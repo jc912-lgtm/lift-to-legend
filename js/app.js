@@ -73,6 +73,7 @@ function App(){
       s.statHistory=s.statHistory||[];
       s.bodyWeight=s.bodyWeight||(parseInt(s.weightClass)||80);
       s.targetWeight=s.targetWeight||s.bodyWeight;
+      s.mapPos=s.mapPos||null;
       setC(s);setScreen('hub');
     }}catch(e){console.error(e)}
   }

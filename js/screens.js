@@ -337,7 +337,7 @@ function Hub({c,setC,go}){
   const[newAch,setNewAch]=useState(null);
   const[hovered,setHovered]=useState(null);
   const[storyEvent,setStoryEvent]=useState(null);
-  const[playerPos,setPlayerPos]=useState({x:1200,y:1500});
+  const[playerPos,setPlayerPos]=useState(c.mapPos||{x:1200,y:1500});
   const[moving,setMoving]=useState(null);
   const moveSpeed=8;
   const season=getSeason(c.day);
@@ -452,31 +452,34 @@ function Hub({c,setC,go}){
   },[]);
 
   // Map locations -- world coords (2400x2400)
+  // Save player position before leaving hub
+  function goSave(screen){setC(x=>({...x,mapPos:playerPos}));go(screen)}
+
   const locations=[
     // North area (y: 200-800) -- urban/arena zone
-    {id:'status',icon:'📊',label:'狀態',x:1200,y:200,action:()=>{sfx('click');go('status')},tip:'查看能力值和成長紀錄'},
+    {id:'status',icon:'📊',label:'狀態',x:1200,y:200,action:()=>{sfx('click');goSave('status')},tip:'查看能力值和成長紀錄'},
     {id:'wangfund',icon:'🏦',label:'老王基金會',x:1200,y:400,locked:c.eventLevel<4,
-      action:()=>{if(c.eventLevel<4){sfx('fail');setToast({text:'🔒 世界賽等級！',type:'fail'});return}sfx('click');go('wangfund')},tip:'🔒 世界賽解鎖'},
-    {id:'nstc',icon:'🏛️',label:'國訓中心',x:900,y:600,action:()=>{sfx('click');go('nstc')},tip:'國訓中心！可參觀'},
-    {id:'arena',icon:'🏟️',label:'比賽場',x:1500,y:500,action:()=>{sfx('click');go('comp')},tip:'參加舉重比賽！'},
+      action:()=>{if(c.eventLevel<4){sfx('fail');setToast({text:'🔒 世界賽等級！',type:'fail'});return}sfx('click');goSave('wangfund')},tip:'🔒 世界賽解鎖'},
+    {id:'nstc',icon:'🏛️',label:'國訓中心',x:900,y:600,action:()=>{sfx('click');goSave('nstc')},tip:'國訓中心！可參觀'},
+    {id:'arena',icon:'🏟️',label:'比賽場',x:1500,y:500,action:()=>{sfx('click');goSave('comp')},tip:'參加舉重比賽！'},
     // West area (x: 200-700) -- rural/mountains
-    {id:'friend',icon:'🏘️',label:'朋友家',x:400,y:800,action:()=>{sfx('click');go('friend')},tip:'麻將、電動、唱歌'},
-    {id:'jobs',icon:'💼',label:'打工',x:300,y:1000,action:()=>{sfx('click');go('jobs')},tip:'打工賺錢'},
-    {id:'pool',icon:'🎱',label:'撞球館',x:500,y:1200,action:()=>{sfx('click');go('pool')},tip:'打撞球'},
-    {id:'tianliao',icon:'⛰️',label:'田寮移訓',x:200,y:1300,action:()=>{sfx('click');go('tianliao')},tip:'阿公闖關！'},
+    {id:'friend',icon:'🏘️',label:'朋友家',x:400,y:800,action:()=>{sfx('click');goSave('friend')},tip:'麻將、電動、唱歌'},
+    {id:'jobs',icon:'💼',label:'打工',x:300,y:1000,action:()=>{sfx('click');goSave('jobs')},tip:'打工賺錢'},
+    {id:'pool',icon:'🎱',label:'撞球館',x:500,y:1200,action:()=>{sfx('click');goSave('pool')},tip:'打撞球'},
+    {id:'tianliao',icon:'⛰️',label:'田寮移訓',x:200,y:1300,action:()=>{sfx('click');goSave('tianliao')},tip:'阿公闖關！'},
     // Center area (around 1200,1500) -- home/town
-    {id:'shop',icon:'🏪',label:'商店',x:1100,y:1400,action:()=>{sfx('click');go('shop')},tip:'購買裝備'},
-    {id:'laundry',icon:'👕',label:'C&R WASH',x:1350,y:1450,action:()=>{sfx('click');go('laundry')},tip:'洗衣服！'},
-    {id:'cafe',icon:'☕',label:'肆拾而立',x:1050,y:1550,action:()=>{sfx('click');go('cafe')},tip:'喝咖啡'},
-    {id:'home',icon:'🏠',label:'我的家',x:1200,y:1600,action:()=>{sfx('click');go('home')},tip:'回家休息'},
+    {id:'shop',icon:'🏪',label:'商店',x:1100,y:1400,action:()=>{sfx('click');goSave('shop')},tip:'購買裝備'},
+    {id:'laundry',icon:'👕',label:'C&R WASH',x:1350,y:1450,action:()=>{sfx('click');goSave('laundry')},tip:'洗衣服！'},
+    {id:'cafe',icon:'☕',label:'肆拾而立',x:1050,y:1550,action:()=>{sfx('click');goSave('cafe')},tip:'喝咖啡'},
+    {id:'home',icon:'🏠',label:'我的家',x:1200,y:1600,action:()=>{sfx('click');goSave('home')},tip:'回家休息'},
     // East area (x: 1700-2200) -- industrial
-    {id:'gym',icon:'🏋️',label:'訓練場',x:1800,y:1100,action:()=>{sfx('click');go('training')},tip:'訓練提升實力'},
+    {id:'gym',icon:'🏋️',label:'訓練場',x:1800,y:1100,action:()=>{sfx('click');goSave('training')},tip:'訓練提升實力'},
     {id:'hengzhai',icon:'🏗️',label:'衡宅',x:1900,y:900,locked:(c.totalTrainings||0)<20,
-      action:()=>{if((c.totalTrainings||0)<20){sfx('fail');setToast({text:'🔒 訓練20次！',type:'fail'});return}sfx('click');go('hengzhai')},tip:'🔒 訓練20次解鎖'},
-    {id:'restaurant',icon:'🍜',label:'餐廳',x:2000,y:1300,action:()=>{sfx('click');go('restaurant')},tip:'吃飯補體力'},
+      action:()=>{if((c.totalTrainings||0)<20){sfx('fail');setToast({text:'🔒 訓練20次！',type:'fail'});return}sfx('click');goSave('hengzhai')},tip:'🔒 訓練20次解鎖'},
+    {id:'restaurant',icon:'🍜',label:'餐廳',x:2000,y:1300,action:()=>{sfx('click');goSave('restaurant')},tip:'吃飯補體力'},
     // South area (y: 1800-2200) -- beach/nature
-    {id:'mituo',icon:'🌊',label:'彌陀基地',x:800,y:2000,action:()=>{sfx('click');go('mituo')},tip:'阿嬤愛心補給'},
-    {id:'river',icon:'🎣',label:'釣魚河',x:1500,y:2100,action:()=>{sfx('click');go('river')},tip:'河邊放鬆'},
+    {id:'mituo',icon:'🌊',label:'彌陀基地',x:800,y:2000,action:()=>{sfx('click');goSave('mituo')},tip:'阿嬤愛心補給'},
+    {id:'river',icon:'🎣',label:'釣魚河',x:1500,y:2100,action:()=>{sfx('click');goSave('river')},tip:'河邊放鬆'},
   ];
 
   function save(){localStorage.setItem('wl_save',JSON.stringify(c));sfx('coin');setToast({text:'💾 已存檔！',type:'success'})}
