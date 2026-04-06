@@ -1177,6 +1177,45 @@ function TrainingScreen({c,setC,go}){
           </div>}
         </div>
 
+        {/* Coach Program Button */}
+        <div className="flex gap-1 mb-2">
+          <button onClick={()=>setShowProgram(!showProgram)}
+            className={`pixel-btn ${showProgram?'pixel-btn-gold':'bg-pixel-charcoal'} text-pixel-gold px-3 py-1 text-[9px] font-pixel flex-1`}>
+            {showProgram?'✖ 收起課表':'📋 '+myCoach.name+'的課表'}
+          </button>
+        </div>
+
+        {showProgram&&(
+          <div className="pixel-border bg-pixel-charcoal p-2 mb-2 slide-up">
+            <div className="font-vt text-pixel-gold text-sm mb-1">{'📋 '+myCoach.name+'的訓練課表'}</div>
+            {myCoach.programs.map((prog,pi)=>{
+              const exercises=prog.exercises.map(eid=>TRAIN.find(t=>t.id===eid)).filter(Boolean);
+              const nonRestEx=exercises.filter(e=>!e.isRest);
+              const totalCost=nonRestEx.reduce((s,e)=>s+e.cost,0);
+              return(
+                <div key={pi} className="mb-2 p-1.5 bg-pixel-dark rounded">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-vt text-pixel-light text-sm">{'⭐'.repeat(prog.level)} {prog.name}</span>
+                    <span className="font-vt text-pixel-gray text-xs">{prog.sets}</span>
+                  </div>
+                  <div className="font-vt text-pixel-cyan text-xs mb-1">「{prog.desc}」</div>
+                  <div className="flex flex-wrap gap-1 mb-1">
+                    {prog.exercises.map((eid,ei)=>{
+                      const ex=TRAIN.find(t=>t.id===eid);
+                      return ex?<span key={ei} className="text-xs bg-pixel-charcoal px-1 rounded font-vt text-pixel-light">{ex.icon} {ex.name.split(' ')[0]}</span>:null;
+                    })}
+                  </div>
+                  <button onClick={()=>runProgram(prog)}
+                    disabled={c.stamina<totalCost*0.5}
+                    className={`w-full pixel-btn py-1 text-[9px] font-pixel ${c.stamina<totalCost*0.5?'bg-pixel-dark text-pixel-gray cursor-not-allowed':'bg-pixel-darkblue text-pixel-sky'}`}>
+                    {'🏋️ 執行課表（需'+totalCost+'體力）'}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         <div className="flex gap-1 mb-2 overflow-x-auto pb-1" style={{scrollbarWidth:'thin'}}>
           {TRAIN_CATEGORIES.map(cat=>{
             const unlocked=c.totalTrainings>=cat.unlock;
