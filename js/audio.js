@@ -25,8 +25,8 @@ function ea(){
   if(ctx.state==='suspended')ctx.resume();
 }
 function setSfxVol(v){sfxVol=v;if(sfxGain)sfxGain.gain.value=audioMuted?0:v}
-function setBgmVol(v){bgmVol=v;if(bgmGain)bgmGain.gain.value=audioMuted?0:v;if(bgmAudio)bgmAudio.volume=audioMuted?0:v}
-function toggleMute(){audioMuted=!audioMuted;if(sfxGain)sfxGain.gain.value=audioMuted?0:sfxVol;if(bgmGain)bgmGain.gain.value=audioMuted?0:bgmVol;if(bgmAudio)bgmAudio.volume=audioMuted?0:bgmVol;return audioMuted}
+function setBgmVol(v){bgmVol=v;if(bgmGain)bgmGain.gain.value=audioMuted?0:v;if(bgmAudio){bgmAudio.volume=audioMuted?0:v;if(v===0)bgmAudio.pause();else if(!audioMuted)bgmAudio.play().catch(()=>{})}}
+function toggleMute(){audioMuted=!audioMuted;if(sfxGain)sfxGain.gain.value=audioMuted?0:sfxVol;if(bgmGain)bgmGain.gain.value=audioMuted?0:bgmVol;if(bgmAudio){bgmAudio.volume=audioMuted?0:bgmVol;if(audioMuted)bgmAudio.pause();else bgmAudio.play().catch(()=>{})}return audioMuted}
 
 function tone(f,d=.1,t='square',v=.15){
   try{ea();const o=ctx.createOscillator(),g=ctx.createGain();
