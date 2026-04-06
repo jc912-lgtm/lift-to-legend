@@ -47,14 +47,14 @@ body{background:#1a1c2c;margin:0;overflow-x:hidden;font-family:'LXGW WenKai TC',
 .sn-f7{opacity:0;animation:sn-f7 2.5s steps(1) infinite}
 .sn-f8{opacity:0;animation:sn-f8 2.5s steps(1) infinite}
 .sn-f9{opacity:0;animation:sn-f9 2.5s steps(1) infinite}
-/* TCJS: 7 frames over 3s */
-@keyframes tc-f1{0%{opacity:1}14.99%{opacity:1}15%{opacity:0}100%{opacity:0}}
-@keyframes tc-f2{0%{opacity:0}15%{opacity:1}29.99%{opacity:1}30%{opacity:0}100%{opacity:0}}
-@keyframes tc-f3{0%{opacity:0}30%{opacity:1}44.99%{opacity:1}45%{opacity:0}100%{opacity:0}}
-@keyframes tc-f4{0%{opacity:0}45%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}
-@keyframes tc-f5{0%{opacity:0}60%{opacity:1}74.99%{opacity:1}75%{opacity:0}100%{opacity:0}}
-@keyframes tc-f6{0%{opacity:0}75%{opacity:1}89.99%{opacity:1}90%{opacity:0}100%{opacity:0}}
-@keyframes tc-f7{0%{opacity:0}90%{opacity:1}100%{opacity:1}}
+/* TCJS: 7 frames over 3s — equal timing ~14.29% each */
+@keyframes tc-f1{0%{opacity:1}14.28%{opacity:1}14.29%{opacity:0}100%{opacity:0}}
+@keyframes tc-f2{0%{opacity:0}14.29%{opacity:1}28.56%{opacity:1}28.57%{opacity:0}100%{opacity:0}}
+@keyframes tc-f3{0%{opacity:0}28.57%{opacity:1}42.85%{opacity:1}42.86%{opacity:0}100%{opacity:0}}
+@keyframes tc-f4{0%{opacity:0}42.86%{opacity:1}57.13%{opacity:1}57.14%{opacity:0}100%{opacity:0}}
+@keyframes tc-f5{0%{opacity:0}57.14%{opacity:1}71.42%{opacity:1}71.43%{opacity:0}100%{opacity:0}}
+@keyframes tc-f6{0%{opacity:0}71.43%{opacity:1}85.71%{opacity:1}85.72%{opacity:0}100%{opacity:0}}
+@keyframes tc-f7{0%{opacity:0}85.72%{opacity:1}100%{opacity:1}}
 .tc-f1{opacity:0;animation:tc-f1 3s steps(1) infinite}
 .tc-f2{opacity:0;animation:tc-f2 3s steps(1) infinite}
 .tc-f3{opacity:0;animation:tc-f3 3s steps(1) infinite}
