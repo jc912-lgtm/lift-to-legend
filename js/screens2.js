@@ -48,6 +48,23 @@ function StatusScreen({c,go}){
         </div>
 
         <div className="pixel-border bg-pixel-charcoal p-2 mb-2">
+          <div className="font-pixel text-pixel-gold text-[9px] mb-1">⚖️ 體重管理</div>
+          <div className="flex items-center gap-2">
+            <span className="font-vt text-pixel-light text-sm">目前 {c.bodyWeight?.toFixed(1)}kg</span>
+            <span className="font-vt text-pixel-gray text-sm">/ 量級 {c.weightClass}</span>
+          </div>
+          <div className="h-3 bg-pixel-dark border border-pixel-gray mt-1 rounded overflow-hidden">
+            <div className="h-full transition-all" style={{
+              width:`${Math.min(100,(c.bodyWeight/(parseInt(c.weightClass)||80))*100)}%`,
+              background:c.bodyWeight>(parseInt(c.weightClass)||80)?'#b13e53':'#38b764'
+            }}/>
+          </div>
+          {c.bodyWeight>(parseInt(c.weightClass)||80)&&
+            <div className="font-vt text-pixel-red text-xs mt-1">⚠️ 超過量級！比賽會被取消資格</div>
+          }
+        </div>
+
+        <div className="pixel-border bg-pixel-charcoal p-2 mb-2">
           <div className="font-pixel text-pixel-gold text-[8px] text-center mb-1">📜 舉重五字訣</div>
           <PrinciplesDisplay principles={c.principles}/>
           <div className="font-vt text-pixel-gray text-xs text-center mt-1">五字訣越高，比賽成功率加成越大！</div>

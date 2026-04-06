@@ -261,9 +261,10 @@ function CafeScreen({c,setC,go}){
     sfx('coin');setBuyAnim(item.icon);
     setTimeout(()=>{
       setBuyAnim(null);
-      const nc={...c,money:c.money-item.price,stats:{...c.stats}};
-      const fItems=[{icon:'💰',text:`-${item.price}`,color:'#ef5350'}];
       const eff=item.effect;
+      const cafeWeightGain=item.id==='smoothie'?0.1:(eff.sta?0.05:0);
+      const nc={...c,money:c.money-item.price,stats:{...c.stats},bodyWeight:Math.round(((c.bodyWeight||parseInt(c.weightClass)||80)+cafeWeightGain)*100)/100};
+      const fItems=[{icon:'💰',text:`-${item.price}`,color:'#ef5350'}];
       if(eff.fatigue){nc.fatigue=Math.max(0,(nc.fatigue||0)+eff.fatigue);fItems.push({icon:'😌',text:`${eff.fatigue}😤`,color:'#73eff7'})}
       if(eff.sta){nc.stamina=Math.min(ms,nc.stamina+eff.sta);fItems.push({icon:'⚡',text:`+${eff.sta}體力`,color:'#38b764'})}
       if(eff.str){nc.stats.str=Math.min(100,nc.stats.str+eff.str);fItems.push({icon:'💪',text:`力量+${eff.str}`,color:'#ef5350'})}

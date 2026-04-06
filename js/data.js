@@ -390,6 +390,9 @@ const SHOP=[
   {id:'charm',name:'幸運護符',desc:'比賽運氣+3%',price:1200,effect:{type:'luck',value:3},icon:'🍀',tip:'運氣是留給準備好的人！'},
   {id:'book',name:'教練秘笈',desc:'所有屬性+1',price:800,effect:{type:'allBoost',value:1},icon:'📖',tip:'學無止境！書中有前輩們累積的智慧。'},
   {id:'video',name:'國際賽影片分析',desc:'技術+2、穩定+1',price:400,effect:{type:'multi',stats:{tec:2,stb:1}},icon:'📹',tip:'觀看國際選手的比賽影片，分析他們的技術是進步的捷徑！注意他們的槓鈴軌跡和節奏。'},
+  {id:'singlet',name:'比賽連身衣',desc:'正式比賽必備！技術+2、穩定+1',price:400,effect:{type:'multi',stats:{tec:2,stb:1}},icon:'👔',tip:'國際比賽規定必須穿連身衣上場！'},
+  {id:'kneeSleeves',name:'護膝套',desc:'保護膝蓋，深蹲更穩',price:300,effect:{type:'perm',stat:'stb',value:2},icon:'🦵',tip:'護膝能保護膝關節，讓你更安心地蹲'},
+  {id:'chalk',name:'止滑粉',desc:'握力提升！不怕手滑',price:100,effect:{type:'perm',stat:'str',value:1},icon:'🤍',tip:'止滑粉（碳酸鎂）能增加摩擦力，是舉重必備品'},
 ];
 
 const COACH_TIPS=[

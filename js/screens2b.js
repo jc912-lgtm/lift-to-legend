@@ -593,11 +593,13 @@ function RestaurantScreen({c,setC,go}){
       setEatAnim(null);
       setAte(true);
       const fatDrop=5+Math.floor(Math.random()*6);
+      const weightGain=0.1+Math.random()*0.2;
       const nc={...c,
         money:c.money-meal.price,
         stamina:Math.min(ms,c.stamina+meal.sta),
         fatigue:Math.max(0,c.fatigue-fatDrop),
-        stats:{...c.stats}
+        stats:{...c.stats},
+        bodyWeight:Math.round(((c.bodyWeight||parseInt(c.weightClass)||80)+weightGain)*100)/100,
       };
       const fItems=[
         {icon:'💰',text:`-${meal.price}`,color:'#ef5350'},

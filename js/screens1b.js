@@ -169,18 +169,26 @@ function CompScreen({c,setC,go}){
         <div className="max-w-lg mx-auto">
           <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-4 py-1.5 text-[10px] font-pixel mb-2">← 返回</button>
           <h2 className="font-pixel text-pixel-gold text-[10px] mb-2">🏆 選擇賽事</h2>
+          {(c.bodyWeight||0)>(parseInt(c.weightClass)||80)&&(
+            <div className="pixel-border bg-pixel-charcoal p-2 mb-2">
+              <div className="font-vt text-pixel-red text-sm text-center">⚠️ 目前體重 {c.bodyWeight?.toFixed(1)}kg 超過量級 {c.weightClass}！</div>
+              <div className="font-vt text-pixel-red text-xs text-center">無法參賽，請先減重（多訓練、少吃）</div>
+            </div>
+          )}
           <div className="space-y-1.5">
             {EVENTS.map(e=>{
               const ok=e.reqLv<=c.eventLevel;
+              const overweight=(c.bodyWeight||0)>(parseInt(c.weightClass)||80);
+              const canStart=ok&&!overweight;
               return(
-                <button key={e.id} onClick={()=>{if(ok){sfx('click');startEv(e)}}} disabled={!ok}
-                  className={`w-full pixel-border p-2.5 text-left transition-colors ${ok?'bg-pixel-charcoal hover:bg-pixel-darkblue cursor-pointer':'bg-pixel-dark opacity-35 cursor-not-allowed'}`}>
+                <button key={e.id} onClick={()=>{if(canStart){sfx('click');startEv(e)}}} disabled={!canStart}
+                  className={`w-full pixel-border p-2.5 text-left transition-colors ${canStart?'bg-pixel-charcoal hover:bg-pixel-darkblue cursor-pointer':'bg-pixel-dark opacity-35 cursor-not-allowed'}`}>
                   <div className="flex justify-between items-center">
                     <div>
-                      <div className={`font-pixel text-[10px] ${ok?'text-pixel-gold':'text-pixel-gray'}`}>{e.emoji} Lv.{e.id} {e.name}</div>
-                      <div className="font-vt text-pixel-gray text-sm mt-0.5">{ok?`🏆 獎金${e.prize} | ${'★'.repeat(e.id)}${'☆'.repeat(6-e.id)}`:`🔒 ${e.unlock}`}</div>
+                      <div className={`font-pixel text-[10px] ${canStart?'text-pixel-gold':'text-pixel-gray'}`}>{e.emoji} Lv.{e.id} {e.name}</div>
+                      <div className="font-vt text-pixel-gray text-sm mt-0.5">{ok?(overweight?'⚖️ 體重超標':`🏆 獎金${e.prize} | ${'★'.repeat(e.id)}${'☆'.repeat(6-e.id)}`):`🔒 ${e.unlock}`}</div>
                     </div>
-                    {ok&&<span className="text-xl">{e.emoji}</span>}
+                    {canStart&&<span className="text-xl">{e.emoji}</span>}
                   </div>
                 </button>
               );

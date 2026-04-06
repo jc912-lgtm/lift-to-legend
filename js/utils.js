@@ -168,6 +168,8 @@ function newChar(name,gender,wc,avatar='cat',coach='titan'){
     etf:{shares:0,prices:[100],buyPrice:0},
     gachaCount:0,
     injured:false,injuryDay:0,injuryType:null,
+    bodyWeight:parseInt(wc)||80,
+    targetWeight:parseInt(wc)||80,
   };
 }
 

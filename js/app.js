@@ -71,6 +71,8 @@ function App(){
       s.injuryType=s.injuryType||null;
       s.seenStories=s.seenStories||{};
       s.statHistory=s.statHistory||[];
+      s.bodyWeight=s.bodyWeight||(parseInt(s.weightClass)||80);
+      s.targetWeight=s.targetWeight||s.bodyWeight;
       setC(s);setScreen('hub');
     }}catch(e){console.error(e)}
   }
