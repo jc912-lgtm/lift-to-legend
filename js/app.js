@@ -47,7 +47,7 @@ function App(){
 
   // BGM routing based on screen
   useEffect(()=>{
-    const bgmMap={title:'title',create:'title',hub:'hub',training:'training',comp:'competition',status:'shop',shop:'shop',jobs:'work',achievements:'shop',pool:'friend',restaurant:'relax',friend:'friend',home:'relax',cafe:'relax',laundry:'work',river:'nature',nstc:'training',wangfund:'relax',tianliao:'nature',mituo:'relax',hengzhai:'work'};
+    const bgmMap={title:'title',create:'title',hub:'title',training:'training',comp:'competition',status:'shop',shop:'shop',jobs:'shop',achievements:'shop',pool:'shop',restaurant:'shop',friend:'shop',home:'shop',cafe:'shop',laundry:'shop',river:'shop',nstc:'training',wangfund:'shop',tianliao:'training',mituo:'shop',hengzhai:'training'};
     const track=bgmMap[screen];
     if(track)playBGM(track);
   },[screen]);
@@ -99,6 +99,7 @@ function App(){
         case'wangfund':return<WangFundScreen c={c} setC={setC} go={go}/>;
         case'tianliao':return<TianliaoScreen c={c} setC={setC} go={go}/>;
         case'mituo':return<MituoScreen c={c} setC={setC} go={go}/>;
+        case'hengzhai':return<HengzhaiScreen c={c} setC={setC} go={go}/>;
         case'achievements':return<AchScreen c={c} go={go}/>;
         default:return<TitleScreen onNew={()=>go('create')} onLoad={load} hasSave={hasSave}/>;
       }})()}

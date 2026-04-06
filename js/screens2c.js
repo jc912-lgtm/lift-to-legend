@@ -26,12 +26,56 @@ function HomeScreen({c,setC,go}){
     },2000);
   }
 
+  const[catPlaying,setCatPlaying]=useState(false);
+  const earTwitch=Math.sin(frame*0.08)*3;
+
   function playCat(){
     sfx('tap');
     const msgs=['喵～貓咪磨蹭你的腿','貓咪追逐逗貓棒！','貓咪在你腿上睡著了...','貓咪翻肚肚要摸摸！'];
     setCatMsg(msgs[Math.floor(Math.random()*msgs.length)]);
+    setCatPlaying(true);
     setC(x=>({...x,fatigue:Math.max(0,x.fatigue-10),stats:{...x.stats,stb:Math.min(100,x.stats.stb+1)}}));
     setFloats([{icon:'🐱',text:'-10😤',color:'#73eff7'},{icon:'🧠',text:'穩定+1',color:'#ab47bc'}]);
+    setTimeout(()=>{setCatMsg(null);setCatPlaying(false)},2500);
+  }
+
+  function clickCat(){
+    sfx('tap');
+    const reactions=[
+      '喵～(貓咪伸懶腰)',
+      '呼嚕呼嚕...(貓咪打呼)',
+      '喵！(貓咪被嚇到跳起來)',
+      '...(貓咪翻了個身繼續睡)',
+      '喵喵喵！(貓咪肚子餓了)'
+    ];
+    setCatMsg(reactions[Math.floor(Math.random()*reactions.length)]);
+    setTimeout(()=>setCatMsg(null),2500);
+  }
+
+  function doPhone(){
+    sfx('tap');
+    const fItems=[{icon:'📱',text:'-5😤',color:'#73eff7'}];
+    const nc={...c,fatigue:Math.max(0,c.fatigue-5),stats:{...c.stats,stb:Math.min(100,c.stats.stb+1)}};
+    fItems.push({icon:'🧠',text:'穩定+1',color:'#ab47bc'});
+    let msg='看了舉重影片，學到新東西！';
+    if(Math.random()<0.3){
+      nc.stats.tec=Math.min(100,nc.stats.tec+1);
+      fItems.push({icon:'🎯',text:'技術+1',color:'#26c6da'});
+      msg='看了舉重影片，學到新技巧！技術+1';
+    }
+    setC(nc);
+    setFloats(fItems);
+    setCatMsg(msg);
+    setTimeout(()=>setCatMsg(null),2500);
+  }
+
+  function doCook(){
+    if(c.money<20){sfx('fail');setFloats([{icon:'💸',text:'不夠！',color:'#b13e53'}]);return}
+    sfx('tap');
+    const nc={...c,money:c.money-20,stamina:Math.min(ms,c.stamina+20),fatigue:Math.max(0,c.fatigue-5)};
+    setC(nc);
+    setFloats([{icon:'💰',text:'-20',color:'#ef5350'},{icon:'⚡',text:'+20體力',color:'#38b764'},{icon:'😌',text:'-5😤',color:'#73eff7'}]);
+    setCatMsg('簡單煮了一餐，省錢又健康');
     setTimeout(()=>setCatMsg(null),2500);
   }
 
@@ -82,23 +126,54 @@ function HomeScreen({c,setC,go}){
             <rect x="80" y="155" width="140" height="8" rx="2" fill="#3949ab"/>
             {/* Blanket fold */}
             <path d="M80,130 Q150,125 220,130 L220,155 L80,155Z" fill="#42a5f5" opacity=".5"/>
-            {/* Cat on bed */}
-            <g transform={`translate(170,${118+catBreath})`}>
-              <ellipse cx="0" cy="0" rx="18" ry="10" fill="#9e9e9e"/>
-              <ellipse cx="-14" cy="-4" rx="8" ry="7" fill="#9e9e9e"/>
-              <polygon points="-20,-10 -16,-3 -12,-9" fill="#757575"/>
-              <polygon points="-10,-10 -6,-3 -2,-9" fill="#757575"/>
-              <ellipse cx="-14" cy="-2" rx="1.5" ry={catMsg?2:0.8} fill="#333"/>
-              <ellipse cx="-9" cy="-2" rx="1.5" ry={catMsg?2:0.8} fill="#333"/>
-              <path d="M16,2 Q22,6 18,10" stroke="#9e9e9e" strokeWidth="3" fill="none"/>
-              {catMsg&&<ellipse cx="15" cy="-12" rx="4" ry="3" fill="#e91e63" opacity=".6"/>}
+            {/* Cat on bed — LARGE ~25% of scene, clickable */}
+            <g transform={`translate(160,${catPlaying?105:118+catBreath})`} onClick={clickCat} style={{cursor:'pointer'}}>
+              <ellipse cx="0" cy={catPlaying?-5:0} rx={catPlaying?22:30} ry={catPlaying?18:16} fill="#b0b0b0"/>
+              <path d={catPlaying?'M-12,-16 Q-8,-20 -4,-16':'M-15,-8 Q-8,-14 0,-8'} stroke="#8a8a8a" strokeWidth="2.5" fill="none"/>
+              <path d={catPlaying?'M0,-18 Q4,-22 8,-18':'M-5,-10 Q2,-16 10,-10'} stroke="#8a8a8a" strokeWidth="2.5" fill="none"/>
+              <path d={catPlaying?'M10,-14 Q14,-18 18,-14':'M5,-7 Q12,-13 20,-7'} stroke="#8a8a8a" strokeWidth="2" fill="none"/>
+              <ellipse cx={catPlaying?0:-22} cy={catPlaying?-22:-6} rx="13" ry="11" fill="#b0b0b0"/>
+              <g transform={`translate(${catPlaying?0:-22},${catPlaying?-22:-6})`}>
+                <polygon points={`-11,-9 ${-8+earTwitch*0.3},-20 -4,-8`} fill="#999"/>
+                <polygon points={`4,-9 ${8-earTwitch*0.3},-20 12,-8`} fill="#999"/>
+                <polygon points={`-9,-9 ${-7+earTwitch*0.3},-17 -5,-8`} fill="#e8a0a0" opacity=".6"/>
+                <polygon points={`5,-9 ${7-earTwitch*0.3},-17 10,-8`} fill="#e8a0a0" opacity=".6"/>
+                <ellipse cx="-5" cy="-1" rx="2.5" ry={catMsg?3.5:1.2} fill="#333"/>
+                <ellipse cx="5" cy="-1" rx="2.5" ry={catMsg?3.5:1.2} fill="#333"/>
+                {catMsg&&<><circle cx="-4" cy="-2" r="0.8" fill="white"/><circle cx="6" cy="-2" r="0.8" fill="white"/></>}
+                <polygon points="0,2 -1.5,4 1.5,4" fill="#e8a0a0"/>
+                <path d="M0,4 Q-2,6 -3,5" stroke="#777" strokeWidth="0.7" fill="none"/>
+                <path d="M0,4 Q2,6 3,5" stroke="#777" strokeWidth="0.7" fill="none"/>
+                <line x1="-6" y1="3" x2="-16" y2="1" stroke="#888" strokeWidth="0.5"/>
+                <line x1="-6" y1="4" x2="-16" y2="5" stroke="#888" strokeWidth="0.5"/>
+                <line x1="6" y1="3" x2="16" y2="1" stroke="#888" strokeWidth="0.5"/>
+                <line x1="6" y1="4" x2="16" y2="5" stroke="#888" strokeWidth="0.5"/>
+              </g>
+              {catPlaying?<>
+                <ellipse cx="-8" cy="12" rx="5" ry="4" fill="#c0c0c0"/>
+                <ellipse cx="8" cy="12" rx="5" ry="4" fill="#c0c0c0"/>
+              </>:<>
+                <ellipse cx="-18" cy="8" rx="6" ry="4" fill="#c0c0c0"/>
+              </>}
+              <path d={catPlaying?'M20,-5 Q32,-10 28,5 Q24,12 15,10':'M26,4 Q38,0 35,12 Q30,22 18,18'} stroke="#a0a0a0" strokeWidth="5" fill="none" strokeLinecap="round"/>
+              {catMsg&&<ellipse cx={catPlaying?16:-6} cy={catPlaying?-28:-18} rx="4" ry="3" fill="#e91e63" opacity=".6"/>}
             </g>
+            {/* Thought bubble (cloud shape) above cat */}
+            {catMsg&&<g>
+              <ellipse cx="240" cy="58" rx="50" ry="16" fill="white" opacity=".92"/>
+              <ellipse cx="222" cy="53" rx="12" ry="9" fill="white" opacity=".92"/>
+              <ellipse cx="258" cy="53" rx="12" ry="9" fill="white" opacity=".92"/>
+              <ellipse cx="240" cy="48" rx="18" ry="9" fill="white" opacity=".92"/>
+              <ellipse cx="208" cy="75" rx="5" ry="4" fill="white" opacity=".85"/>
+              <ellipse cx="200" cy="84" rx="3" ry="2.5" fill="white" opacity=".7"/>
+              <text x="240" y="62" textAnchor="middle" fontSize="6.5" fill="#333" fontFamily="sans-serif">{catMsg.length>16?catMsg.slice(0,16)+'...':catMsg}</text>
+            </g>}
             {/* ZZZ when sleeping */}
             {sleeping&&[0,1,2].map(i=>
               <text key={i} x={155+i*15} y={90+zzzY-i*12} fill="#fff9c4" fontSize={10+i*3} opacity={Math.max(0,zzzOp-i*0.2)} fontFamily="monospace">Z</text>
             )}
             {/* Warm glow overlay */}
-            <rect width="320" height="200" fill="#fff9c4" opacity={sleeping?0.08:0.03}/>
+            <rect width="320" height="200" fill="#fff9c4" opacity={sleeping?0.08:0.03} style={{pointerEvents:'none'}}/>
           </svg>
         </div>
 
@@ -117,6 +192,18 @@ function HomeScreen({c,setC,go}){
             <div className="text-2xl mb-1">🐱</div>
             <div className="font-pixel text-[9px]">跟貓咪玩</div>
             <div className="font-vt text-pixel-cyan text-xs">疲勞-10 穩定+1</div>
+          </button>
+          <button onClick={doPhone}
+            className="pixel-btn bg-blue-900 text-pixel-light py-3 text-center hover:bg-blue-800">
+            <div className="text-2xl mb-1">📱</div>
+            <div className="font-pixel text-[9px]">滑手機</div>
+            <div className="font-vt text-pixel-cyan text-xs">疲勞-5 穩定+1</div>
+          </button>
+          <button onClick={doCook}
+            className={`pixel-btn py-3 text-center ${c.money>=20?'bg-amber-900 text-pixel-light hover:bg-amber-800':'bg-pixel-gray text-pixel-light opacity-50'}`}>
+            <div className="text-2xl mb-1">🍳</div>
+            <div className="font-pixel text-[9px]">自己煮飯</div>
+            <div className="font-vt text-pixel-orange text-xs">💰20 體力+20</div>
           </button>
         </div>
       </div>
@@ -407,12 +494,28 @@ function LaundryScreen({c,setC,go}){
 // ── RIVER ──
 function RiverScreen({c,setC,go}){
   const[floats,setFloats]=useState(null);
-  const[done,setDone]=useState({fish:false,picnic:false,sun:false,sketch:false});
+  const[done,setDone]=useState({fish:false,picnic:false,sun:false,sketch:false,swim:false});
   const[msg,setMsg]=useState('');
   const[rFrame,setRFrame]=useState(0);
-  const[activity,setActivity]=useState(null); // 'fish','picnic','sun','sketch' during animation
+  const[activity,setActivity]=useState(null); // 'fish','picnic','sun','sketch','swim' during animation
+  const[fishMsg,setFishMsg]=useState(null);
+  const[bobberPhase,setBobberPhase]=useState(0); // 0=waiting, 1=bobbing, 2=bite
   const ms=maxSta(c.stats.sta);
   useEffect(()=>{const t=setInterval(()=>setRFrame(f=>(f+1)%200),70);return()=>clearInterval(t)},[]);
+
+  const fishWisdom=[
+    "急什麼？魚也有自己的時間表",
+    "耐心是最好的魚餌",
+    "我在這釣了30年，從來不無聊",
+    "你那個舉重...跟釣魚一樣，要穩！",
+    "大魚都在深處，跟夢想一樣",
+    "今天風向不錯，會有大物！"
+  ];
+  function clickFisherman(){
+    sfx('tap');
+    setFishMsg(fishWisdom[Math.floor(Math.random()*fishWisdom.length)]);
+    setTimeout(()=>setFishMsg(null),2500);
+  }
 
   const waveOff=Math.sin(rFrame*.06)*3;
   const sunRay=.5+Math.sin(rFrame*.04)*.3;
@@ -423,23 +526,27 @@ function RiverScreen({c,setC,go}){
 
   function doFish(){
     if(done.fish)return;
-    sfx('rest');setActivity('fish');
+    sfx('rest');setActivity('fish');setBobberPhase(1);
+    const waitTime=1000+Math.random()*1000; // 1-2s random wait
+    const big=Math.random()<.3;
     setTimeout(()=>{
-      const big=Math.random()<.3;
-      const fi=[];
-      if(big){
-        fi.push({icon:'🐟',text:'大魚！+80💰',color:'#f4d03f'});
-        fi.push({icon:'🧠',text:'穩定+2',color:'#ab47bc'});
-        setC(x=>({...x,money:x.money+80,stats:{...x.stats,stb:Math.min(100,x.stats.stb+2)},fatigue:Math.max(0,x.fatigue-10)}));
-        sfx('medal');setMsg('釣到大魚！賣了好價錢！');
-      }else{
-        fi.push({icon:'🎣',text:'穩定+1',color:'#ab47bc'});
-        fi.push({icon:'💚',text:'恢復+1',color:'#26c6da'});
-        setC(x=>({...x,stats:{...x.stats,stb:Math.min(100,x.stats.stb+1),rec:Math.min(100,x.stats.rec+1)},fatigue:Math.max(0,x.fatigue-10)}));
-        sfx('success');setMsg('釣到小魚～好悠閒！');
-      }
-      setFloats(fi);setDone(d=>({...d,fish:true}));setActivity(null);
-    },1200);
+      setBobberPhase(2); // bite!
+      setTimeout(()=>{
+        const fi=[];
+        if(big){
+          fi.push({icon:'🐟',text:'大魚！+80💰',color:'#f4d03f'});
+          fi.push({icon:'🧠',text:'穩定+2',color:'#ab47bc'});
+          setC(x=>({...x,money:x.money+80,stats:{...x.stats,stb:Math.min(100,x.stats.stb+2)},fatigue:Math.max(0,x.fatigue-10)}));
+          sfx('medal');setMsg('釣到大魚！賣了好價錢！');
+        }else{
+          fi.push({icon:'🎣',text:'穩定+1',color:'#ab47bc'});
+          fi.push({icon:'💚',text:'恢復+1',color:'#26c6da'});
+          setC(x=>({...x,stats:{...x.stats,stb:Math.min(100,x.stats.stb+1),rec:Math.min(100,x.stats.rec+1)},fatigue:Math.max(0,x.fatigue-10)}));
+          sfx('success');setMsg('釣到小魚～好悠閒！');
+        }
+        setFloats(fi);setDone(d=>({...d,fish:true}));setActivity(null);setBobberPhase(0);
+      },800);
+    },waitTime);
   }
 
   function doPicnic(){
@@ -479,6 +586,17 @@ function RiverScreen({c,setC,go}){
       sfx('success');setMsg('畫了一幅河邊風景畫！');
       setDone(d=>({...d,sketch:true}));setActivity(null);
     },1200);
+  }
+
+  function doSwim(){
+    if(done.swim)return;
+    sfx('rest');setActivity('swim');
+    setTimeout(()=>{
+      setC(x=>({...x,fatigue:Math.max(0,x.fatigue-15),stats:{...x.stats,sta:Math.min(100,x.stats.sta+2),rec:Math.min(100,x.stats.rec+1)}}));
+      setFloats([{icon:'🏊',text:'體力+2',color:'#38b764'},{icon:'😌',text:'-15疲勞',color:'#64b5f6'},{icon:'💚',text:'恢復+1',color:'#26c6da'}]);
+      sfx('success');setMsg('在河裡游泳，全身都運動到了！');
+      setDone(d=>({...d,swim:true}));setActivity(null);
+    },1500);
   }
 
   return(
@@ -573,18 +691,43 @@ function RiverScreen({c,setC,go}){
               {!activity&&<text x="0" y="10" fontSize="10">🧺</text>}
             </g>
 
-            {/* Character on blanket when sunbathing */}
+            {/* Character on blanket when sunbathing + butterflies */}
             {activity==='sun'&&<g transform="translate(60,82)">
               <ellipse cx="0" cy="5" rx="12" ry="4" fill="#ffcc80"/>
               <circle cx="-8" cy="3" r="5" fill="#ffcc80"/>
               <text x="-4" y="-3" fontSize="8">😊</text>
+              {/* Butterflies circling the sunbather */}
+              <g transform={`translate(${15+Math.sin(rFrame*.07)*12},${-8+Math.cos(rFrame*.09)*6})`} opacity=".8">
+                <ellipse cx="-2" cy="0" rx="2" ry="1.5" fill="#ffab40" transform={`rotate(${Math.sin(rFrame*.15)*20})`}/>
+                <ellipse cx="2" cy="0" rx="2" ry="1.5" fill="#ffab40" transform={`rotate(${-Math.sin(rFrame*.15)*20})`}/>
+                <circle cx="0" cy="0" r=".6" fill="#333"/>
+              </g>
+              <g transform={`translate(${-18+Math.cos(rFrame*.06)*10},${-5+Math.sin(rFrame*.08)*8})`} opacity=".7">
+                <ellipse cx="-2" cy="0" rx="1.8" ry="1.3" fill="#e040fb" transform={`rotate(${Math.sin(rFrame*.12)*25})`}/>
+                <ellipse cx="2" cy="0" rx="1.8" ry="1.3" fill="#e040fb" transform={`rotate(${-Math.sin(rFrame*.12)*25})`}/>
+                <circle cx="0" cy="0" r=".5" fill="#333"/>
+              </g>
+              <g transform={`translate(${5+Math.sin(rFrame*.05)*15},${-15+Math.cos(rFrame*.07)*5})`} opacity=".6">
+                <ellipse cx="-1.5" cy="0" rx="1.5" ry="1" fill="#69f0ae" transform={`rotate(${Math.sin(rFrame*.1)*15})`}/>
+                <ellipse cx="1.5" cy="0" rx="1.5" ry="1" fill="#69f0ae" transform={`rotate(${-Math.sin(rFrame*.1)*15})`}/>
+                <circle cx="0" cy="0" r=".4" fill="#333"/>
+              </g>
             </g>}
 
-            {/* Fishing line from dock */}
+            {/* Fishing line from dock with enhanced bobber */}
             {activity==='fish'&&<g>
-              <line x1="165" y1="92" x2="200" y2="140" stroke="#999" strokeWidth="1"/>
-              <circle cx="200" cy={140+Math.sin(rFrame*.2)*3} r="3" fill="#f44336" stroke="#b71c1c" strokeWidth="1"/>
-              <line x1="200" y1={143+Math.sin(rFrame*.2)*3} x2="200" y2="160" stroke="#999" strokeWidth=".5"/>
+              <line x1="165" y1="92" x2="200" y2={bobberPhase===2?155:140} stroke="#999" strokeWidth="1"/>
+              {bobberPhase===1&&<>
+                <circle cx="200" cy={140+Math.sin(rFrame*.3)*4} r="3" fill="#f44336" stroke="#b71c1c" strokeWidth="1"/>
+                <line x1="200" y1={143+Math.sin(rFrame*.3)*4} x2="200" y2="160" stroke="#999" strokeWidth=".5"/>
+              </>}
+              {bobberPhase===2&&<>
+                <circle cx="200" cy={155+Math.sin(rFrame*.5)*2} r="3" fill="#f44336" stroke="#b71c1c" strokeWidth="1" opacity=".7"/>
+                <line x1="200" y1={158+Math.sin(rFrame*.5)*2} x2="200" y2="170" stroke="#999" strokeWidth=".5"/>
+                {/* Splash rings */}
+                <ellipse cx="200" cy="152" rx={6+rFrame%10} ry={2+rFrame%10*.3} fill="none" stroke="#81d4fa" strokeWidth="1" opacity={Math.max(0,1-rFrame%10*.1)}/>
+                <ellipse cx="200" cy="152" rx={10+rFrame%15} ry={3+rFrame%15*.3} fill="none" stroke="#81d4fa" strokeWidth=".8" opacity={Math.max(0,1-rFrame%15*.07)}/>
+              </>}
             </g>}
 
             {/* Easel when sketching */}
@@ -596,6 +739,60 @@ function RiverScreen({c,setC,go}){
               <rect x="-7" y="-2" width="14" height="10" fill="#81d4fa"/>
               <polygon points="-4,4 0,-1 4,4" fill="#4caf50" opacity=".6"/>
             </g>}
+
+            {/* Swimming character in water */}
+            {activity==='swim'&&<g transform={`translate(${250+Math.sin(rFrame*.08)*15},140)`}>
+              <circle cx="0" cy={-2+Math.sin(rFrame*.2)*2} r="7" fill="#ffcc80"/>
+              <circle cx="-2" cy={-3+Math.sin(rFrame*.2)*2} r="1" fill="#333"/>
+              <circle cx="2" cy={-3+Math.sin(rFrame*.2)*2} r="1" fill="#333"/>
+              <path d={`M-1,${-0.5+Math.sin(rFrame*.2)*2} Q0,${1+Math.sin(rFrame*.2)*2} 1,${-0.5+Math.sin(rFrame*.2)*2}`} fill="none" stroke="#333" strokeWidth=".6"/>
+              <line x1="-7" y1={-2+Math.sin(rFrame*.3)*3} x2="-14" y2={-6+Math.cos(rFrame*.3)*5} stroke="#ffcc80" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="7" y1={-2+Math.sin(rFrame*.3+1.5)*3} x2="14" y2={-6+Math.cos(rFrame*.3+1.5)*5} stroke="#ffcc80" strokeWidth="2.5" strokeLinecap="round"/>
+              {[0,1,2,3].map(i=><circle key={i} cx={-8+i*5+Math.sin(rFrame*.2+i)*3} cy={3+Math.cos(rFrame*.25+i*1.2)*2} r={1.5+Math.sin(rFrame*.15+i)*.5} fill="#81d4fa" opacity={.4+Math.sin(rFrame*.1+i)*.3}/>)}
+              <ellipse cx="0" cy="5" rx={12+Math.sin(rFrame*.1)*3} ry="2" fill="none" stroke="#42a5f5" strokeWidth=".8" opacity=".5"/>
+            </g>}
+
+            {/* Fisherman NPC - 釣魚阿伯 */}
+            <g transform={`translate(100,${72+Math.sin(rFrame*.03)*1.5})`} onClick={clickFisherman} style={{cursor:'pointer'}}>
+              {/* Straw hat */}
+              <ellipse cx="0" cy="-18" rx="18" ry="5" fill="#d4a017" stroke="#b8860b" strokeWidth="1"/>
+              <path d="M-10,-18 Q0,-32 10,-18" fill="#daa520" stroke="#b8860b" strokeWidth=".8"/>
+              <ellipse cx="0" cy="-18" rx="12" ry="3" fill="#c79810" opacity=".4"/>
+              {/* Head - tanned weathered face */}
+              <circle cx="0" cy="-8" r="10" fill="#c68642"/>
+              {/* Eyes and big smile */}
+              <circle cx="-4" cy="-10" r="1.5" fill="#333"/>
+              <circle cx="4" cy="-10" r="1.5" fill="#333"/>
+              <path d="M-5,-5 Q0,-1 5,-5" fill="none" stroke="#333" strokeWidth="1.2" strokeLinecap="round"/>
+              {/* Wrinkles */}
+              <path d="M-7,-12 Q-6,-11 -5,-12" fill="none" stroke="#8B5E3C" strokeWidth=".5"/>
+              <path d="M5,-12 Q6,-11 7,-12" fill="none" stroke="#8B5E3C" strokeWidth=".5"/>
+              {/* Body - fishing vest */}
+              <rect x="-9" y="2" width="18" height="16" rx="3" fill="#6b8e23" stroke="#556b2f" strokeWidth=".8"/>
+              {/* Vest pockets */}
+              <rect x="-7" y="5" width="6" height="4" rx="1" fill="#556b2f" stroke="#4a5d23" strokeWidth=".4"/>
+              <rect x="1" y="5" width="6" height="4" rx="1" fill="#556b2f" stroke="#4a5d23" strokeWidth=".4"/>
+              <rect x="-7" y="11" width="6" height="3" rx="1" fill="#556b2f" stroke="#4a5d23" strokeWidth=".4"/>
+              <rect x="1" y="11" width="6" height="3" rx="1" fill="#556b2f" stroke="#4a5d23" strokeWidth=".4"/>
+              {/* Arms */}
+              <line x1="9" y1="6" x2="18" y2="2" stroke="#c68642" strokeWidth="3" strokeLinecap="round"/>
+              <line x1="-9" y1="8" x2="-14" y2="14" stroke="#c68642" strokeWidth="3" strokeLinecap="round"/>
+              {/* Fishing rod in hand */}
+              <line x1="18" y1="2" x2="45" y2="-20" stroke="#8B4513" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="45" y1="-20" x2="50" y2="20" stroke="#aaa" strokeWidth=".6"/>
+              {/* Legs sitting on dock */}
+              <rect x="-7" y="18" width="6" height="10" rx="1" fill="#4a6741"/>
+              <rect x="1" y="18" width="6" height="10" rx="1" fill="#4a6741"/>
+              {/* Bare feet dangling */}
+              <ellipse cx={-4} cy={30+Math.sin(rFrame*.06)*2} rx="3.5" ry="2" fill="#c68642"/>
+              <ellipse cx={4} cy={30+Math.sin(rFrame*.06+1)*2} rx="3.5" ry="2" fill="#c68642"/>
+              {/* Speech bubble */}
+              {fishMsg&&<g>
+                <rect x="-55" y="-58" width="110" height="26" rx="6" fill="white" stroke="#555" strokeWidth="1" opacity=".95"/>
+                <polygon points="-2,-32 4,-32 0,-26" fill="white" stroke="#555" strokeWidth=".5"/>
+                <text x="0" y="-41" textAnchor="middle" fontSize="6.5" fill="#333" fontFamily="sans-serif">{fishMsg}</text>
+              </g>}
+            </g>
 
             {/* Butterflies */}
             <g transform={`translate(${butterfly1X},${butterfly1Y})`} opacity=".7">
@@ -610,7 +807,7 @@ function RiverScreen({c,setC,go}){
             </g>
 
             {/* Chibi character on dock */}
-            {activity!=='sun'&&<g transform="translate(160,72)">
+            {activity!=='sun'&&activity!=='swim'&&<g transform="translate(160,72)">
               <circle cx="0" cy="0" r="8" fill="#ffcc80"/>
               <circle cx="-3" cy="-1" r="1.2" fill="#333"/>
               <circle cx="3" cy="-1" r="1.2" fill="#333"/>
@@ -674,6 +871,18 @@ function RiverScreen({c,setC,go}){
                 <div className="font-vt text-pixel-gray text-xs">免費 | 穩定+2 技術+1 | 專注力與精準度！</div>
               </div>
               {done.sketch&&<span className="text-pixel-green font-vt text-lg">✓</span>}
+            </div>
+          </button>
+
+          <button onClick={doSwim} disabled={done.swim||!!activity}
+            className={`w-full pixel-border p-2 text-left transition-colors ${!done.swim&&!activity?'bg-pixel-charcoal hover:bg-pixel-darkblue cursor-pointer':'bg-pixel-dark opacity-40 cursor-not-allowed'}`}>
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🏊</span>
+              <div className="flex-1">
+                <div className="font-vt text-pixel-white text-base">游泳</div>
+                <div className="font-vt text-pixel-gray text-xs">免費 | 體力+2 疲勞-15 恢復+1 | 全身運動！</div>
+              </div>
+              {done.swim&&<span className="text-pixel-green font-vt text-lg">✓</span>}
             </div>
           </button>
         </div>

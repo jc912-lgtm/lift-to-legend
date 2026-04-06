@@ -407,13 +407,8 @@ function Hub({c,setC,go}){
     {id:'friend',icon:'🏘️',label:'朋友家',x:10,y:28,action:()=>{sfx('click');go('friend')},tip:'麻將、電動、唱歌'},
     {id:'gym',icon:'🏋️',label:'訓練場',x:35,y:28,action:()=>{sfx('click');go('training')},tip:'訓練提升實力'},
     {id:'nstc',icon:'🏛️',label:'國訓中心',x:65,y:28,action:()=>{sfx('click');go('nstc')},tip:'國訓中心！可參觀'},
-    {id:'hengzhai',icon:'🏗️',label:'衡宅',x:90,y:28,locked:c.totalTrainings<20,
-      action:()=>{if(c.totalTrainings<20){sfx('fail');setToast({text:'🔒 訓練20次！',type:'fail'});return}sfx('train');
-        const floor=Math.min(8,1+Math.floor((c.totalTrainings-20)/20));const acts=['搬磚🧱','扛水泥🏋️','爬鷹架🦵','拆模板✊','頂樓舉槓💪'];
-        const act=acts[Math.floor(Math.random()*acts.length)];const reward=30+floor*10;
-        setC(x=>({...x,stamina:Math.max(0,x.stamina-20),money:x.money+reward,fatigue:Math.min(100,x.fatigue+12),
-          stats:{...x.stats,str:Math.min(100,x.stats.str+2),sta:Math.min(100,x.stats.sta+1)}}));
-        setToast({text:`🏗️ ${act} ${floor}F！💪+2 💰+${reward}`,type:'success'})},tip:'🔒 訓練20次解鎖'},
+    {id:'hengzhai',icon:'🏗️',label:'衡宅',x:90,y:28,locked:(c.totalTrainings||0)<20,
+      action:()=>{if((c.totalTrainings||0)<20){sfx('fail');setToast({text:'🔒 訓練20次！',type:'fail'});return}sfx('click');go('hengzhai')},tip:'🔒 訓練20次解鎖'},
     // ── Row 3 (y:48) ──
     {id:'jobs',icon:'💼',label:'打工',x:10,y:48,action:()=>{sfx('click');go('jobs')},tip:'打工賺錢'},
     {id:'shop',icon:'🏪',label:'商店',x:35,y:48,action:()=>{sfx('click');go('shop')},tip:'購買裝備'},

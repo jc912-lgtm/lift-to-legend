@@ -269,14 +269,30 @@ function JobsScreen({c,setC,go}){
   const[gachaAnim,setGachaAnim]=useState(false);
   const[gachaResult,setGachaResult]=useState(null);
   const[etfBuyAmt,setEtfBuyAmt]=useState(1);
+  const[bossMsg,setBossMsg]=useState(null);
+  const[cleanAnim,setCleanAnim]=useState(false);
+  const[studyAnim,setStudyAnim]=useState(false);
   const ms=maxSta(c.stats.sta);
 
   const etfPrice=(c.etf&&c.etf.prices)?c.etf.prices[c.etf.prices.length-1]:100;
 
+  function clickBoss(){
+    sfx('tap');
+    const talks=[
+      '認真工作的人我最欣賞',
+      '今天的進度不錯！',
+      '要不要加班？(開玩笑的)',
+      '記得準時下班去訓練啊',
+      '年輕人有夢想很好'
+    ];
+    setBossMsg(talks[Math.floor(Math.random()*talks.length)]);
+    setTimeout(()=>setBossMsg(null),2500);
+  }
+
   // 1. Study & Exams
   function doStudy(){
     if(c.stamina<15){sfx('fail');setMsgs(m=>[...m,{text:'❌ 體力不足！需要15體力。',type:'fail'}]);return}
-    sfx('click');
+    sfx('click');setStudyAnim(true);setTimeout(()=>setStudyAnim(false),1500);
     const newKnow=Math.min(100,(c.knowledge||0)+Math.floor(8+Math.random()*5));
     const newCount=(c.studyCount||0)+1;
     const ns={...c.stats,stb:Math.min(100,c.stats.stb+1)};
@@ -304,7 +320,7 @@ function JobsScreen({c,setC,go}){
   // 2. Part-time Cleaning
   function doCleaning(){
     if(c.stamina<10){sfx('fail');setMsgs(m=>[...m,{text:'❌ 體力不足！需要10體力。',type:'fail'}]);return}
-    sfx('train');
+    sfx('train');setCleanAnim(true);setTimeout(()=>setCleanAnim(false),1500);
     let earn=30+Math.floor(Math.random()*51);
     const ns={...c.stats,sta:Math.min(100,c.stats.sta+1)};
     let extra='';
@@ -489,13 +505,18 @@ function JobsScreen({c,setC,go}){
               {sceneMode==='study'&&<circle cx="262" cy="78" r="6" fill="#f4d03f" opacity={.3+Math.sin(jFrame*.1)*.2}/>}
             </g>
 
-            {/* Mop & Bucket (left side) */}
-            <g transform="translate(30,90)" opacity={tab==='work'?1:0.4}>
+            {/* Mop & Bucket (left side) — with cleaning animation */}
+            <g transform={`translate(${cleanAnim?30+Math.sin(jFrame*0.4)*8:30},90)`} opacity={tab==='work'?1:0.4}>
               <rect x="0" y="20" width="20" height="18" rx="3" fill={sceneMode==='study'?'#78909c':'#90a4ae'} stroke="#546e7a" strokeWidth="1"/>
               <rect x="2" y="22" width="16" height="8" fill="#b3e5fc" opacity=".5"/>
-              <line x1="25" y1="-5" x2="25" y2="38" stroke="#8d6e63" strokeWidth="3"/>
+              <line x1="25" y1="-5" x2={cleanAnim?25+Math.sin(jFrame*0.5)*5:25} y2="38" stroke="#8d6e63" strokeWidth="3"/>
               <rect x="18" y="-5" width="14" height="6" rx="1" fill="#78909c"/>
             </g>
+            {/* Sparkle effects when cleaning */}
+            {cleanAnim&&[0,1,2,3,4].map(i=>
+              <text key={'sp'+i} x={20+i*18+Math.sin(jFrame*0.2+i)*5} y={130+Math.sin(jFrame*0.15+i*1.5)*10}
+                fontSize="8" opacity={0.4+Math.sin(jFrame*0.1+i)*0.4} style={{pointerEvents:'none'}}>✨</text>
+            )}
 
             {/* Gacha machine (appears in play tab) */}
             {tab==='play'&&<g transform="translate(330,55)">
