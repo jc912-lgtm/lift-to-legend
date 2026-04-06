@@ -497,12 +497,21 @@ function JobsScreen({c,setC,go}){
               <rect x="205" y="95" width="36" height="2" rx="1" fill="#37474f"/>
             </g>
 
-            {/* Books on desk */}
+            {/* Books on desk — with opening animation when studying */}
             <g opacity={sceneMode==='study'?1:0.6}>
               <rect x="250" y="80" width="12" height="15" fill={sceneMode==='study'?'#f44336':'#c62828'} rx="1"/>
               <rect x="264" y="82" width="10" height="13" fill={sceneMode==='study'?'#2196f3':'#1565c0'} rx="1"/>
               <rect x="276" y="84" width="8" height="11" fill={sceneMode==='study'?'#4caf50':'#2e7d32'} rx="1"/>
               {sceneMode==='study'&&<circle cx="262" cy="78" r="6" fill="#f4d03f" opacity={.3+Math.sin(jFrame*.1)*.2}/>}
+              {/* Book opening animation when studying */}
+              {studyAnim&&<>
+                <rect x="248" y={76-Math.sin(jFrame*0.15)*4} width="16" height="12" rx="1" fill="#fff" opacity=".9" transform={`rotate(${-10+Math.sin(jFrame*0.2)*8},256,82)`}/>
+                <line x1="256" y1={74-Math.sin(jFrame*0.15)*4} x2="256" y2={86-Math.sin(jFrame*0.15)*4} stroke="#ddd" strokeWidth="0.5"/>
+                <rect x="250" y={78-Math.sin(jFrame*0.15)*4} width="4" height="1" fill="#999" opacity=".6"/>
+                <rect x="258" y={78-Math.sin(jFrame*0.15)*4} width="5" height="1" fill="#999" opacity=".6"/>
+                <rect x="250" y={81-Math.sin(jFrame*0.15)*4} width="5" height="1" fill="#999" opacity=".6"/>
+                <rect x="258" y={81-Math.sin(jFrame*0.15)*4} width="4" height="1" fill="#999" opacity=".6"/>
+              </>}
             </g>
 
             {/* Mop & Bucket (left side) — with cleaning animation */}
@@ -554,6 +563,48 @@ function JobsScreen({c,setC,go}){
                 <line x1="8" y1="10" x2="14" y2="4" stroke="#ffcc80" strokeWidth="3" strokeLinecap="round"/>
               </>}
             </g>
+
+            {/* Boss/Manager NPC — chibi, ~25% of scene, clickable */}
+            <g transform={`translate(110,95)`} onClick={clickBoss} style={{cursor:'pointer'}}>
+              {/* Legs */}
+              <rect x="-5" y="28" width="5" height="10" rx="1" fill="#37474f"/>
+              <rect x="2" y="28" width="5" height="10" rx="1" fill="#37474f"/>
+              {/* Body — polo shirt */}
+              <rect x="-10" y="8" width="22" height="22" rx="4" fill="#1565c0"/>
+              {/* Collar */}
+              <path d="M-4,8 L1,14 L6,8" fill="none" stroke="#0d47a1" strokeWidth="1.5"/>
+              {/* Arms */}
+              <line x1="-10" y1="14" x2="-18" y2="20" stroke="#ffcc80" strokeWidth="3" strokeLinecap="round"/>
+              <line x1="12" y1="14" x2="20" y2="8" stroke="#ffcc80" strokeWidth="3" strokeLinecap="round"/>
+              {/* Clipboard in right hand */}
+              <rect x="17" y="2" width="10" height="14" rx="1" fill="#8d6e63" stroke="#5d4037" strokeWidth="0.8"/>
+              <rect x="18" y="5" width="8" height="9" rx="0.5" fill="#fff"/>
+              <line x1="19" y1="7" x2="25" y2="7" stroke="#ccc" strokeWidth="0.5"/>
+              <line x1="19" y1="9" x2="24" y2="9" stroke="#ccc" strokeWidth="0.5"/>
+              <line x1="19" y1="11" x2="25" y2="11" stroke="#ccc" strokeWidth="0.5"/>
+              <rect x="19" y="1" width="6" height="2" rx="0.5" fill="#5d4037"/>
+              {/* Head */}
+              <circle cx="1" cy="-2" r="11" fill="#ffcc80"/>
+              {/* Hair — neat short */}
+              <ellipse cx="1" cy="-10" rx="10" ry="5" fill="#333"/>
+              <rect x="-8" y="-12" width="18" height="5" rx="2" fill="#333"/>
+              {/* Glasses */}
+              <rect x="-7" y="-5" width="6" height="5" rx="1.5" fill="none" stroke="#455a64" strokeWidth="1"/>
+              <rect x="2" y="-5" width="6" height="5" rx="1.5" fill="none" stroke="#455a64" strokeWidth="1"/>
+              <line x1="-1" y1="-3" x2="2" y2="-3" stroke="#455a64" strokeWidth="0.8"/>
+              {/* Eyes behind glasses */}
+              <circle cx="-4" cy="-3" r="1.2" fill="#333"/>
+              <circle cx="5" cy="-3" r="1.2" fill="#333"/>
+              {/* Friendly smile */}
+              <path d="M-3,2 Q1,5 5,2" fill="none" stroke="#333" strokeWidth="1"/>
+            </g>
+            {/* Boss speech bubble */}
+            {bossMsg&&<g>
+              <rect x="60" y="30" width={Math.min(bossMsg.length*8+16,140)} height="22" rx="6" fill="#fff" stroke="#ddd" strokeWidth="1"/>
+              <polygon points="100,52 95,62 108,54" fill="#fff" stroke="#ddd" strokeWidth="1"/>
+              <polygon points="101,52 97,60 108,54" fill="#fff"/>
+              <text x="68" y="44" fontSize="8" fill="#333" fontFamily="sans-serif">{bossMsg}</text>
+            </g>}
 
             {/* Teaching scene — junior students */}
             {tab==='work'&&sceneMode==='study'&&c.totalTrainings>=30&&<g opacity=".7">

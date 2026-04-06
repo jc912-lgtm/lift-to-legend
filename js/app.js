@@ -47,7 +47,7 @@ function App(){
 
   // BGM routing based on screen
   useEffect(()=>{
-    const bgmMap={title:'title',create:'title',hub:'title',training:'training',comp:'competition',status:'shop',shop:'shop',jobs:'shop',achievements:'shop',pool:'shop',restaurant:'shop',friend:'shop',home:'shop',cafe:'shop',laundry:'shop',river:'shop',nstc:'training',wangfund:'shop',tianliao:'training',mituo:'shop',hengzhai:'training'};
+    const bgmMap={title:'title',create:'title',hub:'hub',training:'training',comp:'competition',status:'shop',shop:'shop',jobs:'work',achievements:'shop',pool:'friend',restaurant:'relax',friend:'friend',home:'relax',cafe:'relax',laundry:'work',river:'nature',nstc:'training',wangfund:'relax',tianliao:'nature',mituo:'relax',hengzhai:'work'};
     const track=bgmMap[screen];
     if(track)playBGM(track);
   },[screen]);
