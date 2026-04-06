@@ -106,10 +106,24 @@ function StatusScreen({c,go}){
 function ShopScreen({c,setC,go}){
   const[floats,setFloats]=useState(null);
   const[coach,setCoach]=useState(null);
-  const[shopMsg,setShopMsg]=useState(()=>{const greets=['歡迎光臨！','看看有什麼需要的？','今天有特價喔！'];return greets[Math.floor(Math.random()*greets.length)]});
+  const shopDialogs=(()=>{
+    const normal=['歡迎光臨！','看看有什麼需要的？','今天有特價喔！','好東西不怕貴！','買了就變強！','這個很多選手都在用喔','老闆推薦！絕對值得','品質保證，不滿意包退','每樣都是精挑細選的好貨'];
+    const tired=['你看起來很累耶...休息一下再買？','要不要先吃個飯？','運動員要注意身體喔','別太勉強自己啊'];
+    const rich=['大客戶來了！歡迎歡迎！','今天想買什麼盡管挑！','VIP待遇給你！'];
+    const poor=['沒關係，先看看就好','下次比賽贏了再來！','夢想無價，慢慢來'];
+    const npcMood=(c.fatigue||0)>60?'tired':c.money>=500?'rich':c.money<50?'poor':'normal';
+    return npcMood==='tired'?[...normal,...tired]:npcMood==='rich'?[...normal,...rich]:npcMood==='poor'?[...normal,...poor]:normal;
+  })();
+  const[shopMsg,setShopMsg]=useState(()=>shopDialogs[Math.floor(Math.random()*shopDialogs.length)]);
   const[shopWave,setShopWave]=useState(false);
   const[sFrame,setSFrame]=useState(0);
   useEffect(()=>{const t=setInterval(()=>setSFrame(f=>(f+1)%100),90);return()=>clearInterval(t)},[]);
+
+  function clickShopkeeper(){
+    sfx('tap');
+    setShopMsg(shopDialogs[Math.floor(Math.random()*shopDialogs.length)]);
+    setShopWave(true);setTimeout(()=>setShopWave(false),1200);
+  }
 
   function buy(item){
     if(c.money<item.price){sfx('fail');setFloats([{icon:'💸',text:'不夠！',color:'#b13e53'}]);setShopMsg('不夠錢喔，多加油比賽吧！');return}
@@ -122,7 +136,7 @@ function ShopScreen({c,setC,go}){
     else if(ef.type==='luck'){nc.luckBonus=(nc.luckBonus||0)+ef.value;fItems.push({icon:'🍀',text:`+${ef.value}%`,color:'#f4d03f'})}
     else if(ef.type==='allBoost'){nc.stats={...nc.stats};for(const k of Object.keys(SN)){nc.stats[k]=Math.min(100,nc.stats[k]+ef.value);fItems.push({icon:SI[k],text:`+${ef.value}`,color:SC[k]})}spawnConfetti(15)}
     else if(ef.type==='multi'){nc.stats={...nc.stats};for(const[k,v]of Object.entries(ef.stats)){nc.stats[k]=Math.min(100,nc.stats[k]+v);fItems.push({icon:SI[k],text:`+${v}`,color:SC[k]})}spawnConfetti(8)}
-    const buyMsgs=['好眼光！','這個很好用！','謝謝惠顧！'];
+    const buyMsgs=['好眼光！','這個很好用！','謝謝惠顧！','識貨！','這款超熱賣的！','你一定會滿意！','回頭客都買這個！'];
     setShopMsg(buyMsgs[Math.floor(Math.random()*buyMsgs.length)]);
     setShopWave(true);setTimeout(()=>setShopWave(false),1200);
     setFloats(fItems);setC(nc);if(Math.random()<.4)setCoach({text:item.tip});
@@ -190,8 +204,8 @@ function ShopScreen({c,setC,go}){
             <rect x="25" y="92" width="350" height="16" rx="2" fill="#e3f2fd" opacity=".15"/>
             <line x1="25" y1="108" x2="375" y2="108" stroke="#4e342e" strokeWidth="1"/>
 
-            {/* Shopkeeper chibi */}
-            <g transform={`translate(200,72)`}>
+            {/* Shopkeeper chibi — clickable */}
+            <g transform={`translate(200,72)`} onClick={clickShopkeeper} style={{cursor:'pointer'}}>
               {/* Body (apron) */}
               <rect x="-10" y="10" width="20" height="18" rx="3" fill="#fff" stroke="#ddd" strokeWidth="1"/>
               <rect x="-8" y="12" width="16" height="14" rx="2" fill="#f5f5f5"/>

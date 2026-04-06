@@ -534,8 +534,21 @@ function RestaurantScreen({c,setC,go}){
   const[floats,setFloats]=useState(null);
   const[eatAnim,setEatAnim]=useState(null);
   const[chefWave,setChefWave]=useState(false);
+  const[chefMsg,setChefMsg]=useState(null);
   const[frame,setFrame]=useState(0);
   useEffect(()=>{const t=setInterval(()=>setFrame(f=>(f+1)%120),60);return()=>clearInterval(t)},[]);
+
+  const chefDialogs=(()=>{
+    const normal=['今日特餐喔！','吃飽才有力氣練！','我的手藝可是師傅傳的','要不要加大份？','營養均衡最重要','這道菜我最拿手！','香吧？都是新鮮食材','坐坐坐，馬上來！','老闆兼主廚，包你滿意','吃完記得給五星好評喔'];
+    const tired=['你臉色不太好...先吃飯吧','累了就要好好吃一頓！','補充營養最重要'];
+    const won=c.medals&&c.medals.length>0?['聽說你比賽得獎了？恭喜！','冠軍來吃飯，我請客！（開玩笑的）','以後簽名牆要掛你的照片！']:[];
+    return(c.fatigue||0)>60?[...normal,...tired]:[...normal,...won];
+  })();
+  function clickChef(){
+    sfx('tap');setChefMsg(chefDialogs[Math.floor(Math.random()*chefDialogs.length)]);
+    setChefWave(true);setTimeout(()=>setChefWave(false),1200);
+    setTimeout(()=>setChefMsg(null),2500);
+  }
 
   const steamY1=Math.sin(frame*0.08)*4;
   const steamY2=Math.sin(frame*0.08+2)*4;
@@ -679,8 +692,8 @@ function RestaurantScreen({c,setC,go}){
             <rect x="280" y="86" width="14" height="13" rx="2" fill="#90caf9" opacity=".7"/>
             <circle cx="320" cy="90" r="5" fill="#ffcc80" opacity=".8"/>
 
-            {/* Chef character */}
-            <g transform={`translate(200,72)${chefWave?' scale(1.05)':''}`} style={{transition:'transform 0.3s'}}>
+            {/* Chef character — clickable */}
+            <g transform={`translate(200,72)${chefWave?' scale(1.05)':''}`} style={{transition:'transform 0.3s',cursor:'pointer'}} onClick={clickChef}>
               {/* Chef body/apron */}
               <rect x="-14" y="2" width="28" height="26" rx="5" fill="#f5f5f5" stroke="#e0e0e0" strokeWidth="1"/>
               {/* Apron strings */}
@@ -718,6 +731,16 @@ function RestaurantScreen({c,setC,go}){
               <path d={`M230,${80+steamY2} Q234,${70+steamY2} 228,${60+steamY2} Q224,${50+steamY2} 230,${40+steamY2}`} stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" opacity=".35"/>
               <path d={`M250,${76+steamY3} Q254,${66+steamY3} 248,${56+steamY3} Q244,${46+steamY3} 250,${36+steamY3}`} stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" opacity=".3"/>
             </g>
+
+            {/* Chef speech bubble */}
+            {chefMsg&&<g className="pop-in">
+              <rect x="245" y="30" width={Math.min(chefMsg.length*8+16,150)} height="24" rx="6" fill="#fff" stroke="#ddd" strokeWidth="1"/>
+              <polygon points="244,48 238,58 252,50" fill="#fff" stroke="#ddd" strokeWidth="1"/>
+              <polygon points="245,48 240,56 252,50" fill="#fff"/>
+              <text x="253" y="46" fontSize="9" fill="#333" fontFamily="sans-serif">{chefMsg}</text>
+              {(c.fatigue||0)>60&&<text x="232" y="36" fontSize="8">💧</text>}
+              {c.medals&&c.medals.length>0&&(c.fatigue||0)<=60&&<text x="232" y="36" fontSize="8">✨</text>}
+            </g>}
 
             {/* Checkered floor */}
             {Array.from({length:14},(_,col)=>

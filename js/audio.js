@@ -116,9 +116,9 @@ function commentary(text){
   if('speechSynthesis' in window){
     const u=new SpeechSynthesisUtterance(text);
     u.lang='en-US';
-    u.rate=1.1;
+    u.rate=0.85;
     u.pitch=1.0;
-    u.volume=0.7;
+    u.volume=1.0;
     const voices=speechSynthesis.getVoices();
     const en=voices.find(v=>v.lang.startsWith('en'));
     if(en)u.voice=en;
@@ -359,14 +359,14 @@ function playSynthBGM(type){
       // Main note
       const o=ctx.createOscillator(),g=ctx.createGain();
       o.type=pat.wave;o.frequency.value=freq;
-      g.gain.value=bgmVol*0.5;
+      g.gain.value=bgmVol*0.12;
       g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+pat.tempo/1000*0.85);
       o.connect(g);g.connect(masterGain);
       o.start();o.stop(ctx.currentTime+pat.tempo/1000);
       // Harmony (octave below, softer)
       const o2=ctx.createOscillator(),g2=ctx.createGain();
       o2.type='sine';o2.frequency.value=freq/2;
-      g2.gain.value=bgmVol*0.2;
+      g2.gain.value=bgmVol*0.06;
       g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+pat.tempo/1000*0.8);
       o2.connect(g2);g2.connect(masterGain);
       o2.start();o2.stop(ctx.currentTime+pat.tempo/1000);
