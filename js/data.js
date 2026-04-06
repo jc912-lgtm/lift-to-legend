@@ -481,6 +481,11 @@ const COACHES=[
       injury:['受傷了？揉一揉繼續！...開玩笑的，去看醫生','別硬撐，身體最重要','我以前也受過傷，休息是為了走更長的路'],
       coffee:['咖啡？我喝蠻牛！','好吧來一杯，聊聊爆發力訓練','你知道嗎，我以前159公斤抓舉...'],
     },
+    programs:[
+      {name:'初階課表',level:1,desc:'先練爆發力基礎！',exercises:['squat','plyometric','boxJump','rest'],sets:'每項3組'},
+      {name:'中階課表',level:2,desc:'爆發！爆發！再爆發！',exercises:['squat','powerSnatch','powerClean','plyometric','sqJump'],sets:'每項4組'},
+      {name:'高階課表',level:3,desc:'今天要炸開天花板！',exercises:['frontSquat','tcjs','powerSnatch','powerClean','plyometric','snatchPull','cleanPull'],sets:'每項5組'},
+    ],
     appearance:{hair:'#8d6e63',skin:'#e8b87a',height:'short',build:'stocky',
       special:'小但肌肉超大，穿緊身衣，頭帶紅色頭帶，永遠很激動的表情'}
   },
@@ -496,6 +501,11 @@ const COACHES=[
       injury:['身體在告訴你什麼，要聽','受傷是身體的智慧，休息吧','我幫你念經...不是，我幫你找醫生'],
       coffee:['我喝茶，你喝咖啡','來，聊聊人生和舉重的共通之處','你知道嗎，舉重和禪修很像...'],
     },
+    programs:[
+      {name:'初階課表',level:1,desc:'先把動作做對',exercises:['snatchDrill','cleanJerkDrill','flexibility','mental'],sets:'每項3組'},
+      {name:'中階課表',level:2,desc:'感受每個動作的細節',exercises:['hangSnatch','hangClean','snatchBalance','overheadSquat','slowPull'],sets:'每項4組'},
+      {name:'高階課表',level:3,desc:'技術到位，重量自然來',exercises:['snatchDrill','tcjs','hangSnatch','cleanJerkDrill','snatchBalance','muscleSnatch','mental'],sets:'每項5組'},
+    ],
     appearance:{hair:'#1a1a1a',skin:'#ffcc80',height:'tall',build:'lean',
       special:'光頭（或極短髮），戴佛珠項鍊，穿寬鬆的僧袍式訓練服，表情永遠很平靜，二頭肌超大反差萌'}
   },
@@ -511,6 +521,11 @@ const COACHES=[
       injury:['受傷了？塗點北歐草藥...開玩笑，去看醫生','A true warrior knows when to heal','Rest and come back STRONGER!'],
       coffee:['我喝蜂蜜酒...好吧咖啡也行','SKOL! 乾杯！','你知道維京人也做重訓嗎？'],
     },
+    programs:[
+      {name:'初階課表',level:1,desc:'LIFT HEAVY! 基礎力量！',exercises:['squat','deadlift','press','pullUp'],sets:'每項3組'},
+      {name:'中階課表',level:2,desc:'MORE WEIGHT! SKOL!',exercises:['squat','frontSquat','deadlift','benchPress','snatchPull','cleanPull'],sets:'每項4組'},
+      {name:'高階課表',level:3,desc:'VALHALLA TRAINING PROTOCOL!',exercises:['squat','frontSquat','deadlift','snatchPull','cleanPull','deficitPull','press','grip'],sets:'每項5組'},
+    ],
     appearance:{hair:'#d4a44a',skin:'#ffcc80',height:'tall',build:'massive',
       special:'金色長髮紮馬尾，大鬍子，穿無袖盔甲風格的訓練服，手臂有北歐紋身，永遠很豪邁'}
   },

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><body style="background:#111;color:#f4d03f;font-family:monospace;padding:40px;text-align:center">
+<h2>清除快取中...</h2>
+<pre id="log"></pre>
+<script>
+var log=document.getElementById('log');
+function l(t){log.textContent+=t+'\n'}
+
+// Unregister all service workers
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    l('Found '+regs.length+' service workers');
+    regs.forEach(function(r){r.unregister();l('Unregistered: '+r.scope)});
+  });
+}
+
+// Clear all caches
+if('caches' in window){
+  caches.keys().then(function(names){
+    l('Found '+names.length+' caches');
+    names.forEach(function(n){caches.delete(n);l('Deleted cache: '+n)});
+  });
+}
+
+setTimeout(function(){
+  l('\n✅ 清除完成！3秒後跳轉...');
+  setTimeout(function(){window.location.href='index.html?t='+Date.now()},3000);
+},2000);
+</script>
+</body></html>

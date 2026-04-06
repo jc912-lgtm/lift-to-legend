@@ -863,6 +863,7 @@ function TrainingScreen({c,setC,go}){
   const[coach,setCoach]=useState(null);
   const[exerciseAnim,setExerciseAnim]=useState(null);
   const[selectedCat,setSelectedCat]=useState(TRAIN_CATEGORIES[0].id);
+  const[showProgram,setShowProgram]=useState(false);
   const ms=maxSta(c.stats.sta);
   const hasBoost=c.activeEffects.some(e=>e.type==='trainBoost');
   const mult=hasBoost?1.2:1;
@@ -988,6 +989,55 @@ function TrainingScreen({c,setC,go}){
     sfx('newday');
     setC(x=>{const _sh=[...(x.statHistory||[])];if((x.day+1)%5===0&&(_sh.length===0||_sh[_sh.length-1].day!==(x.day+1))){_sh.push({day:x.day+1,stats:{...x.stats}});if(_sh.length>50)_sh.shift()}return{...x,stamina:Math.min(ms,x.stamina+rec),day:x.day+1,fatigue:Math.max(0,x.fatigue-fatDrop),activeEffects:x.activeEffects.map(e=>({...e,dur:e.dur-1})).filter(e=>e.dur>0),statHistory:_sh}});
     setFloats([{icon:'🌙',text:`+${rec}❤️`,color:'#41a6f6'}]);
+  }
+
+  function runProgram(prog){
+    setShowProgram(false);
+    const exercises=prog.exercises.map(eid=>TRAIN.find(t=>t.id===eid)).filter(Boolean);
+    const nonRestExercises=exercises.filter(e=>!e.isRest);
+    const totalCost=nonRestExercises.reduce((s,e)=>s+e.cost,0);
+    if(c.stamina<totalCost*0.5){
+      setCoach({text:'體力太低了，先休息吧！'});
+      setTimeout(()=>setCoach(null),2000);
+      return;
+    }
+    const allGains={};
+    let staminaUsed=0;
+    let completed=0;
+    const nc={...c,stats:{...c.stats},principles:{...c.principles}};
+    for(const ex of exercises){
+      if(ex.isRest){
+        const rec=20+Math.floor(nc.stats.rec/3);
+        const fatDrop=Math.min(nc.fatigue||0,25+Math.floor(nc.stats.rec/5));
+        nc.stamina=Math.min(ms,nc.stamina+rec);
+        nc.stats.rec=Math.min(100,nc.stats.rec+1);
+        nc.fatigue=Math.max(0,(nc.fatigue||0)-fatDrop);
+        allGains['rec']=(allGains['rec']||0)+1;
+        completed++;
+        continue;
+      }
+      if(nc.stamina<ex.cost)break;
+      nc.stamina-=ex.cost;
+      staminaUsed+=ex.cost;
+      for(const[s,v]of Object.entries({...ex.primary,...ex.secondary})){
+        const gain=Math.round(v*mult*streakB*(s===myCoach.bonusStat?myCoach.bonusValue:1)*injuryMult);
+        nc.stats[s]=Math.min(100,nc.stats[s]+gain);
+        allGains[s]=(allGains[s]||0)+gain;
+      }
+      nc.fatigue=Math.min(100,(nc.fatigue||0)+Math.round(ex.cost*0.35));
+      completed++;
+    }
+    nc.totalTrainings=(nc.totalTrainings||0)+completed;
+    nc.lastTrainDay=nc.day;
+    nc.streak=c.lastTrainDay===c.day-1||c.lastTrainDay===c.day?c.streak+completed:completed;
+    nc.restStreak=0;
+    setC(nc);
+    const floatItems=Object.entries(allGains).map(([s,v])=>({icon:SI[s],text:'+'+v,color:SC[s]}));
+    floatItems.push({icon:'📋',text:completed+'/'+exercises.length+'完成',color:'#f4d03f'});
+    setFloats(floatItems);
+    setCoach({text:completed===exercises.length?'課表全部完成！幹得好！':'體力不足，完成了'+completed+'/'+exercises.length});
+    setTimeout(()=>setCoach(null),3000);
+    sfx('success');
   }
 
   return(
