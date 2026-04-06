@@ -137,95 +137,21 @@ var bgmAudio=null;
 
 var bgmGeneration=0;
 
-// Synth BGM patterns for different locations (simple looping melodies)
-var synthBGMInterval=null;
-var synthBGMType=null;
-var SYNTH_PATTERNS={
-  training:{notes:[262,330,392,330,262,294,349,294],tempo:200,wave:'sine'},
-  competition:{notes:[330,392,494,392,330,294,262,294,330,392,494,587],tempo:150,wave:'square'},
-  shop:{notes:[349,440,349,330,294,262,294,330],tempo:280,wave:'sine'},
-  friend:{notes:[392,440,494,440,392,349,330,349],tempo:250,wave:'sine'},
-  nature:{notes:[262,330,392,494,392,330,262,196],tempo:300,wave:'sine'},
-  work:{notes:[262,294,330,349,330,294,262,247],tempo:220,wave:'triangle'},
-  relax:{notes:[196,262,330,294,262,247,196,220],tempo:320,wave:'sine'},
-};
-
-function stopSynthBGM(){
-  if(synthBGMInterval){clearInterval(synthBGMInterval);synthBGMInterval=null}
-  synthBGMType=null;
-}
-
-function playSynthBGM(type){
-  if(synthBGMType===type)return;
-  stopSynthBGM();
-  const pat=SYNTH_PATTERNS[type];
-  if(!pat||audioMuted)return;
-  synthBGMType=type;
-  let idx=0;
-  ea();
-  synthBGMInterval=setInterval(()=>{
-    if(audioMuted||!bgmPlaying||!ctx)return;
-    if(ctx.state==='suspended')ctx.resume();
-    const freq=pat.notes[idx%pat.notes.length];
-    if(freq>0){
-      // Main note
-      const o=ctx.createOscillator(),g=ctx.createGain();
-      o.type=pat.wave;o.frequency.value=freq;
-      g.gain.value=bgmVol*0.12;
-      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+pat.tempo/1000*0.85);
-      o.connect(g);g.connect(masterGain);
-      o.start();o.stop(ctx.currentTime+pat.tempo/1000);
-      // Harmony (octave below, softer)
-      const o2=ctx.createOscillator(),g2=ctx.createGain();
-      o2.type='sine';o2.frequency.value=freq/2;
-      g2.gain.value=bgmVol*0.06;
-      g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+pat.tempo/1000*0.8);
-      o2.connect(g2);g2.connect(masterGain);
-      o2.start();o2.stop(ctx.currentTime+pat.tempo/1000);
-    }
-    idx++;
-  },pat.tempo);
-}
 
 function stopBGM(){
   bgmPlaying=false;currentBGM=null;
   if(bgmAudio){bgmAudio.pause();bgmAudio.currentTime=0;}
-  stopSynthBGM();
 }
 
-// BGM track mapping
-var BGM_TRACK_TYPE={
-  title:'mp3',hub:'mp3',create:'mp3',
-  training:'synth',competition:'synth',shop:'synth',
-  friend:'synth',nature:'synth',work:'synth',relax:'synth',
-};
-var BGM_SYNTH_MAP={
-  training:'training',competition:'competition',shop:'shop',
-  friend:'friend',nature:'nature',work:'work',relax:'relax',
-};
-
 function playBGM(trackName){
-  if(currentBGM===trackName&&bgmPlaying)return;
-  stopBGM();
+  if(bgmAudio&&!bgmAudio.paused&&bgmPlaying)return;
   currentBGM=trackName;bgmPlaying=true;
-
-  const trackType=BGM_TRACK_TYPE[trackName]||'synth';
-
-  if(trackType==='mp3'){
-    // Play mp3 for title/hub/create
-    if(!bgmAudio){
-      bgmAudio=new Audio('阿神BGM.mp3');
-      bgmAudio.loop=true;
-    }
-    bgmAudio.volume=audioMuted?0:bgmVol;
-    bgmAudio.play().catch(()=>{});
-  }else{
-    // Pause mp3 if playing
-    if(bgmAudio&&!bgmAudio.paused)bgmAudio.pause();
-    // Play synth pattern
-    const synthType=BGM_SYNTH_MAP[trackName]||'shop';
-    playSynthBGM(synthType);
+  if(!bgmAudio){
+    bgmAudio=new Audio('阿神BGM.mp3');
+    bgmAudio.loop=true;
   }
+  bgmAudio.volume=audioMuted?0:bgmVol;
+  bgmAudio.play().catch(function(){});
 }
 // Start BGM on first user click (browser autoplay policy)
 document.addEventListener('click',function(){
