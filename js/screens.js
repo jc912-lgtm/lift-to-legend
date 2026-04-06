@@ -954,11 +954,16 @@ function TrainingScreen({c,setC,go}){
           <FatigueBar fatigue={c.fatigue}/>
         </div>
 
+        {/* Injury Banner */}
+        {c.injured&&<div className="pixel-border bg-red-900 border-red-500 p-2 mb-2 text-center">
+          <span className="font-vt text-pixel-orange text-sm">🤕 受傷中：{c.injuryType}（第{c.day-c.injuryDay}天）訓練效果-50%</span>
+        </div>}
+
         {/* Coach NPC */}
         <div className="pixel-border bg-pixel-charcoal p-1 mb-2 cursor-pointer relative"
           onClick={()=>{
-            const tips=['姿勢注意！','很好繼續！','核心收緊！','呼吸配合動作！','今天狀態不錯！','專注！','再來一組！','動作要確實！'];
-            setCoach({text:tips[Math.floor(Math.random()*tips.length)]});
+            const cLines=c.injured?myCoach.lines.injury:myCoach.lines.train;
+            setCoach({text:cLines[Math.floor(Math.random()*cLines.length)]});
             sfx('tap');
             setTimeout(()=>setCoach(null),2000);
           }}>
@@ -983,41 +988,71 @@ function TrainingScreen({c,setC,go}){
             <rect x="295" y="72" width="8" height="14" rx="2" fill="#ef5350"/>
             <rect x="377" y="72" width="8" height="14" rx="2" fill="#ef5350"/>
 
-            {/* COACH CHARACTER — large, center-right */}
-            <g transform="translate(250,15)">
-              {/* Shadow */}
-              <ellipse cx="0" cy="72" rx="25" ry="5" fill="#000" opacity=".15"/>
-              {/* Legs */}
-              <rect x="-10" y="52" width="8" height="18" rx="2" fill="#1a237e"/>
-              <rect x="2" y="52" width="8" height="18" rx="2" fill="#1a237e"/>
-              {/* Shoes */}
-              <rect x="-12" y="68" width="10" height="5" rx="2" fill="#333"/>
-              <rect x="2" y="68" width="10" height="5" rx="2" fill="#333"/>
-              {/* Body — yellow polo */}
-              <rect x="-16" y="20" width="32" height="35" rx="5" fill="#f4d03f"/>
-              {/* Collar */}
-              <path d="M-6,20 L0,26 L6,20" fill="none" stroke="#ffed8a" strokeWidth="2"/>
-              {/* Whistle */}
-              <circle cx="6" cy="28" r="3" fill="#f4d03f" stroke="#c8a415" strokeWidth="0.8"/>
-              <line x1="3" y1="20" x2="6" y2="26" stroke="#c8a415" strokeWidth="1"/>
-              {/* Arms — one hand on hip, one pointing */}
-              <path d="M-16,28 Q-28,35 -24,45" stroke="#ffcc80" strokeWidth="6" fill="none" strokeLinecap="round"/>
-              <path d="M16,28 Q28,20 40,15" stroke="#ffcc80" strokeWidth="6" fill="none" strokeLinecap="round"/>
-              <circle cx="40" cy="14" r="3" fill="#ffcc80"/>
-              {/* Head */}
-              <circle cx="0" cy="8" r="14" fill="#ffcc80"/>
-              {/* Hair */}
-              <path d="M-14,4 Q-14,-8 0,-10 Q14,-8 14,4" fill="#3e2723"/>
-              {/* Sunglasses (cool coach!) */}
-              <rect x="-10" y="2" width="8" height="6" rx="2" fill="#263238"/>
-              <rect x="2" y="2" width="8" height="6" rx="2" fill="#263238"/>
-              <line x1="-2" y1="5" x2="2" y2="5" stroke="#263238" strokeWidth="1.5"/>
-              {/* Confident smile */}
-              <path d="M-5,12 Q0,17 5,12" stroke="#5d4037" strokeWidth="1.5" fill="none"/>
-            </g>
+            {/* COACH CHARACTER — adapts to selected coach */}
+            {myCoach.id==='titan'&&<g transform="translate(250,28)">
+              <ellipse cx="0" cy="58" rx="20" ry="4" fill="#000" opacity=".15"/>
+              <rect x="-8" y="40" width="7" height="14" rx="2" fill="#1a237e"/>
+              <rect x="1" y="40" width="7" height="14" rx="2" fill="#1a237e"/>
+              <rect x="-10" y="52" width="9" height="5" rx="2" fill="#ef5350"/>
+              <rect x="1" y="52" width="9" height="5" rx="2" fill="#ef5350"/>
+              <rect x="-18" y="10" width="36" height="32" rx="6" fill="#ef5350"/>
+              <path d="M-5,10 L0,15 L5,10" fill="none" stroke="#fff" strokeWidth="1.5"/>
+              <path d="M-18,20 Q-30,18 -28,28" stroke={myCoach.appearance.skin} strokeWidth="7" fill="none" strokeLinecap="round"/>
+              <path d="M18,20 Q30,12 35,8" stroke={myCoach.appearance.skin} strokeWidth="7" fill="none" strokeLinecap="round"/>
+              <circle cx="35" cy="7" r="3.5" fill={myCoach.appearance.skin}/>
+              <circle cx="0" cy="-2" r="14" fill={myCoach.appearance.skin}/>
+              <path d="M-14,-6 Q-14,-14 0,-16 Q14,-14 14,-6" fill={myCoach.appearance.hair}/>
+              <rect x="-13" y="-10" width="26" height="5" rx="2" fill="#ef5350"/>
+              <ellipse cx="-6" cy="0" rx="3" ry="3.5" fill="#fff"/><ellipse cx="-6" cy="1" rx="2" ry="2.5" fill="#263238"/>
+              <ellipse cx="6" cy="0" rx="3" ry="3.5" fill="#fff"/><ellipse cx="6" cy="1" rx="2" ry="2.5" fill="#263238"/>
+              <line x1="-10" y1="-5" x2="-3" y2="-3" stroke="#5d4037" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="3" y1="-3" x2="10" y2="-5" stroke="#5d4037" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M-5,6 Q0,12 5,6" stroke="#c62828" strokeWidth="2" fill="#ef5350"/>
+            </g>}
+            {myCoach.id==='monk'&&<g transform="translate(250,10)">
+              <ellipse cx="0" cy="75" rx="25" ry="5" fill="#000" opacity=".15"/>
+              <rect x="-10" y="55" width="8" height="18" rx="2" fill="#ff8f00"/>
+              <rect x="2" y="55" width="8" height="18" rx="2" fill="#ff8f00"/>
+              <rect x="-12" y="71" width="10" height="5" rx="2" fill="#5d4037"/>
+              <rect x="2" y="71" width="10" height="5" rx="2" fill="#5d4037"/>
+              <rect x="-18" y="22" width="36" height="36" rx="6" fill="#ff8f00"/>
+              <path d="M-8,22 L0,28 L8,22" fill="none" stroke="#ffcc80" strokeWidth="1.5"/>
+              <ellipse cx="0" cy="35" rx="3" ry="3" fill="#8d6e63" opacity=".5"/>
+              <path d="M-18,32 Q-28,38 -26,48" stroke={myCoach.appearance.skin} strokeWidth="6" fill="none" strokeLinecap="round"/>
+              <path d="M18,32 Q28,28 32,22" stroke={myCoach.appearance.skin} strokeWidth="6" fill="none" strokeLinecap="round"/>
+              <circle cx="0" cy="8" r="15" fill={myCoach.appearance.skin}/>
+              <ellipse cx="0" cy="-4" rx="14" ry="6" fill={myCoach.appearance.hair} opacity=".3"/>
+              <ellipse cx="-6" cy="5" rx="3" ry="2" fill="#263238"/>
+              <ellipse cx="6" cy="5" rx="3" ry="2" fill="#263238"/>
+              <path d="M-4,12 Q0,15 4,12" stroke="#5d4037" strokeWidth="1.2" fill="none"/>
+              <ellipse cx="0" cy="26" rx="8" ry="1.5" fill="#8d6e63" opacity=".4"/>
+            </g>}
+            {myCoach.id==='thor'&&<g transform="translate(250,8)">
+              <ellipse cx="0" cy="78" rx="28" ry="5" fill="#000" opacity=".15"/>
+              <rect x="-12" y="55" width="10" height="20" rx="3" fill="#1a237e"/>
+              <rect x="2" y="55" width="10" height="20" rx="3" fill="#1a237e"/>
+              <rect x="-14" y="73" width="12" height="5" rx="2" fill="#5d4037"/>
+              <rect x="2" y="73" width="12" height="5" rx="2" fill="#5d4037"/>
+              <rect x="-20" y="20" width="40" height="38" rx="6" fill="#546e7a"/>
+              <rect x="-18" y="20" width="36" height="6" rx="2" fill="#78909c"/>
+              <path d="M-20,30 Q-34,26 -32,40" stroke={myCoach.appearance.skin} strokeWidth="8" fill="none" strokeLinecap="round"/>
+              <path d="M20,30 Q34,22 40,16" stroke={myCoach.appearance.skin} strokeWidth="8" fill="none" strokeLinecap="round"/>
+              <circle cx="40" cy="15" r="4" fill={myCoach.appearance.skin}/>
+              <circle cx="0" cy="6" r="16" fill={myCoach.appearance.skin}/>
+              <path d="M-16,2 Q-16,-10 -10,-14 Q-4,-16 0,-14 Q4,-16 10,-14 Q16,-10 16,2" fill={myCoach.appearance.hair}/>
+              <path d="M-14,6 Q-16,14 -12,18" stroke={myCoach.appearance.hair} strokeWidth="3" fill="none"/>
+              <path d="M14,6 Q16,14 12,18" stroke={myCoach.appearance.hair} strokeWidth="3" fill="none"/>
+              <path d="M-6,12 Q-4,18 0,18 Q4,18 6,12" stroke={myCoach.appearance.hair} strokeWidth="2" fill={myCoach.appearance.hair}/>
+              <ellipse cx="-6" cy="2" rx="3.5" ry="3.5" fill="#fff"/><ellipse cx="-6" cy="3" rx="2.5" ry="2.5" fill="#2196f3"/>
+              <ellipse cx="6" cy="2" rx="3.5" ry="3.5" fill="#fff"/><ellipse cx="6" cy="3" rx="2.5" ry="2.5" fill="#2196f3"/>
+              <line x1="-12" y1="-3" x2="-3" y2="-1" stroke={myCoach.appearance.hair} strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="3" y1="-1" x2="12" y2="-3" stroke={myCoach.appearance.hair} strokeWidth="2.5" strokeLinecap="round"/>
+              <rect x="-22" y="38" width="6" height="14" rx="1" fill="#1565c0" opacity=".3"/>
+              <rect x="16" y="38" width="6" height="14" rx="1" fill="#1565c0" opacity=".3"/>
+            </g>}
 
             {/* Coach name */}
-            <text x="250" y="95" textAnchor="middle" fill="#f4d03f" fontSize="8" fontWeight="bold" fontFamily="LXGW WenKai TC,sans-serif">教練</text>
+            <text x="250" y="95" textAnchor="middle" fill="#f4d03f" fontSize="8" fontWeight="bold" fontFamily="LXGW WenKai TC,sans-serif">{myCoach.name}</text>
           </svg>
 
           {/* Coach speech bubble overlay */}
@@ -1054,7 +1089,7 @@ function TrainingScreen({c,setC,go}){
                 <span className="font-vt text-pixel-white text-xs">{t.name.length>4?t.name.slice(0,4):t.name}</span>
                 <div className="flex gap-0.5 flex-wrap justify-center">
                   {Object.entries({...t.primary,...t.secondary}).map(([s,v])=>(
-                    <span key={s} className="text-[10px]" style={{color:SC[s]}}>{SI[s]}{Math.round(v*mult*streakB)}</span>
+                    <span key={s} className="text-[10px]" style={{color:SC[s]}}>{SI[s]}{Math.round(v*mult*streakB*injuryMult*(s===myCoach.bonusStat?myCoach.bonusValue:1))}</span>
                   ))}
                 </div>
                 {!t.isRest&&<span className="font-vt text-pixel-orange text-[10px]">-{t.cost}❤️</span>}
@@ -1070,9 +1105,10 @@ function TrainingScreen({c,setC,go}){
             sfx('rest');
             setC(x=>({...x,fatigue:Math.max(0,x.fatigue-15),stats:{...x.stats,stb:Math.min(100,x.stats.stb+1)}}));
             setFloats([{icon:'☕',text:'-15😤',color:'#73eff7'},{icon:'🧠',text:'+1',color:'#b13e53'}]);
-            setCoach({text:['放鬆一下吧','聊聊比賽策略','你最近進步很多','多喝水少喝糖','心態很重要喔'][Math.floor(Math.random()*5)]});
+            const cfLines=myCoach.lines.coffee;
+            setCoach({text:cfLines[Math.floor(Math.random()*cfLines.length)]});
             setTimeout(()=>setCoach(null),2500);
-          }} className="flex-1 pixel-btn bg-pixel-charcoal text-pixel-gold py-2 text-[10px] font-pixel">☕ 跟教練喝咖啡</button>
+          }} className="flex-1 pixel-btn bg-pixel-charcoal text-pixel-gold py-2 text-[10px] font-pixel">☕ 跟{myCoach.name}喝咖啡</button>
           <button onClick={endDay} className="flex-1 pixel-btn bg-pixel-darkblue text-pixel-sky py-2 text-lg">🌙</button>
         </div>
       </div>
