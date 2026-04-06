@@ -104,60 +104,59 @@ function getExerciseSVG(eid,skin,shirt){
      Coordinate system: viewBox 0 0 200 200, floor at y=180
      ========================================================= */
   if(at==='snatch'){
-    // Frame 1 (0%): Deep squat start, bar at floor
-    // Torso tilted ~45° forward, deep knee bend
+    // Frame 1: START — Deep squat, bar at floor, torso tilted forward ~45°
     const f1=figure({
-      headX:85,headY:110, shoulderX:90,shoulderY:122, hipX:78,hipY:148,
-      elbowX:90,elbowY:152, handX:88,handY:172,
-      kneeX:92,kneeY:164, ankleX:82,ankleY:176
+      headX:100,headY:95, shoulderX:98,shoulderY:108, hipX:85,hipY:140,
+      elbowX:94,elbowY:140, handX:90,handY:170,
+      kneeX:95,kneeY:155, ankleX:90,ankleY:175
     },'1');
-    // Frame 2 (12%): Pull to knee, knees slightly straighter
+    // Frame 2: FIRST PULL — Bar at knee height, knees straighter
     const f2=figure({
-      headX:88,headY:102, shoulderX:92,shoulderY:114, hipX:80,hipY:142,
-      elbowX:92,elbowY:148, handX:90,handY:162,
-      kneeX:90,kneeY:158, ankleX:82,ankleY:176
+      headX:100,headY:85, shoulderX:100,shoulderY:100, hipX:88,hipY:130,
+      elbowX:96,elbowY:130, handX:92,handY:148,
+      kneeX:95,kneeY:150, ankleX:92,ankleY:175
     },'2');
-    // Frame 3 (25%): Bar at mid-thigh, torso ~30° forward
+    // Frame 3: TRANSITION — Bar at mid-thigh
     const f3=figure({
-      headX:92,headY:92, shoulderX:95,shoulderY:105, hipX:84,hipY:136,
-      elbowX:96,elbowY:138, handX:94,handY:148,
-      kneeX:88,kneeY:156, ankleX:84,ankleY:176
+      headX:102,headY:78, shoulderX:102,shoulderY:92, hipX:92,hipY:122,
+      elbowX:98,elbowY:122, handX:95,handY:128,
+      kneeX:98,kneeY:148, ankleX:95,ankleY:175
     },'3');
-    // Frame 4 (37%): Triple extension / power position, on toes
+    // Frame 4: SECOND PULL — Full extension, on toes, shoulders shrugged
     const f4=figure({
-      headX:96,headY:72, shoulderX:97,shoulderY:85, hipX:92,hipY:120,
-      elbowX:98,elbowY:118, handX:96,handY:128,
-      kneeX:90,kneeY:148, ankleX:88,ankleY:172
+      headX:105,headY:60, shoulderX:105,shoulderY:75, hipX:100,hipY:105,
+      elbowX:102,elbowY:105, handX:100,handY:105,
+      kneeX:102,kneeY:140, ankleX:100,ankleY:168
     },'4');
-    // Frame 5 (47%): Bar at chest height, arms bending, elbows high
+    // Frame 5: TURNOVER — High elbows, bar at chin, feet leaving ground
     const f5=figure({
-      headX:97,headY:68, shoulderX:97,shoulderY:82, hipX:93,hipY:118,
-      elbowX:102,elbowY:74, handX:98,handY:90,
-      kneeX:90,kneeY:146, ankleX:88,ankleY:172
+      headX:103,headY:65, shoulderX:103,shoulderY:78, hipX:98,hipY:108,
+      elbowX:115,elbowY:70, handX:105,handY:75,
+      kneeX:100,kneeY:140, ankleX:98,ankleY:170
     },'5');
-    // Frame 6 (55%): High pull, bar at chin, body descending
+    // Frame 6: Dropping under bar — bar going overhead, body descending
     const f6=figure({
-      headX:96,headY:72, shoulderX:96,shoulderY:86, hipX:90,hipY:120,
-      elbowX:104,elbowY:68, handX:98,handY:76,
-      kneeX:88,kneeY:148, ankleX:86,ankleY:174
+      headX:102,headY:80, shoulderX:100,shoulderY:94, hipX:90,hipY:128,
+      elbowX:108,elbowY:72, handX:102,handY:64,
+      kneeX:96,kneeY:152, ankleX:92,ankleY:175
     },'6');
-    // Frame 7 (65%): Turnover - wrists flip, bar going overhead, dropping under
+    // Frame 7: Entering catch — squat deepening, arms nearly overhead
     const f7=figure({
-      headX:92,headY:88, shoulderX:92,shoulderY:102, hipX:84,hipY:134,
-      elbowX:96,elbowY:82, handX:92,handY:68,
-      kneeX:90,kneeY:156, ankleX:84,ankleY:176
+      headX:100,headY:92, shoulderX:98,shoulderY:106, hipX:86,hipY:138,
+      elbowX:102,elbowY:80, handX:100,handY:62,
+      kneeX:95,kneeY:156, ankleX:90,ankleY:175
     },'7');
-    // Frame 8 (80%): Deep squat catch, arms locked overhead
+    // Frame 8: CATCH — Deep squat with bar locked overhead
     const f8=figure({
-      headX:88,headY:108, shoulderX:88,shoulderY:120, hipX:80,hipY:148,
-      elbowX:90,elbowY:96, handX:88,handY:78,
-      kneeX:92,kneeY:164, ankleX:82,ankleY:176
+      headX:100,headY:100, shoulderX:98,shoulderY:112, hipX:85,hipY:142,
+      elbowX:100,elbowY:82, handX:100,handY:60,
+      kneeX:95,kneeY:158, ankleX:90,ankleY:175
     },'8');
-    // Frame 9 (90%): Standing recovery, arms overhead
+    // Frame 9: RECOVERY — Standing with bar overhead, arms locked straight
     const f9=figure({
-      headX:94,headY:68, shoulderX:94,shoulderY:82, hipX:92,hipY:118,
-      elbowX:96,elbowY:62, handX:94,handY:46,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:55, shoulderX:102,shoulderY:68, hipX:100,hipY:105,
+      elbowX:102,elbowY:48, handX:102,handY:32,
+      kneeX:100,kneeY:145, ankleX:100,ankleY:175
     },'9');
 
     return E('g',null,...bg,
@@ -178,47 +177,47 @@ function getExerciseSVG(eid,skin,shirt){
      ANIMATION 2: TCJS — 7 frames
      ========================================================= */
   if(at==='tcjs'){
-    // Frame 1 (0%): Standing, bar at hip, wide grip
+    // Frame 1: Standing tall, bar at hip height, arms straight
     const f1=figure({
-      headX:96,headY:68, shoulderX:96,shoulderY:82, hipX:92,hipY:118,
-      elbowX:100,elbowY:108, handX:98,handY:126,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:55, shoulderX:102,shoulderY:68, hipX:100,hipY:105,
+      elbowX:102,elbowY:96, handX:102,handY:112,
+      kneeX:100,kneeY:145, ankleX:100,ankleY:175
     },'1');
-    // Frame 2 (15%): Jump 1 - slight knee bend then up, feet off ground
+    // Frame 2: Slight dip, preparing to pull under
     const f2=figure({
-      headX:96,headY:62, shoulderX:96,shoulderY:76, hipX:92,hipY:112,
-      elbowX:100,elbowY:102, handX:98,handY:120,
-      kneeX:92,kneeY:140, ankleX:90,ankleY:168
+      headX:102,headY:62, shoulderX:102,shoulderY:76, hipX:100,hipY:112,
+      elbowX:102,elbowY:104, handX:102,handY:118,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'2');
-    // Frame 3 (30%): Jump 2 - another jump, bar slightly higher
+    // Frame 3: Explosive shrug, on toes, bar rising
     const f3=figure({
-      headX:96,headY:58, shoulderX:96,shoulderY:72, hipX:92,hipY:108,
-      elbowX:100,elbowY:98, handX:98,handY:116,
-      kneeX:92,kneeY:136, ankleX:90,ankleY:164
+      headX:104,headY:56, shoulderX:104,shoulderY:70, hipX:100,hipY:104,
+      elbowX:106,elbowY:68, handX:104,handY:80,
+      kneeX:102,kneeY:138, ankleX:100,ankleY:168
     },'3');
-    // Frame 4 (45%): Jump 3 - third jump, max height
+    // Frame 4: High pull, elbows high, bar at chest
     const f4=figure({
-      headX:96,headY:54, shoulderX:96,shoulderY:68, hipX:92,hipY:104,
-      elbowX:100,elbowY:94, handX:98,handY:112,
-      kneeX:92,kneeY:132, ankleX:90,ankleY:160
+      headX:103,headY:62, shoulderX:103,shoulderY:76, hipX:98,hipY:110,
+      elbowX:115,elbowY:68, handX:108,handY:76,
+      kneeX:100,kneeY:142, ankleX:100,ankleY:172
     },'4');
-    // Frame 5 (60%): Contact - bar at hip crease, triple extension starting
+    // Frame 5: Turnover into front rack, dropping under
     const f5=figure({
-      headX:96,headY:64, shoulderX:97,shoulderY:78, hipX:93,hipY:114,
-      elbowX:100,elbowY:106, handX:98,handY:118,
-      kneeX:92,kneeY:144, ankleX:90,ankleY:172
+      headX:102,headY:82, shoulderX:100,shoulderY:96, hipX:90,hipY:128,
+      elbowX:114,elbowY:92, handX:106,handY:96,
+      kneeX:96,kneeY:152, ankleX:94,ankleY:175
     },'5');
-    // Frame 6 (75%): Full triple extension, on toes, bar going up
+    // Frame 6: Front rack catch in deep squat, elbows forward
     const f6=figure({
-      headX:97,headY:58, shoulderX:97,shoulderY:72, hipX:94,hipY:108,
-      elbowX:104,elbowY:66, handX:100,handY:82,
-      kneeX:92,kneeY:138, ankleX:90,ankleY:168
+      headX:100,headY:100, shoulderX:98,shoulderY:112, hipX:85,hipY:142,
+      elbowX:112,elbowY:106, handX:104,handY:112,
+      kneeX:95,kneeY:158, ankleX:90,ankleY:175
     },'6');
-    // Frame 7 (90%): Turnover catch - deep squat, arms locked overhead
+    // Frame 7: Standing recovery with bar on front shoulders
     const f7=figure({
-      headX:88,headY:108, shoulderX:88,shoulderY:120, hipX:80,hipY:148,
-      elbowX:90,elbowY:96, handX:88,handY:78,
-      kneeX:92,kneeY:164, ankleX:82,ankleY:176
+      headX:102,headY:68, shoulderX:102,shoulderY:82, hipX:100,hipY:118,
+      elbowX:114,elbowY:78, handX:108,handY:82,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'7');
 
     return E('g',null,...bg,
@@ -238,80 +237,79 @@ function getExerciseSVG(eid,skin,shirt){
      Bar goes to shoulders (front rack), then jerk overhead
      ========================================================= */
   if(at==='clean'){
-    // Frame 1 (0%): Deep squat start, bar at floor
+    // Frame 1: START — Deep squat, bar at floor, torso tilted forward
     const f1=figure({
-      headX:85,headY:110, shoulderX:90,shoulderY:122, hipX:78,hipY:148,
-      elbowX:90,elbowY:152, handX:88,handY:172,
-      kneeX:92,kneeY:164, ankleX:82,ankleY:176
+      headX:100,headY:95, shoulderX:98,shoulderY:108, hipX:85,hipY:140,
+      elbowX:94,elbowY:140, handX:90,handY:170,
+      kneeX:95,kneeY:155, ankleX:90,ankleY:175
     },'1');
-    // Frame 2 (10%): Pull off floor
+    // Frame 2: FIRST PULL — Bar at knee height
     const f2=figure({
-      headX:88,headY:102, shoulderX:92,shoulderY:114, hipX:80,hipY:142,
-      elbowX:92,elbowY:148, handX:90,handY:162,
-      kneeX:90,kneeY:158, ankleX:82,ankleY:176
+      headX:100,headY:85, shoulderX:100,shoulderY:100, hipX:88,hipY:130,
+      elbowX:96,elbowY:130, handX:92,handY:148,
+      kneeX:95,kneeY:150, ankleX:92,ankleY:175
     },'2');
-    // Frame 3 (20%): Bar at knee
+    // Frame 3: TRANSITION — Bar at mid-thigh
     const f3=figure({
-      headX:92,headY:92, shoulderX:95,shoulderY:105, hipX:84,hipY:136,
-      elbowX:96,elbowY:138, handX:94,handY:148,
-      kneeX:88,kneeY:156, ankleX:84,ankleY:176
+      headX:102,headY:78, shoulderX:102,shoulderY:92, hipX:92,hipY:122,
+      elbowX:98,elbowY:122, handX:95,handY:128,
+      kneeX:98,kneeY:148, ankleX:95,ankleY:175
     },'3');
-    // Frame 4 (35%): Triple extension, bar at hip
+    // Frame 4: SECOND PULL — Full extension, on toes
     const f4=figure({
-      headX:96,headY:72, shoulderX:97,shoulderY:85, hipX:92,hipY:120,
-      elbowX:98,elbowY:118, handX:96,handY:128,
-      kneeX:90,kneeY:148, ankleX:88,ankleY:172
+      headX:105,headY:60, shoulderX:105,shoulderY:75, hipX:100,hipY:105,
+      elbowX:102,elbowY:105, handX:100,handY:105,
+      kneeX:102,kneeY:140, ankleX:100,ankleY:168
     },'4');
-    // Frame 5 (50%): Front rack catch - elbows high, bar on shoulders, squatting
+    // Frame 5: FRONT RACK CATCH — Deep squat, elbows high, bar on shoulders
     const f5=figure({
-      headX:88,headY:108, shoulderX:88,shoulderY:120, hipX:80,hipY:148,
-      elbowX:98,elbowY:112, handX:92,handY:120,
-      kneeX:92,kneeY:164, ankleX:82,ankleY:176
+      headX:100,headY:100, shoulderX:98,shoulderY:112, hipX:85,hipY:142,
+      elbowX:112,elbowY:106, handX:104,handY:112,
+      kneeX:95,kneeY:158, ankleX:90,ankleY:175
     },'5');
-    // Frame 6 (60%): Standing from squat with bar on shoulders
+    // Frame 6: STANDING — Rising from squat with bar on front shoulders
     const f6=figure({
-      headX:94,headY:72, shoulderX:94,shoulderY:86, hipX:92,hipY:120,
-      elbowX:102,elbowY:80, handX:96,handY:86,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:68, shoulderX:102,shoulderY:82, hipX:100,hipY:118,
+      elbowX:114,elbowY:78, handX:108,handY:82,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'6');
-    // Frame 7 (70%): Dip - slight knee bend, bar on shoulders
+    // Frame 7: DIP — Slight knee bend, bar on front shoulders
     const f7=figure({
-      headX:93,headY:78, shoulderX:93,shoulderY:92, hipX:90,hipY:126,
-      elbowX:101,elbowY:86, handX:96,handY:92,
-      kneeX:90,kneeY:152, ankleX:88,ankleY:176
+      headX:102,headY:75, shoulderX:102,shoulderY:88, hipX:98,hipY:124,
+      elbowX:114,elbowY:84, handX:108,handY:88,
+      kneeX:98,kneeY:152, ankleX:96,ankleY:175
     },'7');
-    // Frame 8 (80%): Drive - explosive up, bar leaving shoulders
+    // Frame 8: DRIVE — Explosive extension, bar leaving shoulders, on toes
     const f8=figure({
-      headX:96,headY:66, shoulderX:96,shoulderY:80, hipX:93,hipY:116,
-      elbowX:100,elbowY:64, handX:96,handY:56,
-      kneeX:92,kneeY:146, ankleX:90,ankleY:172
+      headX:104,headY:62, shoulderX:104,shoulderY:76, hipX:100,hipY:110,
+      elbowX:106,elbowY:58, handX:104,handY:48,
+      kneeX:102,kneeY:142, ankleX:100,ankleY:168
     },'8');
-    // Frame 9 (90%): Split - front foot forward, back foot back, bar overhead
-    // Front leg forward, back leg back (split jerk)
+    // Frame 9: SPLIT JERK — Front foot forward, back foot back, bar locked overhead
     const f9els=[
       // Back leg
-      uLeg(92,118,78,148,'9bl'),
-      lLeg(78,148,68,172,'9bl'),
-      foot(68,172,1,'9b'),
+      uLeg(100,110,82,145,'9bl'),
+      lLeg(82,145,72,172,'9bl'),
+      foot(72,172,1,'9b'),
       // Front leg
-      uLeg(92,118,108,148,'9fl'),
-      lLeg(108,148,106,172,'9fl'),
-      foot(106,172,1,'9f'),
+      uLeg(100,110,115,145,'9fl'),
+      lLeg(115,145,112,175,'9fl'),
+      foot(112,175,1,'9f'),
       // Torso
-      torso(96,82,92,118,'9'),
-      // Arms overhead
-      uArm(96,82,98,62,'9'),
-      lArm(98,62,96,46,'9'),
+      torso(104,76,100,110,'9'),
+      // Arms locked overhead
+      uArm(104,76,104,52,'9'),
+      lArm(104,52,104,36,'9'),
       // Head
-      head(96,68,'9'),
+      head(104,62,'9'),
       // Barbell overhead
-      hBar(96,46,56,'9'),
+      hBar(104,36,56,'9'),
     ];
-    // Frame 10 (95%): Recover - feet together, bar overhead
+    // Frame 10: RECOVER — Feet together, bar overhead, standing tall
     const f10=figure({
-      headX:94,headY:68, shoulderX:94,shoulderY:82, hipX:92,hipY:118,
-      elbowX:96,elbowY:62, handX:94,handY:46,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:55, shoulderX:102,shoulderY:68, hipX:100,hipY:105,
+      elbowX:102,elbowY:48, handX:102,handY:32,
+      kneeX:100,kneeY:145, ankleX:100,ankleY:175
     },'10');
 
     return E('g',null,...bg,
@@ -333,63 +331,63 @@ function getExerciseSVG(eid,skin,shirt){
      ANIMATION 4: JERK — 7 frames (from front rack to overhead)
      ========================================================= */
   if(at==='jerk'){
-    // Frame 1: Standing with bar on shoulders (front rack)
+    // Frame 1: Standing with bar on front shoulders (front rack), elbows forward
     const f1=figure({
-      headX:94,headY:72, shoulderX:94,shoulderY:86, hipX:92,hipY:120,
-      elbowX:102,elbowY:80, handX:96,handY:86,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:68, shoulderX:102,shoulderY:82, hipX:100,hipY:118,
+      elbowX:114,elbowY:78, handX:108,handY:82,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'1');
-    // Frame 2: Dip
+    // Frame 2: DIP — slight knee bend, bar on shoulders
     const f2=figure({
-      headX:93,headY:78, shoulderX:93,shoulderY:92, hipX:90,hipY:126,
-      elbowX:101,elbowY:86, handX:96,handY:92,
-      kneeX:90,kneeY:152, ankleX:88,ankleY:176
+      headX:102,headY:75, shoulderX:102,shoulderY:88, hipX:98,hipY:124,
+      elbowX:114,elbowY:84, handX:108,handY:88,
+      kneeX:98,kneeY:152, ankleX:96,ankleY:175
     },'2');
-    // Frame 3: Drive - explosive extension
+    // Frame 3: DRIVE — explosive extension, on toes, bar leaving shoulders
     const f3=figure({
-      headX:96,headY:66, shoulderX:96,shoulderY:80, hipX:93,hipY:116,
-      elbowX:100,elbowY:68, handX:96,handY:62,
-      kneeX:92,kneeY:146, ankleX:90,ankleY:170
+      headX:104,headY:60, shoulderX:104,shoulderY:74, hipX:100,hipY:108,
+      elbowX:108,elbowY:58, handX:104,handY:50,
+      kneeX:102,kneeY:140, ankleX:100,ankleY:168
     },'3');
-    // Frame 4: Under the bar, arms extending
+    // Frame 4: Under the bar, arms extending overhead
     const f4=figure({
-      headX:95,headY:72, shoulderX:95,shoulderY:86, hipX:92,hipY:120,
-      elbowX:98,elbowY:62, handX:96,handY:50,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:174
+      headX:103,headY:68, shoulderX:103,shoulderY:82, hipX:100,hipY:116,
+      elbowX:104,elbowY:56, handX:103,handY:42,
+      kneeX:100,kneeY:146, ankleX:100,ankleY:174
     },'4');
-    // Frame 5: Split position - front foot forward, back foot back
+    // Frame 5: SPLIT — front foot forward, back foot back, bar locked overhead
     const f5els=[
-      uLeg(92,120,78,150,'5bl'),
-      lLeg(78,150,68,174,'5bl'),
-      foot(68,174,1,'5b'),
-      uLeg(92,120,108,150,'5fl'),
-      lLeg(108,150,106,174,'5fl'),
-      foot(106,174,1,'5f'),
-      torso(96,82,92,120,'5'),
-      uArm(96,82,98,62,'5'),
-      lArm(98,62,96,46,'5'),
-      head(96,68,'5'),
-      hBar(96,46,56,'5'),
+      uLeg(100,112,82,145,'5bl'),
+      lLeg(82,145,72,172,'5bl'),
+      foot(72,172,1,'5b'),
+      uLeg(100,112,115,145,'5fl'),
+      lLeg(115,145,112,175,'5fl'),
+      foot(112,175,1,'5f'),
+      torso(104,76,100,112,'5'),
+      uArm(104,76,104,52,'5'),
+      lArm(104,52,104,36,'5'),
+      head(104,62,'5'),
+      hBar(104,36,56,'5'),
     ];
-    // Frame 6: Recovery - bringing feet together
+    // Frame 6: RECOVERY — bringing feet together, bar still overhead
     const f6els=[
-      uLeg(92,120,86,150,'6bl'),
-      lLeg(86,150,80,174,'6bl'),
-      foot(80,174,1,'6b'),
-      uLeg(92,120,100,150,'6fl'),
-      lLeg(100,150,98,174,'6fl'),
-      foot(98,174,1,'6f'),
-      torso(96,82,92,120,'6'),
-      uArm(96,82,98,62,'6'),
-      lArm(98,62,96,46,'6'),
-      head(96,68,'6'),
-      hBar(96,46,56,'6'),
+      uLeg(100,112,90,148,'6bl'),
+      lLeg(90,148,85,175,'6bl'),
+      foot(85,175,1,'6b'),
+      uLeg(100,112,108,148,'6fl'),
+      lLeg(108,148,105,175,'6fl'),
+      foot(105,175,1,'6f'),
+      torso(104,76,100,112,'6'),
+      uArm(104,76,104,52,'6'),
+      lArm(104,52,104,36,'6'),
+      head(104,62,'6'),
+      hBar(104,36,56,'6'),
     ];
-    // Frame 7: Standing tall, bar overhead
+    // Frame 7: Standing tall, feet together, bar overhead, arms locked
     const f7=figure({
-      headX:94,headY:68, shoulderX:94,shoulderY:82, hipX:92,hipY:118,
-      elbowX:96,elbowY:62, handX:94,handY:46,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:55, shoulderX:102,shoulderY:68, hipX:100,hipY:105,
+      elbowX:102,elbowY:48, handX:102,handY:32,
+      kneeX:100,kneeY:145, ankleX:100,ankleY:175
     },'7');
 
     return E('g',null,...bg,
@@ -416,31 +414,31 @@ function getExerciseSVG(eid,skin,shirt){
     function sqFrame(headX,headY,shoulderX,shoulderY,hipX,hipY,kneeX,kneeY,ankleX,ankleY,k){
       let elbowX,elbowY,handX,handY;
       if(isOH){
-        // Arms locked overhead
-        elbowX=shoulderX+2; elbowY=shoulderY-22;
-        handX=shoulderX; handY=shoulderY-38;
+        // Arms locked overhead — nearly vertical
+        elbowX=shoulderX+1; elbowY=shoulderY-20;
+        handX=shoulderX; handY=shoulderY-40;
       } else if(isFront){
-        // Front rack: elbows high, bar on front deltoids
-        elbowX=shoulderX+8; elbowY=shoulderY-6;
-        handX=shoulderX+4; handY=shoulderY;
+        // Front rack: elbows pointing forward and high, bar on front deltoids
+        elbowX=shoulderX+12; elbowY=shoulderY-4;
+        handX=shoulderX+6; handY=shoulderY;
       } else {
-        // Back squat: hands on bar behind neck
-        elbowX=shoulderX-4; elbowY=shoulderY+10;
+        // Back squat: hands on bar behind neck, elbows pointing down-back
+        elbowX=shoulderX-6; elbowY=shoulderY+8;
         handX=shoulderX-2; handY=shoulderY-2;
       }
       return figure({headX,headY,shoulderX,shoulderY,hipX,hipY,elbowX,elbowY,handX,handY,kneeX,kneeY,ankleX,ankleY},k);
     }
 
-    // Frame 1: Standing tall
-    const f1=sqFrame(94,68,94,82,92,118,92,148,90,176,'1');
-    // Frame 2: Quarter squat
-    const f2=sqFrame(93,78,93,92,90,126,90,152,88,176,'2');
-    // Frame 3: Full deep squat
-    const f3=sqFrame(88,108,88,120,80,148,92,164,82,176,'3');
+    // Frame 1: Standing tall, bar on back/front/overhead
+    const f1=sqFrame(102,60,102,74,100,110,100,145,100,175,'1');
+    // Frame 2: Quarter squat descending
+    const f2=sqFrame(102,72,102,86,98,120,98,150,98,175,'2');
+    // Frame 3: Full deep squat — thighs below parallel, torso upright, feet flat
+    const f3=sqFrame(100,95,98,108,85,140,95,158,90,175,'3');
     // Frame 4: Quarter squat rising
-    const f4=sqFrame(93,78,93,92,90,126,90,152,88,176,'4');
+    const f4=sqFrame(102,72,102,86,98,120,98,150,98,175,'4');
     // Frame 5: Standing again
-    const f5=sqFrame(94,68,94,82,92,118,92,148,90,176,'5');
+    const f5=sqFrame(102,60,102,74,100,110,100,145,100,175,'5');
 
     return E('g',null,...bg,
       E('g',{key:'f1',className:'sq-f1'},...f1),
@@ -456,35 +454,35 @@ function getExerciseSVG(eid,skin,shirt){
      ANIMATION 6: PULL / DEADLIFT — 5 frames
      ========================================================= */
   if(at==='pull'){
-    // Frame 1 (0%): Bent over, bar at floor
+    // Frame 1: START — Deep squat, bar at floor, narrower grip than snatch
     const f1=figure({
-      headX:85,headY:110, shoulderX:90,shoulderY:122, hipX:78,hipY:148,
-      elbowX:90,elbowY:152, handX:88,handY:172,
-      kneeX:92,kneeY:164, ankleX:82,ankleY:176
+      headX:100,headY:95, shoulderX:98,shoulderY:108, hipX:85,hipY:140,
+      elbowX:96,elbowY:140, handX:92,handY:170,
+      kneeX:95,kneeY:155, ankleX:90,ankleY:175
     },'1');
-    // Frame 2 (20%): Bar at knee
+    // Frame 2: Bar at knee height, torso rising
     const f2=figure({
-      headX:90,headY:96, shoulderX:93,shoulderY:108, hipX:82,hipY:140,
-      elbowX:94,elbowY:142, handX:92,handY:154,
-      kneeX:88,kneeY:158, ankleX:84,ankleY:176
+      headX:100,headY:82, shoulderX:100,shoulderY:96, hipX:90,hipY:128,
+      elbowX:98,elbowY:128, handX:96,handY:148,
+      kneeX:96,kneeY:150, ankleX:94,ankleY:175
     },'2');
-    // Frame 3 (40%): Bar at hip, torso upright, full extension
+    // Frame 3: LOCKOUT — Standing fully upright, arms hanging straight, bar at hip
     const f3=figure({
-      headX:95,headY:68, shoulderX:95,shoulderY:82, hipX:92,hipY:118,
-      elbowX:98,elbowY:110, handX:96,handY:126,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:55, shoulderX:102,shoulderY:68, hipX:100,hipY:105,
+      elbowX:102,elbowY:96, handX:102,handY:112,
+      kneeX:100,kneeY:145, ankleX:100,ankleY:175
     },'3');
-    // Frame 4 (60%): Start lowering, bar at mid thigh
+    // Frame 4: Lowering — bar at mid-thigh, hinging forward
     const f4=figure({
-      headX:92,headY:82, shoulderX:94,shoulderY:96, hipX:86,hipY:132,
-      elbowX:96,elbowY:130, handX:94,handY:144,
-      kneeX:88,kneeY:154, ankleX:86,ankleY:176
+      headX:100,headY:82, shoulderX:100,shoulderY:96, hipX:90,hipY:128,
+      elbowX:98,elbowY:128, handX:96,handY:148,
+      kneeX:96,kneeY:150, ankleX:94,ankleY:175
     },'4');
-    // Frame 5 (80%): Back to start
+    // Frame 5: Back to start position
     const f5=figure({
-      headX:85,headY:110, shoulderX:90,shoulderY:122, hipX:78,hipY:148,
-      elbowX:90,elbowY:152, handX:88,handY:172,
-      kneeX:92,kneeY:164, ankleX:82,ankleY:176
+      headX:100,headY:95, shoulderX:98,shoulderY:108, hipX:85,hipY:140,
+      elbowX:96,elbowY:140, handX:92,handY:170,
+      kneeX:95,kneeY:155, ankleX:90,ankleY:175
     },'5');
 
     return E('g',null,...bg,
@@ -558,35 +556,35 @@ function getExerciseSVG(eid,skin,shirt){
       );
     }
     // Standing overhead press
-    // Frame 1: Bar at shoulders (front rack)
+    // Frame 1: Bar at shoulders (front rack), elbows forward
     const f1=figure({
-      headX:94,headY:72, shoulderX:94,shoulderY:86, hipX:92,hipY:120,
-      elbowX:102,elbowY:80, handX:96,handY:86,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:68, shoulderX:102,shoulderY:82, hipX:100,hipY:118,
+      elbowX:114,elbowY:78, handX:108,handY:82,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'1');
     // Frame 2: Pressing, bar at forehead height
     const f2=figure({
-      headX:94,headY:72, shoulderX:94,shoulderY:86, hipX:92,hipY:120,
-      elbowX:100,elbowY:66, handX:96,handY:60,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:68, shoulderX:102,shoulderY:82, hipX:100,hipY:118,
+      elbowX:106,elbowY:60, handX:102,handY:52,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'2');
-    // Frame 3: Lockout overhead
+    // Frame 3: Lockout overhead — arms nearly vertical
     const f3=figure({
-      headX:94,headY:72, shoulderX:94,shoulderY:86, hipX:92,hipY:120,
-      elbowX:96,elbowY:62, handX:94,handY:48,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:68, shoulderX:102,shoulderY:82, hipX:100,hipY:118,
+      elbowX:102,elbowY:56, handX:102,handY:38,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'3');
-    // Frame 4: Lowering
+    // Frame 4: Lowering back down
     const f4=figure({
-      headX:94,headY:72, shoulderX:94,shoulderY:86, hipX:92,hipY:120,
-      elbowX:100,elbowY:66, handX:96,handY:60,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:68, shoulderX:102,shoulderY:82, hipX:100,hipY:118,
+      elbowX:106,elbowY:60, handX:102,handY:52,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'4');
-    // Frame 5: Back to start
+    // Frame 5: Back to front rack start
     const f5=figure({
-      headX:94,headY:72, shoulderX:94,shoulderY:86, hipX:92,hipY:120,
-      elbowX:102,elbowY:80, handX:96,handY:86,
-      kneeX:92,kneeY:148, ankleX:90,ankleY:176
+      headX:102,headY:68, shoulderX:102,shoulderY:82, hipX:100,hipY:118,
+      elbowX:114,elbowY:78, handX:108,handY:82,
+      kneeX:100,kneeY:148, ankleX:100,ankleY:175
     },'5');
 
     return E('g',null,...bg,

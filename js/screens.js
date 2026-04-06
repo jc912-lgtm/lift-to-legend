@@ -796,7 +796,7 @@ function TrainingScreen({c,setC,go}){
           activeEffects:x.activeEffects.map(e=>({...e,dur:e.dur-1})).filter(e=>e.dur>0),
         }));
         setFloats([{icon:'😴',text:`+${rec}❤️`,color:'#38b764'},{icon:'😌',text:`-${fatDrop}😤`,color:'#73eff7'}]);
-        if(c.fatigue>40)setCoach({text:'休息也是訓練👍'});
+        if(c.fatigue>40){setCoach({text:'休息也是訓練👍'});setTimeout(()=>setCoach(null),2000);}
       },2000);
       return;
     }
@@ -809,7 +809,7 @@ function TrainingScreen({c,setC,go}){
       setFloats([{icon:'🤕',text:'受傷！',color:'#b13e53'}]);
       setC(x=>({...x,stamina:Math.min(ms,x.stamina+10),day:x.day+1,fatigue:Math.max(0,x.fatigue-15),streak:0,
         activeEffects:x.activeEffects.map(e=>({...e,dur:e.dur-1})).filter(e=>e.dur>0)}));
-      setCoach({text:'受傷了！要好好休息💤'});
+      setCoach({text:'受傷了！要好好休息💤'});setTimeout(()=>setCoach(null),2000);
       return;
     }
 
@@ -869,7 +869,8 @@ function TrainingScreen({c,setC,go}){
       setExerciseAnim(null);
       setC(x=>{const _sh=[...(x.statHistory||[])];if(x.day%5===0&&(_sh.length===0||_sh[_sh.length-1].day!==x.day)){_sh.push({day:x.day,stats:{...ns}});if(_sh.length>50)_sh.shift()}return{...x,stamina:x.stamina-t.cost,stats:ns,totalTrainings:x.totalTrainings+1,fatigue:Math.min(100,x.fatigue+fatGain),streak:newStreak,restStreak:0,lastTrainDay:x.day,principles:np,tcjsCount:isTcjs?(x.tcjsCount||0)+1:x.tcjsCount||0,statHistory:_sh}});
       setFloats(floatItems);
-      if(showCoach)setTimeout(()=>setCoach({text:t.tip}),500);
+      if(showCoach){setTimeout(()=>setCoach({text:t.tip}),500);setTimeout(()=>setCoach(null),2500);}
+      else{const reactions=['不錯！','很好！','繼續保持！','動作確實！','有進步！'];if(Math.random()<.4){setCoach({text:reactions[Math.floor(Math.random()*reactions.length)]});setTimeout(()=>setCoach(null),2000);}}
     },2000);
   }
 
@@ -911,6 +912,78 @@ function TrainingScreen({c,setC,go}){
           <FatigueBar fatigue={c.fatigue}/>
         </div>
 
+        {/* Coach NPC */}
+        <div className="pixel-border bg-pixel-charcoal p-1 mb-2 cursor-pointer relative"
+          onClick={()=>{
+            const tips=['姿勢注意！','很好繼續！','核心收緊！','呼吸配合動作！','今天狀態不錯！','專注！','再來一組！','動作要確實！'];
+            setCoach({text:tips[Math.floor(Math.random()*tips.length)]});
+            sfx('tap');
+            setTimeout(()=>setCoach(null),2000);
+          }}>
+          <svg viewBox="0 0 400 100" className="w-full" xmlns="http://www.w3.org/2000/svg">
+            {/* Gym background */}
+            <rect width="400" height="100" fill="#2c3e50" rx="4"/>
+            <rect x="0" y="85" width="400" height="15" fill="#34495e"/>
+
+            {/* Weight rack in background */}
+            <rect x="10" y="30" width="4" height="55" fill="#5d4037"/>
+            <rect x="30" y="30" width="4" height="55" fill="#5d4037"/>
+            <rect x="8" y="35" width="28" height="3" fill="#5d4037"/>
+            <rect x="8" y="50" width="28" height="3" fill="#5d4037"/>
+            <rect x="8" y="65" width="28" height="3" fill="#5d4037"/>
+            <rect x="12" y="32" width="6" height="10" rx="1" fill="#ef5350"/>
+            <rect x="20" y="32" width="6" height="10" rx="1" fill="#42a5f5"/>
+            <rect x="12" y="47" width="6" height="10" rx="1" fill="#66bb6a"/>
+            <rect x="20" y="47" width="6" height="10" rx="1" fill="#f4d03f"/>
+
+            {/* Barbell on floor */}
+            <rect x="300" y="78" width="80" height="3" rx="1" fill="#b0bec5"/>
+            <rect x="295" y="72" width="8" height="14" rx="2" fill="#ef5350"/>
+            <rect x="377" y="72" width="8" height="14" rx="2" fill="#ef5350"/>
+
+            {/* COACH CHARACTER — large, center-right */}
+            <g transform="translate(250,15)">
+              {/* Shadow */}
+              <ellipse cx="0" cy="72" rx="25" ry="5" fill="#000" opacity=".15"/>
+              {/* Legs */}
+              <rect x="-10" y="52" width="8" height="18" rx="2" fill="#1a237e"/>
+              <rect x="2" y="52" width="8" height="18" rx="2" fill="#1a237e"/>
+              {/* Shoes */}
+              <rect x="-12" y="68" width="10" height="5" rx="2" fill="#333"/>
+              <rect x="2" y="68" width="10" height="5" rx="2" fill="#333"/>
+              {/* Body — yellow polo */}
+              <rect x="-16" y="20" width="32" height="35" rx="5" fill="#f4d03f"/>
+              {/* Collar */}
+              <path d="M-6,20 L0,26 L6,20" fill="none" stroke="#ffed8a" strokeWidth="2"/>
+              {/* Whistle */}
+              <circle cx="6" cy="28" r="3" fill="#f4d03f" stroke="#c8a415" strokeWidth="0.8"/>
+              <line x1="3" y1="20" x2="6" y2="26" stroke="#c8a415" strokeWidth="1"/>
+              {/* Arms — one hand on hip, one pointing */}
+              <path d="M-16,28 Q-28,35 -24,45" stroke="#ffcc80" strokeWidth="6" fill="none" strokeLinecap="round"/>
+              <path d="M16,28 Q28,20 40,15" stroke="#ffcc80" strokeWidth="6" fill="none" strokeLinecap="round"/>
+              <circle cx="40" cy="14" r="3" fill="#ffcc80"/>
+              {/* Head */}
+              <circle cx="0" cy="8" r="14" fill="#ffcc80"/>
+              {/* Hair */}
+              <path d="M-14,4 Q-14,-8 0,-10 Q14,-8 14,4" fill="#3e2723"/>
+              {/* Sunglasses (cool coach!) */}
+              <rect x="-10" y="2" width="8" height="6" rx="2" fill="#263238"/>
+              <rect x="2" y="2" width="8" height="6" rx="2" fill="#263238"/>
+              <line x1="-2" y1="5" x2="2" y2="5" stroke="#263238" strokeWidth="1.5"/>
+              {/* Confident smile */}
+              <path d="M-5,12 Q0,17 5,12" stroke="#5d4037" strokeWidth="1.5" fill="none"/>
+            </g>
+
+            {/* Coach name */}
+            <text x="250" y="95" textAnchor="middle" fill="#f4d03f" fontSize="8" fontWeight="bold" fontFamily="LXGW WenKai TC,sans-serif">教練</text>
+          </svg>
+
+          {/* Coach speech bubble overlay */}
+          {coach&&<div className="absolute top-1 left-2 bg-white bg-opacity-95 rounded-lg px-3 py-1 shadow-lg" style={{maxWidth:'60%'}}>
+            <span className="font-vt text-pixel-dark text-sm font-bold">{coach.text}</span>
+          </div>}
+        </div>
+
         <div className="flex gap-1 mb-2 overflow-x-auto pb-1" style={{scrollbarWidth:'thin'}}>
           {TRAIN_CATEGORIES.map(cat=>{
             const unlocked=c.totalTrainings>=cat.unlock;
@@ -949,7 +1022,17 @@ function TrainingScreen({c,setC,go}){
           })}
         </div>
 
-        <button onClick={endDay} className="w-full pixel-btn bg-pixel-darkblue text-pixel-sky py-2 text-lg mb-2">🌙</button>
+        <div className="flex gap-2 mb-2">
+          <button onClick={()=>{
+            if(c.fatigue<10){setCoach({text:'不累啊？去練！'});setTimeout(()=>setCoach(null),2000);return}
+            sfx('rest');
+            setC(x=>({...x,fatigue:Math.max(0,x.fatigue-15),stats:{...x.stats,stb:Math.min(100,x.stats.stb+1)}}));
+            setFloats([{icon:'☕',text:'-15😤',color:'#73eff7'},{icon:'🧠',text:'+1',color:'#b13e53'}]);
+            setCoach({text:['放鬆一下吧','聊聊比賽策略','你最近進步很多','多喝水少喝糖','心態很重要喔'][Math.floor(Math.random()*5)]});
+            setTimeout(()=>setCoach(null),2500);
+          }} className="flex-1 pixel-btn bg-pixel-charcoal text-pixel-gold py-2 text-[10px] font-pixel">☕ 跟教練喝咖啡</button>
+          <button onClick={endDay} className="flex-1 pixel-btn bg-pixel-darkblue text-pixel-sky py-2 text-lg">🌙</button>
+        </div>
       </div>
     </div>
   );
