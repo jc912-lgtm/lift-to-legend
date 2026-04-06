@@ -15,9 +15,20 @@ function PoolScreen({c,setC,go}){
   const[floats,setFloats]=useState(null);
   const[neonFrame,setNeonFrame]=useState(0);
   const[pocketEffect,setPocketEffect]=useState(null);
+  const[poolNpcMsg,setPoolNpcMsg]=useState(null);
   const powerRef=useRef(0);
   const phaseRef=useRef('aim');
   const holdRef=useRef(null);
+
+  const poolRegularDialogs=(()=>{
+    const normal=['小伙子來打球啊？','我可是這裡的常勝軍','撞球講的是角度','你的出桿要穩','再來一局！','打撞球也是練穩定性啊','你那握桿姿勢不太對喔','年輕人反應就是快','這球打得不錯嘛！','慢慢來，瞄準再出手'];
+    const impressed=c.stats&&c.stats.stb>60?['你的穩定性很好嘛！','有練過的出桿就是不一樣']:[];
+    return[...normal,...impressed];
+  })();
+  function clickPoolNpc(){
+    sfx('tap');setPoolNpcMsg(poolRegularDialogs[Math.floor(Math.random()*poolRegularDialogs.length)]);
+    setTimeout(()=>setPoolNpcMsg(null),2500);
+  }
 
   const BALL_R=7;
   const POCKET_R=13;
@@ -354,6 +365,23 @@ function PoolScreen({c,setC,go}){
               <rect x="-6" y="8" width="12" height="22" rx="1" fill="#4e342e"/>
               <circle cx="0" cy="6" r="8" fill="#795548" stroke="#4e342e" strokeWidth="1.5"/>
             </g>
+
+            {/* Pool hall regular (常客大叔) — clickable */}
+            <g transform="translate(370,185)" onClick={clickPoolNpc} style={{cursor:'pointer'}}>
+              <circle cx="0" cy="-12" r="7" fill="#ffcc80"/>
+              <circle cx="-2" cy="-13" r="1.2" fill="#333"/>
+              <circle cx="3" cy="-13" r="1.2" fill="#333"/>
+              <path d="M-2,-9 Q0,-7 3,-9" stroke="#333" strokeWidth=".8" fill="none"/>
+              <rect x="-6" y="-5" width="12" height="14" rx="2" fill="#37474f"/>
+              <path d="M-7,-15 Q0,-20 7,-15" fill="#5d4037"/>
+              <text x="0" y="16" textAnchor="middle" fontSize="5" fill="#f4d03f" fontFamily="monospace">常客</text>
+            </g>
+            {/* Pool regular speech bubble */}
+            {poolNpcMsg&&<g className="pop-in">
+              <rect x="280" y="165" width={Math.min(poolNpcMsg.length*7+12,130)} height="20" rx="5" fill="#fff" stroke="#ddd" strokeWidth="1"/>
+              <polygon points="370,185 362,185 368,178" fill="#fff"/>
+              <text x="288" y="179" fontSize="8" fill="#333" fontFamily="sans-serif">{poolNpcMsg}</text>
+            </g>}
 
             {/* === Pool Table === */}
             {/* Outer frame (wood) */}
@@ -826,8 +854,21 @@ function FriendScreen({c,setC,go}){
   const[animResult,setAnimResult]=useState(null);
   const[tiles,setTiles]=useState([]);
   const[frame,setFrame]=useState(0);
+  const[friendMsg,setFriendMsg]=useState(null);
 
   useEffect(()=>{const t=setInterval(()=>setFrame(f=>(f+1)%120),80);return()=>clearInterval(t)},[]);
+
+  const friendDialogs=(()=>{
+    const normal=['今天打什麼？','聽說你最近比賽很厲害','下次帶你去吃好料','你變壯了耶！','放輕鬆嘛','你最近都在練不來找我們','什麼時候要上電視啊？','練舉重的都這麼早睡嗎？','我幫你加油！','欸等等我去拿飲料'];
+    const tired=['你好像很累...今天多休息吧','不用勉強，放鬆就好'];
+    const streak=(c.streak||0)>=5?['最近很認真嘛！繼續保持！','你該不會每天都在練吧']:[];
+    const won=c.medals&&c.medals.length>0?['聽說你贏了！恭喜啊！','你現在是不是很厲害了？']:[];
+    return[...normal,...((c.fatigue||0)>60?tired:[]),...streak,...won];
+  })();
+  function clickFriend(){
+    sfx('tap');setFriendMsg(friendDialogs[Math.floor(Math.random()*friendDialogs.length)]);
+    setTimeout(()=>setFriendMsg(null),2500);
+  }
 
   const doMahjong=()=>{
     if(done.mahjong)return;
@@ -999,8 +1040,8 @@ function FriendScreen({c,setC,go}){
           <rect x="285" y="133" width="6" height="10" rx="1" fill="#2196f3"/>
           <rect x="284" y="132" width="8" height="3" rx="1" fill="#1565c0"/>
 
-          {/* Friend 1 (blue) */}
-          <g transform={`translate(35,${92+breathY*0.5})`}>
+          {/* Friend 1 (blue) — clickable */}
+          <g transform={`translate(35,${92+breathY*0.5})`} onClick={clickFriend} style={{cursor:'pointer'}}>
             <circle cx="0" cy="0" r="9" fill="#ffe0b2"/>
             <circle cx="-3" cy="-2" r="1.5" fill="#333"/>
             <circle cx="3" cy="-2" r="1.5" fill="#333"/>
@@ -1009,8 +1050,8 @@ function FriendScreen({c,setC,go}){
             <path d="M-9,-2 Q-9,-12 0,-12 Q9,-12 9,-2" fill="#3e2723"/>
           </g>
 
-          {/* Friend 2 (green) */}
-          <g transform={`translate(250,${125+breathY*0.3})`}>
+          {/* Friend 2 (green) — clickable */}
+          <g transform={`translate(250,${125+breathY*0.3})`} onClick={clickFriend} style={{cursor:'pointer'}}>
             <circle cx="0" cy="0" r="9" fill="#ffccbc"/>
             <circle cx="-3" cy="-2" r="1.5" fill="#333"/>
             <circle cx="3" cy="-2" r="1.5" fill="#333"/>
@@ -1019,8 +1060,8 @@ function FriendScreen({c,setC,go}){
             <path d="M-9,-2 Q-9,-12 0,-12 Q9,-12 9,-2" fill="#212121"/>
           </g>
 
-          {/* Friend 3 (orange) */}
-          <g transform={`translate(135,${125+breathY*0.7})`}>
+          {/* Friend 3 (orange) — clickable */}
+          <g transform={`translate(135,${125+breathY*0.7})`} onClick={clickFriend} style={{cursor:'pointer'}}>
             <circle cx="0" cy="0" r="9" fill="#ffe0b2"/>
             <circle cx="-3" cy="-2" r="1.5" fill="#333"/>
             <circle cx="3" cy="-2" r="1.5" fill="#333"/>
@@ -1051,6 +1092,15 @@ function FriendScreen({c,setC,go}){
           <rect x="210" y="15" width="25" height="30" rx="2" fill="#fff" stroke="#8d6e3f" strokeWidth="2"/>
           <text x="222" y="35" textAnchor="middle" fontSize="10" fill="#4caf50">🌿</text>
         </svg>
+
+        {/* Friend speech bubble */}
+        {friendMsg&&(
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 pointer-events-none">
+            <div className="pixel-border bg-white bg-opacity-95 px-3 py-1.5 pop-in text-center">
+              <span className="font-cute text-sm" style={{color:'#333'}}>🗣️ {friendMsg}</span>
+            </div>
+          </div>
+        )}
 
         {/* Activity animation overlay */}
         {animResult&&(

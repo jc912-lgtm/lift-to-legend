@@ -20,7 +20,7 @@ function NstcScreen({c,setC,go}){
         nc.stamina=Math.max(0,nc.stamina-30);nc.fatigue=Math.min(100,(nc.fatigue||0)+20);
         ['str','tec','pwr','stb','sta','rec'].forEach(s=>{nc.stats[s]=Math.min(100,nc.stats[s]+2)});
         fi.push({icon:'💪',text:'全+2',color:'#f4d03f'},{icon:'😵',text:'+20😤',color:'#ef5350'});
-        const lines=['給我蹲下去！再來！','技術不到位不准走！','你以為國手是這樣當的？','不錯嘛，有進步！','腰挺直！膝蓋推出去！','今天不練完不准回家！'];
+        const lines=['給我蹲下去！再來！','技術不到位不准走！','你以為國手是這樣當的？','不錯嘛，有進步！','腰挺直！膝蓋推出去！','今天不練完不准回家！','重心再低一點！','速度！速度！速度！','接槓的時機要更快','肘要轉過來！聽到沒','呼吸的節奏要控制好'];
         return '老母：'+lines[Math.floor(Math.random()*lines.length)];
       }},
     {id:'physio',icon:'💆',name:'物理治療',cost:50,costType:'money',
@@ -100,8 +100,11 @@ function NstcScreen({c,setC,go}){
         <div className="pixel-border bg-pixel-charcoal p-1 mb-2 cursor-pointer"
           onClick={()=>{
             if(!msg){
-              const quips=canTrain?['看什麼看！去練！','站在那幹嘛？蹲下去！','你的技術還不行，多練！','態度不錯，繼續保持','我年輕的時候比你強多了','想拿金牌？先給我流汗！']:
-                ['你是誰？先回去練再來','以後要來這裡練嗎？加油','看好了，這就是國手的水準','有夢想很好，去實現它！'];
+              const tiredQuips=(c.fatigue||0)>60?['你今天臉色很差，去休息！','不要硬撐，受傷就完了','我不要帶傷的選手']:[];
+              const wonQuips=c.medals&&c.medals.length>0?['上次比賽表現不錯嘛','有獎牌了還不夠！繼續練','你是我帶過最有潛力的（之一啦）']:[];
+              const streakQuips=(c.streak||0)>=5?['最近很認真嘛！不錯','連續練這麼多天，有國手的樣子了']:[];
+              const quips=canTrain?['看什麼看！去練！','站在那幹嘛？蹲下去！','你的技術還不行，多練！','態度不錯，繼續保持','我年輕的時候比你強多了','想拿金牌？先給我流汗！','膝蓋推出去！屁股夾緊！','穩定性不夠！心要定','挺舉的接槓要快！','我數到三，再蹲十下',...tiredQuips,...wonQuips,...streakQuips]:
+                ['你是誰？先回去練再來','以後要來這裡練嗎？加油','看好了，這就是國手的水準','有夢想很好，去實現它！','國訓中心不是觀光景點','先拿到全國賽資格再來','我看你骨架不錯，好好練'];
               setMsg(quips[Math.floor(Math.random()*quips.length)]);
               sfx('tap');
               setTimeout(()=>setMsg(null),2500);
@@ -200,10 +203,12 @@ function NstcScreen({c,setC,go}){
             </g>
 
             {/* Speech bubble when msg */}
-            {msg&&<g>
+            {msg&&<g className="pop-in">
               <rect x="80" y="20" width="240" height="30" rx="8" fill="white" opacity=".95"/>
               <polygon points="200,50 190,55 210,55" fill="white" opacity=".95"/>
               <text x="200" y="40" textAnchor="middle" fill="#333" fontSize="11" fontFamily="LXGW WenKai TC,sans-serif" fontWeight="bold">{msg}</text>
+              {(c.fatigue||0)>60&&<text x="72" y="40" fontSize="10">💧</text>}
+              {(c.streak||0)>=5&&(c.fatigue||0)<=60&&<text x="72" y="40" fontSize="10">✨</text>}
             </g>}
             {/* Floor */}
             <rect x="0" y="123" width="400" height="77" fill="#263238"/>
@@ -227,7 +232,7 @@ function NstcScreen({c,setC,go}){
 
         {/* Message display */}
         {msg&&(
-          <div className="pixel-border bg-pixel-charcoal p-2 mb-2 text-center">
+          <div className="pixel-border bg-pixel-charcoal p-2 mb-2 text-center pop-in">
             <span className="font-vt text-pixel-cyan text-sm">{msg}</span>
           </div>
         )}
@@ -291,7 +296,18 @@ function WangFundScreen({c,setC,go}){
   const chandelierGlow=0.4+Math.sin(frame*0.03)*0.1;
   const wangBreath=Math.sin(frame*0.04)*1;
 
-  const wangQuotes=['年輕人，堅持就對了','我年輕時也是舉重的','慢慢來比較快','天分不夠，努力來湊','金牌不是終點，是旅程','舉重教會我最多的，是面對失敗'];
+  const[wangMsg,setWangMsg]=useState(null);
+  const wangQuotes=(()=>{
+    const normal=['年輕人，堅持就對了','我年輕時也是舉重的','慢慢來比較快','天分不夠，努力來湊','金牌不是終點，是旅程','舉重教會我最多的，是面對失敗','投資自己永遠不會虧','成功需要時間和耐心','我看好你的未來','基金會就是要支持年輕人'];
+    const tired=(c.fatigue||0)>60?['你看起來很疲憊...要照顧身體','休息也是訓練的一部分']:[];
+    const poor=c.money<50?['沒錢也沒關係，夢想無價','年輕就是最大的本錢']:[];
+    const won=c.medals&&c.medals.length>0?['聽說你最近比賽得獎了？恭喜！','你讓基金會很驕傲']:[];
+    return[...normal,...tired,...poor,...won];
+  })();
+  function clickWang(){
+    sfx('tap');setWangMsg(wangQuotes[Math.floor(Math.random()*wangQuotes.length)]);
+    setTimeout(()=>setWangMsg(null),2500);
+  }
 
   const ACTIVITIES=[
     {id:'tea',icon:'🍵',name:'喝茶聊天',cost:0,costType:'free',
@@ -491,8 +507,8 @@ function WangFundScreen({c,setC,go}){
               <path d="M2,20 Q10,24 7,29" stroke="#388e3c" strokeWidth="1.5" fill="#4caf50" opacity="0.7"/>
             </g>
 
-            {/* Old Wang - distinguished gentleman behind desk */}
-            <g transform={`translate(230,${62+wangBreath})`}>
+            {/* Old Wang - distinguished gentleman behind desk — clickable */}
+            <g transform={`translate(230,${62+wangBreath})`} onClick={clickWang} style={{cursor:'pointer'}}>
               {/* Chair back */}
               <rect x="-18" y="-5" width="36" height="40" rx="4" fill="#4e342e" stroke="#3e2723" strokeWidth="1"/>
               <rect x="-15" y="-2" width="30" height="34" rx="3" fill="#6d4c41"/>
@@ -532,6 +548,15 @@ function WangFundScreen({c,setC,go}){
               {/* Label */}
               <text x="0" y="52" textAnchor="middle" fill="#f4d03f" fontSize="6" fontFamily="monospace">老王</text>
             </g>
+
+            {/* Wang speech bubble */}
+            {wangMsg&&<g className="pop-in">
+              <rect x="90" y="25" width={Math.min(wangMsg.length*7+14,170)} height="22" rx="6" fill="#fff" stroke="#f4d03f" strokeWidth="1"/>
+              <polygon points="230,47 222,52 238,52" fill="#fff"/>
+              <text x="98" y="40" fontSize="8" fill="#333" fontFamily="sans-serif">{wangMsg}</text>
+              {(c.fatigue||0)>60&&<text x="80" y="36" fontSize="8">💧</text>}
+              {c.medals&&c.medals.length>0&&(c.fatigue||0)<=60&&<text x="80" y="36" fontSize="8">✨</text>}
+            </g>}
 
             {/* Warm ambient glow */}
             <ellipse cx="200" cy="18" rx="120" ry="40" fill="#fff9c4" opacity="0.03"/>
@@ -597,10 +622,23 @@ function TianliaoScreen({c,setC,go}){
   const[reactAnim,setReactAnim]=useState(null);
   useEffect(()=>{const t=setInterval(()=>setFrame(f=>(f+1)%240),50);return()=>clearInterval(t)},[]);
 
+  const[grandpaMsg,setGrandpaMsg]=useState(null);
   const breath=Math.sin(frame*0.04)*1.5;
   const chickenX=80+Math.sin(frame*0.06)*15;
   const chickenY=185+Math.sin(frame*0.09)*3;
   const cloudDrift=Math.sin(frame*0.015)*8;
+
+  const grandpaDialogs=(()=>{
+    const normal=['我種田種了一輩子','身體是練出來的','以前哪有什麼健身房','你阿嬤煮的最好吃','山上空氣好，多來','年輕人就是要吃苦','我年輕時也是壯漢','這田是我一個人開墾的','太陽底下才能長結實','做人跟種田一樣要腳踏實地'];
+    const tired=(c.fatigue||0)>60?['你這樣不行...先休息','年輕人不要太拼命']:[];
+    const won=c.medals&&c.medals.length>0?['聽說你比賽贏了？好孫！','阿公以你為榮！']:[];
+    const streak=(c.streak||0)>=5?['不錯嘛，有在認真練','你現在跟我年輕時一樣拼']:[];
+    return[...normal,...tired,...won,...streak];
+  })();
+  function clickGrandpa(){
+    sfx('tap');setGrandpaMsg(grandpaDialogs[Math.floor(Math.random()*grandpaDialogs.length)]);
+    setTimeout(()=>setGrandpaMsg(null),2500);
+  }
 
   const ACTIVITIES=[
     {id:'rice',icon:'🏃',name:'扛米跑操場',cost:20,
@@ -841,8 +879,8 @@ function TianliaoScreen({c,setC,go}){
               )}
             </g>
 
-            {/* ═══ LARGE CHIBI 阿公 ═══ */}
-            <g transform={`translate(200,${88+breath})`}>
+            {/* ═══ LARGE CHIBI 阿公 — clickable ═══ */}
+            <g transform={`translate(200,${88+breath})`} onClick={clickGrandpa} style={{cursor:'pointer'}}>
               {/* === BODY === */}
               {/* Work pants */}
               <rect x="-18" y="32" width="36" height="30" rx="4" fill="#5d4037"/>
@@ -953,6 +991,15 @@ function TianliaoScreen({c,setC,go}){
               {/* Label */}
               <text x="0" y="90" textAnchor="middle" fill="#f4d03f" fontSize="8" fontFamily="monospace" fontWeight="bold">阿公</text>
             </g>
+
+            {/* Grandpa speech bubble */}
+            {grandpaMsg&&<g className="pop-in">
+              <rect x="80" y="50" width={Math.min(grandpaMsg.length*7+14,160)} height="22" rx="6" fill="#fff" stroke="#8d6e3f" strokeWidth="1"/>
+              <polygon points="200,72 192,76 208,76" fill="#fff"/>
+              <text x="88" y="65" fontSize="8" fill="#333" fontFamily="sans-serif">{grandpaMsg}</text>
+              {(c.fatigue||0)>60&&<text x="72" y="62" fontSize="8">💧</text>}
+              {c.medals&&c.medals.length>0&&(c.fatigue||0)<=60&&<text x="72" y="62" fontSize="8">✨</text>}
+            </g>}
 
             {/* Small tree left */}
             <g transform="translate(280,130)">

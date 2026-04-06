@@ -46,9 +46,16 @@ function HomeScreen({c,setC,go}){
       '呼嚕呼嚕...(貓咪打呼)',
       '喵！(貓咪被嚇到跳起來)',
       '...(貓咪翻了個身繼續睡)',
-      '喵喵喵！(貓咪肚子餓了)'
+      '喵喵喵！(貓咪肚子餓了)',
+      '(貓咪用頭頂你的手)',
+      '(貓咪露出肚子撒嬌)',
+      '喵...（貓咪瞇著眼看你）',
+      '(貓咪跳到你肩膀上)',
+      '(貓咪叼了一隻襪子來)'
     ];
-    setCatMsg(reactions[Math.floor(Math.random()*reactions.length)]);
+    const tired=(c.fatigue||0)>60?['(貓咪擔心地看著你)','喵...(貓咪輕輕靠在你身邊)']:[];
+    const all=[...reactions,...tired];
+    setCatMsg(all[Math.floor(Math.random()*all.length)]);
     setTimeout(()=>setCatMsg(null),2500);
   }
 
@@ -228,9 +235,21 @@ function CafeScreen({c,setC,go}){
   const[frame,setFrame]=useState(0);
   useEffect(()=>{const t=setInterval(()=>setFrame(f=>(f+1)%120),60);return()=>clearInterval(t)},[]);
 
+  const[baristaMsg,setBaristaMsg]=useState(null);
   const steamY=Math.sin(frame*0.06)*3;
   const steamOp=0.3+Math.sin(frame*0.08)*0.15;
   const pendantSway=Math.sin(frame*0.03)*2;
+
+  const baristaDialogs=(()=>{
+    const normal=['今天推薦拿鐵喔','你看起來很累，來杯咖啡吧','這豆子是新進的','常來的客人我都記得','要加燕麥奶嗎？','慢慢喝，不急','我們的豆子是手工烘的','今天天氣適合喝冰的','你是運動員吧？推薦蛋白奶昔','歡迎光臨～請慢用'];
+    const tired=(c.fatigue||0)>60?['你眼圈好深...多休息啊','來杯濃一點的提提神？']:[];
+    const streak=(c.streak||0)>=5?['你最近每天都來耶，認真！','VIP客人來了！']:[];
+    return[...normal,...tired,...streak];
+  })();
+  function clickBarista(){
+    sfx('tap');setBaristaMsg(baristaDialogs[Math.floor(Math.random()*baristaDialogs.length)]);
+    setTimeout(()=>setBaristaMsg(null),2500);
+  }
 
   function buy(item){
     if(c.money<item.price)return;
@@ -308,8 +327,8 @@ function CafeScreen({c,setC,go}){
             <rect x="76" y="140" width="8" height="18" fill="#6d4c41"/>
             <circle cx="200" cy="160" r="16" fill="#8d6e3f" opacity=".6"/>
             <rect x="196" y="146" width="8" height="18" fill="#6d4c41"/>
-            {/* Barista */}
-            <g transform="translate(260,92)">
+            {/* Barista — clickable */}
+            <g transform="translate(260,92)" onClick={clickBarista} style={{cursor:'pointer'}}>
               <circle cx="0" cy="-12" r="8" fill="#ffcc80"/>
               <rect x="-6" y="-4" width="12" height="14" rx="2" fill="#4caf50"/>
               <rect x="-8" y="0" width="16" height="3" fill="white" opacity=".7"/>
@@ -318,6 +337,13 @@ function CafeScreen({c,setC,go}){
               <circle cx="3" cy="-13" r="1" fill="#333"/>
               <path d="M-1,-9 Q1,-8 3,-9" stroke="#333" strokeWidth=".8" fill="none"/>
             </g>
+            {/* Barista speech bubble */}
+            {baristaMsg&&<g className="pop-in">
+              <rect x="140" y="68" width={Math.min(baristaMsg.length*7+12,140)} height="20" rx="5" fill="#fff" stroke="#ddd" strokeWidth="1"/>
+              <polygon points="255,88 248,85 252,80" fill="#fff"/>
+              <text x="148" y="82" fontSize="7.5" fill="#333" fontFamily="sans-serif">{baristaMsg}</text>
+              {(c.fatigue||0)>60&&<text x="132" y="78" fontSize="7">💧</text>}
+            </g>}
             {/* Floor */}
             <rect x="0" y="130" width="320" height="50" fill="#3e2723"/>
             {[0,40,80,120,160,200,240,280].map((tx,i)=>
@@ -358,9 +384,16 @@ function LaundryScreen({c,setC,go}){
   const[frame,setFrame]=useState(0);
   useEffect(()=>{const t=setInterval(()=>setFrame(f=>(f+1)%120),60);return()=>clearInterval(t)},[]);
 
+  const[machineMsg,setMachineMsg]=useState(null);
   const spinAngle=washing?frame*12:0;
   const stinkY=Math.sin(frame*0.1)*3;
   const neonFlicker=0.7+Math.sin(frame*0.15)*0.3;
+
+  const machineDialogs=['轟轟轟...(洗衣機在轉)','叮！洗好了！','你的衣服真的很臭...','我也需要休息...','請勿塞太多衣服','嗡嗡嗡...工作中','我是全自動的！不用擔心','水溫剛剛好～','每天都在洗運動服...','洗衣精快用完了...'];
+  function clickMachine(){
+    sfx('tap');setMachineMsg(machineDialogs[Math.floor(Math.random()*machineDialogs.length)]);
+    setTimeout(()=>setMachineMsg(null),2500);
+  }
 
   function doWash(){
     if(washing||c.money<20)return;
@@ -419,11 +452,11 @@ function LaundryScreen({c,setC,go}){
             {/* Neon sign */}
             <rect x="100" y="18" width="120" height="22" rx="3" fill="#1a1c2c"/>
             <text x="160" y="34" textAnchor="middle" fill="#e91e63" fontSize="11" fontFamily="monospace" opacity={neonFlicker}>C&R WASH</text>
-            {/* Washing machines */}
+            {/* Washing machines — middle one is clickable */}
             {[30,120,210].map((mx,i)=>{
               const isSpinning=i===1;
               return(
-                <g key={i} transform={`translate(${mx},60)`}>
+                <g key={i} transform={`translate(${mx},60)`} onClick={i===1?clickMachine:undefined} style={i===1?{cursor:'pointer'}:{}}>
                   <rect x="0" y="0" width="70" height="80" rx="4" fill="white" stroke="#9e9e9e" strokeWidth="2"/>
                   <rect x="5" y="5" width="60" height="12" rx="2" fill="#e0e0e0"/>
                   <circle cx="15" cy="11" r="3" fill={i===0?'#4caf50':'#9e9e9e'}/>
@@ -468,6 +501,13 @@ function LaundryScreen({c,setC,go}){
                 </g>
               )}
             </g>
+            {/* Washing machine speech bubble */}
+            {machineMsg&&<g className="pop-in">
+              <rect x="100" y="40" width={Math.min(machineMsg.length*7+12,160)} height="18" rx="5" fill="#e3f2fd" stroke="#90caf9" strokeWidth="1"/>
+              <polygon points="155,58 148,62 162,62" fill="#e3f2fd"/>
+              <text x="108" y="53" fontSize="7" fill="#37474f" fontFamily="sans-serif">{machineMsg}</text>
+            </g>}
+
             {/* Tile floor pattern */}
             {[0,40,80,120,160,200,240,280].map((tx,i)=>
               <rect key={i} x={tx} y="170" width="38" height="28" fill={i%2===0?'#cfd8dc':'#b0bec5'} opacity=".3"/>
@@ -503,14 +543,12 @@ function RiverScreen({c,setC,go}){
   const ms=maxSta(c.stats.sta);
   useEffect(()=>{const t=setInterval(()=>setRFrame(f=>(f+1)%200),70);return()=>clearInterval(t)},[]);
 
-  const fishWisdom=[
-    "急什麼？魚也有自己的時間表",
-    "耐心是最好的魚餌",
-    "我在這釣了30年，從來不無聊",
-    "你那個舉重...跟釣魚一樣，要穩！",
-    "大魚都在深處，跟夢想一樣",
-    "今天風向不錯，會有大物！"
-  ];
+  const fishWisdom=(()=>{
+    const normal=["急什麼？魚也有自己的時間表","耐心是最好的魚餌","我在這釣了30年，從來不無聊","你那個舉重...跟釣魚一樣，要穩！","大魚都在深處，跟夢想一樣","今天風向不錯，會有大物！","水面下的世界很精彩","釣魚的人都懂得等待","河水的聲音最療癒","你看那邊有魚在跳！"];
+    const tired=(c.fatigue||0)>60?["你看起來比我還老...去休息吧","年輕人別把自己操壞了"]:[];
+    const won=c.medals&&c.medals.length>0?["聽說你得獎了？了不起！","比賽贏了要請我吃魚啊"]:[];
+    return[...normal,...tired,...won];
+  })();
   function clickFisherman(){
     sfx('tap');
     setFishMsg(fishWisdom[Math.floor(Math.random()*fishWisdom.length)]);

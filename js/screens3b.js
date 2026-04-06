@@ -6,7 +6,20 @@ function MituoScreen({c,setC,go}){
   const[visited,setVisited]=useState({});
   const[reactAnim,setReactAnim]=useState(null);
   const[singNotes,setSingNotes]=useState(false);
+  const[grandmaMsg,setGrandmaMsg]=useState(null);
   useEffect(()=>{const t=setInterval(()=>setFrame(f=>(f+1)%240),50);return()=>clearInterval(t)},[]);
+
+  const grandmaDialogs=(()=>{
+    const normal=['囝仔來了喔！','有吃飽沒？','你媽有打電話嗎？','阿嬤幫你拜拜保佑','太瘦了啦多吃一點','比賽贏了要回來跟阿嬤說喔','你是阿嬤的驕傲','阿嬤煮了你最愛吃的','海風吹了會冷，穿多一點','阿嬤最掛念你了'];
+    const tired=(c.fatigue||0)>60?['你看起來好累...快來休息','不要太拼了啦，身體第一']:[];
+    const poor=c.money<50?['不夠用跟阿嬤說，不要不好意思']:[];
+    const won=c.medals&&c.medals.length>0?['聽說你得名了！阿嬤好開心！','你爸媽一定很驕傲']:[];
+    return[...normal,...tired,...poor,...won];
+  })();
+  function clickGrandma(){
+    sfx('tap');setGrandmaMsg(grandmaDialogs[Math.floor(Math.random()*grandmaDialogs.length)]);
+    setTimeout(()=>setGrandmaMsg(null),2500);
+  }
 
   const breath=Math.sin(frame*0.04)*1.5;
   const waveSway=Math.sin(frame*0.03)*3;
@@ -209,8 +222,8 @@ function MituoScreen({c,setC,go}){
               <circle cx="12.5" cy="10" r="1.5" fill="#9e9e9e" opacity="0.5"/>
             </g>
 
-            {/* ═══ LARGE CHIBI 阿嬤 ═══ */}
-            <g transform={`translate(210,${92+breath})`}>
+            {/* ═══ LARGE CHIBI 阿嬤 — clickable ═══ */}
+            <g transform={`translate(210,${92+breath})`} onClick={clickGrandma} style={{cursor:'pointer'}}>
               {/* === BODY === */}
               {/* Floral dress */}
               <path d="M-18,10 Q-22,40 -24,65 Q0,70 24,65 Q22,40 18,10Z" fill="#e91e63"/>
@@ -349,6 +362,15 @@ function MituoScreen({c,setC,go}){
               {/* Label */}
               <text x="0" y="88" textAnchor="middle" fill="#f4d03f" fontSize="8" fontFamily="monospace" fontWeight="bold">阿嬤</text>
             </g>
+
+            {/* Grandma speech bubble */}
+            {grandmaMsg&&<g className="pop-in">
+              <rect x="80" y="55" width={Math.min(grandmaMsg.length*7+14,170)} height="22" rx="6" fill="#fff" stroke="#e91e63" strokeWidth="1"/>
+              <polygon points="210,77 202,82 218,82" fill="#fff"/>
+              <text x="88" y="70" fontSize="8" fill="#333" fontFamily="sans-serif">{grandmaMsg}</text>
+              {(c.fatigue||0)>60&&<text x="72" y="66" fontSize="8">💧</text>}
+              {c.medals&&c.medals.length>0&&(c.fatigue||0)<=60&&<text x="72" y="66" fontSize="8">✨</text>}
+            </g>}
           </svg>
         </div>
 
@@ -416,20 +438,18 @@ function HengzhaiScreen({c,setC,go}){
   const sparkle2=Math.sin(frame*0.12+2)*0.5+0.5;
   const sparkle3=Math.sin(frame*0.12+4)*0.5+0.5;
 
-  const HENG_LINES=[
-    "這棟房子蓋好就是我們的重訓基地！💪",
-    "搬磚也是一種訓練啊",
-    "衡哥帶你練，保證變壯",
-    "今天的進度不錯！",
-    "安全第一！戴好安全帽",
-    "蓋房子跟舉重一樣，基礎最重要",
-    "這工地就是最好的健身房",
-    "流的汗越多，肌肉越大💪",
-  ];
+  const HENG_LINES=(()=>{
+    const normal=["這棟房子蓋好就是我們的重訓基地！💪","搬磚也是一種訓練啊","衡哥帶你練，保證變壯","今天的進度不錯！","安全第一！戴好安全帽","蓋房子跟舉重一樣，基礎最重要","這工地就是最好的健身房","流的汗越多，肌肉越大💪","帥不帥？(撥頭髮)","我這六塊肌可不是白練的","中午一起吃便當？","你看這view多好","以後頂樓要蓋泳池"];
+    const tired=(c.fatigue||0)>60?["你今天臉色不太好...要不要休息？","不要硬撐，受傷划不來"]:[];
+    const won=c.medals&&c.medals.length>0?["聽說你比賽贏了？帥啦！","等你得金牌，我蓋一面牆給你掛獎牌"]:[];
+    const streak=(c.streak||0)>=5?["最近很拼嘛！繼續保持","你現在的樣子很像當年的我"]:[];
+    return[...normal,...tired,...won,...streak];
+  })();
 
   function clickHeng(){
     sfx('click');
     setHengLine(HENG_LINES[Math.floor(Math.random()*HENG_LINES.length)]);
+    setTimeout(()=>setHengLine(null),3000);
   }
 
   const ACTIVITIES=[
@@ -756,6 +776,13 @@ function HengzhaiScreen({c,setC,go}){
               <text x="0" y="100" textAnchor="middle" fill="#f4d03f" fontSize="9" fontFamily="monospace" fontWeight="bold">衡哥</text>
             </g>
 
+            {/* 衡哥 speech bubble in SVG */}
+            {hengLine&&<g className="pop-in">
+              <rect x="160" y="60" width={Math.min(hengLine.length*6+14,170)} height="22" rx="6" fill="#fff" stroke="#fdd835" strokeWidth="1"/>
+              <polygon points="280,82 272,88 288,88" fill="#fff"/>
+              <text x="168" y="75" fontSize="7.5" fill="#333" fontFamily="sans-serif">{hengLine.length>22?hengLine.slice(0,22)+'...':hengLine}</text>
+            </g>}
+
             {/* Floor progress text */}
             <text x="80" y="215" textAnchor="middle" fill="#fff" fontSize="7" fontFamily="monospace">目前 {floor}/8 樓</text>
           </svg>
@@ -763,8 +790,10 @@ function HengzhaiScreen({c,setC,go}){
 
         {/* 衡哥 dialogue */}
         {(hengLine||msg)&&(
-          <div className="pixel-border bg-pixel-charcoal p-2 mb-1 text-center">
-            <span className="font-vt text-pixel-cyan text-sm">{msg||hengLine}</span>
+          <div className="pixel-border bg-pixel-charcoal p-2 mb-1 text-center pop-in">
+            <span className="font-vt text-pixel-cyan text-sm">
+              {(c.fatigue||0)>60?'💧 ':c.medals&&c.medals.length>0?'✨ ':''}{msg||hengLine}
+            </span>
           </div>
         )}
 
