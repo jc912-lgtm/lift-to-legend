@@ -12,7 +12,7 @@ var bgmPlaying=false;
 var bgmNodes=[];
 var currentBGM=null;
 var sfxVol=0.5;
-var bgmVol=0.3;
+var bgmVol=0;
 var audioMuted=false;
 
 function ea(){
