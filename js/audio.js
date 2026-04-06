@@ -341,12 +341,21 @@ function playBGM(trackName){
   bgmAudio.volume=audioMuted?0:bgmVol;
   bgmAudio.play().catch(()=>{});
 }
-// Also try to start BGM on first user click (browser autoplay policy)
-document.addEventListener('click',function _startBGM(){
-  if(bgmAudio&&bgmAudio.paused&&bgmPlaying){
+// Start BGM on first user click (browser autoplay policy)
+document.addEventListener('click',function(){
+  if(bgmAudio&&bgmAudio.paused&&bgmPlaying&&!audioMuted){
     bgmAudio.play().catch(()=>{});
   }
 },{once:false});
+// Pause BGM when app goes to background, resume when back
+document.addEventListener('visibilitychange',function(){
+  if(!bgmAudio)return;
+  if(document.hidden){
+    bgmAudio.pause();
+  }else{
+    if(bgmPlaying&&!audioMuted)bgmAudio.play().catch(()=>{});
+  }
+});
 
 // ═══════════════════════════════════════
 // CONFETTI
