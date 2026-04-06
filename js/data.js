@@ -467,3 +467,51 @@ const ACHIEVEMENTS=[
   {id:'five_prin',name:'五字訣大師',desc:'五字訣全部達 Lv.3',icon:'📜',check:c=>c.principles&&Object.values(c.principles).every(v=>v>=3)},
   {id:'perfect10',name:'完美十連',desc:'比賽中累計10次完美',icon:'🌟',check:c=>(c.perfectCount||0)>=10},
 ];
+
+const COACHES=[
+  {id:'titan',name:'小巨人',desc:'身高150但力量爆表！專攻爆發力訓練',
+    style:'power',
+    bonusStat:'pwr',bonusValue:1.5,
+    personality:'hot',
+    lines:{
+      train:['矮不是問題！力量才是！','爆發力就是一切！','我雖然矮但我舉得比你重！','別看我小，我可是全國冠軍！','用力！再用力！'],
+      rest:['休息？我不需要休息！...好吧你休息一下','等等就要繼續練喔！','你比我還沒力？'],
+      win:['看到沒！小巨人的弟子！','這就是爆發力的威力！','身高不決定一切！'],
+      lose:['沒關係！下次用力炸開它！','輸了就練更多！','站起來！再來！'],
+      injury:['受傷了？揉一揉繼續！...開玩笑的，去看醫生','別硬撐，身體最重要','我以前也受過傷，休息是為了走更長的路'],
+      coffee:['咖啡？我喝蠻牛！','好吧來一杯，聊聊爆發力訓練','你知道嗎，我以前159公斤抓舉...'],
+    },
+    appearance:{hair:'#8d6e63',skin:'#e8b87a',height:'short',build:'stocky',
+      special:'小但肌肉超大，穿緊身衣，頭帶紅色頭帶，永遠很激動的表情'}
+  },
+  {id:'monk',name:'二頭肌唐三藏',desc:'佛系訓練法，注重技術和心理素質',
+    style:'technical',
+    bonusStat:'tec',bonusValue:1.5,
+    personality:'calm',
+    lines:{
+      train:['呼吸...感受槓鈴...成為槓鈴','技術是水，力量是杯，杯再大裝不了水也沒用','慢即是快，少即是多','動作做對比重量重要一萬倍','心如止水，力如山崩'],
+      rest:['休息是修行的一部分','打坐冥想，感受肌肉','今天的你比昨天的你更強了'],
+      win:['善哉善哉，技術到位自然成功','勝不驕，這只是修行的一步','冷靜成就了你'],
+      lose:['失敗是最好的老師','執著於結果反而會失敗','放下，重新來過'],
+      injury:['身體在告訴你什麼，要聽','受傷是身體的智慧，休息吧','我幫你念經...不是，我幫你找醫生'],
+      coffee:['我喝茶，你喝咖啡','來，聊聊人生和舉重的共通之處','你知道嗎，舉重和禪修很像...'],
+    },
+    appearance:{hair:'#1a1a1a',skin:'#ffcc80',height:'tall',build:'lean',
+      special:'光頭（或極短髮），戴佛珠項鍊，穿寬鬆的僧袍式訓練服，表情永遠很平靜，二頭肌超大反差萌'}
+  },
+  {id:'thor',name:'雷神索爾',desc:'北歐式硬派訓練，全面提升力量',
+    style:'strength',
+    bonusStat:'str',bonusValue:1.5,
+    personality:'epic',
+    lines:{
+      train:['VALHALLA AWAITS! 練！','像維京人一樣舉起它！','Thor would be proud!','想像你在舉起雷神之鎚！','No pain no gain! SKOL!'],
+      rest:['Even gods need rest','去吃肉！大量的肉！','Vikings也需要睡覺'],
+      win:['BY ODIN\'S BEARD! 你做到了！','WORTHY! 你配得上金牌！','雷神認可你了！'],
+      lose:['A warrior never gives up!','Defeat is temporary, glory is forever!','再來！Ragnarok還沒到！'],
+      injury:['受傷了？塗點北歐草藥...開玩笑，去看醫生','A true warrior knows when to heal','Rest and come back STRONGER!'],
+      coffee:['我喝蜂蜜酒...好吧咖啡也行','SKOL! 乾杯！','你知道維京人也做重訓嗎？'],
+    },
+    appearance:{hair:'#d4a44a',skin:'#ffcc80',height:'tall',build:'massive',
+      special:'金色長髮紮馬尾，大鬍子，穿無袖盔甲風格的訓練服，手臂有北歐紋身，永遠很豪邁'}
+  },
+];

@@ -65,12 +65,16 @@ function App(){
       s.etf=s.etf||{shares:0,prices:[100],buyPrice:0};
       s.gachaCount=s.gachaCount||0;
       s.avatar=s.avatar||'cat';
+      s.coach=s.coach||'titan';
+      s.injured=s.injured||false;
+      s.injuryDay=s.injuryDay||0;
+      s.injuryType=s.injuryType||null;
       s.seenStories=s.seenStories||{};
       s.statHistory=s.statHistory||[];
       setC(s);setScreen('hub');
     }}catch(e){console.error(e)}
   }
-  function create(name,gender,wc,avatar){const ch=newChar(name,gender,wc,avatar);setC(ch);localStorage.setItem('wl_save',JSON.stringify(ch));setScreen('hub')}
+  function create(name,gender,wc,avatar,coach){const ch=newChar(name,gender,wc,avatar,coach);setC(ch);localStorage.setItem('wl_save',JSON.stringify(ch));setScreen('hub')}
 
   useEffect(()=>{if(c)localStorage.setItem('wl_save',JSON.stringify(c))},[c]);
 

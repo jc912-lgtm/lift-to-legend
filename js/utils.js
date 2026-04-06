@@ -149,8 +149,8 @@ function principleLevelBonus(principles){
   if(!principles)return 0;
   return Object.values(principles).reduce((s,v)=>s+v*.5,0);
 }
-function newChar(name,gender,wc,avatar='cat'){
-  return{name,gender,weightClass:wc,avatar,
+function newChar(name,gender,wc,avatar='cat',coach='titan'){
+  return{name,gender,weightClass:wc,avatar,coach,
     stats:{str:15,tec:10,pwr:12,stb:10,sta:20,rec:15},
     stamina:100,day:1,money:500,
     pb:{snatch:0,cleanJerk:0,total:0},
@@ -167,6 +167,7 @@ function newChar(name,gender,wc,avatar='cat'){
     knowledge:0,studyCount:0,
     etf:{shares:0,prices:[100],buyPrice:0},
     gachaCount:0,
+    injured:false,injuryDay:0,injuryType:null,
   };
 }
 

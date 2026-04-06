@@ -13,6 +13,8 @@ function CompScreen({c,setC,go}){
   const[coach,setCoach]=useState(null);
   const[countdown,setCountdown]=useState(null);
   const[oppFlash,setOppFlash]=useState(null);
+  const[showingOpp,setShowingOpp]=useState(null);
+  const[oppPhase,setOppPhase]=useState('lifting');
 
   const compBoost=c.inventory.filter(i=>i.effect?.type==='compBoost').reduce((s,i)=>s+(i.effect?.value||0),0);
   const prinBonus=principleLevelBonus(c.principles);
@@ -78,7 +80,30 @@ function CompScreen({c,setC,go}){
     setOppFlash(oppResults);
     setTimeout(()=>setOppFlash(null),2500);
 
-    advanceAttempt(success);
+    // Show an opponent actually lifting on stage between player attempts
+    setTimeout(()=>{
+      if(opps.length>0){
+        const oIdx=Math.floor(Math.random()*Math.min(3,opps.length));
+        const opp=opps[oIdx];
+        const oppWeight=Math.round(opp[lift==='snatch'?'snatch':'cleanJerk']*(0.85+Math.random()*0.2));
+        const oppSuccess=Math.random()>0.35;
+        setOppPhase('lifting');
+        setShowingOpp({name:opp.name,flag:opp.flag,weight:oppWeight,success:oppSuccess});
+        commentary(opp.name+'. '+oppWeight+' kilograms.');
+        setTimeout(()=>{
+          setOppPhase(oppSuccess?'success':'fail');
+          if(oppSuccess)commentary('Good lift!');
+          else commentary('No lift.');
+          setTimeout(()=>{
+            setShowingOpp(null);
+            setOppPhase('lifting');
+            advanceAttempt(success);
+          },1500);
+        },2000);
+      }else{
+        advanceAttempt(success);
+      }
+    },2000);
   }
 
   function advanceAttempt(success){
@@ -195,8 +220,12 @@ function CompScreen({c,setC,go}){
           {/* Floating top info */}
           <div className="absolute top-1 left-1 right-1 z-20 flex justify-between items-center pointer-events-none">
             <span className="font-pixel text-pixel-gold text-[8px] bg-black bg-opacity-40 px-2 py-0.5 rounded">{ev.emoji}{ev.name}</span>
-            <span className="font-pixel text-white text-[8px] bg-black bg-opacity-40 px-2 py-0.5 rounded">{liftName} {aN+1}/3</span>
-            <span className="font-pixel text-pixel-gold text-[9px] bg-black bg-opacity-40 px-2 py-0.5 rounded">{wt}kg</span>
+            {showingOpp?(
+              <span className="font-pixel text-red-400 text-[8px] bg-red-900 bg-opacity-60 px-2 py-0.5 rounded">對手試舉</span>
+            ):(
+              <span className="font-pixel text-white text-[8px] bg-black bg-opacity-40 px-2 py-0.5 rounded">{liftName} {aN+1}/3</span>
+            )}
+            <span className={`font-pixel text-[9px] bg-black bg-opacity-40 px-2 py-0.5 rounded ${showingOpp?'text-red-400':'text-pixel-gold'}`}>{showingOpp?showingOpp.weight:wt}kg</span>
           </div>
           <svg viewBox="0 0 400 280" className="w-full h-full" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -328,9 +357,161 @@ function CompScreen({c,setC,go}){
             <line x1="200" y1="220" x2="200" y2="268" stroke="#e65100" strokeWidth="1" opacity=".3"/>
 
             {/* ═══ LIFTER SHADOW ═══ */}
-            <ellipse cx="200" cy="250" rx={liftPose==='fail'?'30':'35'} ry={liftPose==='fail'?'6':'8'} fill="#000" opacity=".15"/>
+            <ellipse cx="200" cy="250" rx={showingOpp?(oppPhase==='fail'?'30':'35'):(liftPose==='fail'?'30':'35')} ry={showingOpp?(oppPhase==='fail'?'6':'8'):(liftPose==='fail'?'6':'8')} fill="#000" opacity=".15"/>
 
-            {/* ═══ LIFTER CHARACTER — LARGE FRONT VIEW ═══ */}
+            {/* ═══ OPPONENT BANNER OVERLAY ═══ */}
+            {showingOpp&&(
+              <g>
+                <rect x="80" y="96" width="240" height="22" rx="4" fill="#c62828" opacity=".85"/>
+                <text x="200" y="112" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="bold" fontFamily="sans-serif">{showingOpp.flag} {showingOpp.name} — {showingOpp.weight}kg</text>
+              </g>
+            )}
+
+            {/* ═══ OPPONENT CHARACTER ═══ */}
+            {showingOpp?(<g transform="translate(200,155)" filter="url(#ds)">
+              {oppPhase==='lifting'&&<>
+                {/* Legs wide squat */}
+                <rect x="-22" y="52" width="14" height="28" rx="4" fill="#263238" transform="rotate(-10,-15,66)"/>
+                <rect x="8" y="52" width="14" height="28" rx="4" fill="#263238" transform="rotate(10,15,66)"/>
+                <rect x="-30" y="76" width="18" height="10" rx="3" fill="#e53935"/>
+                <rect x="12" y="76" width="18" height="10" rx="3" fill="#e53935"/>
+                <rect x="-30" y="83" width="18" height="3" rx="1" fill="#b71c1c"/>
+                <rect x="12" y="83" width="18" height="3" rx="1" fill="#b71c1c"/>
+                {/* Body RED singlet */}
+                <rect x="-22" y="8" width="44" height="47" rx="8" fill="#c62828"/>
+                <line x1="-18" y1="40" x2="18" y2="13" stroke="#ffcdd2" strokeWidth="5" opacity=".5" strokeLinecap="round"/>
+                <rect x="-24" y="46" width="48" height="7" rx="3" fill="#5d4037"/>
+                <rect x="-3" y="47" width="6" height="5" rx="1" fill="#ffd740"/>
+                <rect x="-9" y="20" width="18" height="11" rx="2" fill="#b71c1c"/>
+                <text x="0" y="29" textAnchor="middle" fill="#fff" fontSize="6" fontWeight="bold" fontFamily="sans-serif">{(showingOpp.flag||'').slice(0,4)}</text>
+                <rect x="-6" y="-2" width="12" height="12" rx="3" fill="#f5c5a3"/>
+                {/* Arms UP */}
+                <path d="M-22,12 Q-38,-25 -52,-68" stroke="#f5c5a3" strokeWidth="11" fill="none" strokeLinecap="round"/>
+                <path d="M22,12 Q38,-25 52,-68" stroke="#f5c5a3" strokeWidth="11" fill="none" strokeLinecap="round"/>
+                <circle cx="-54" cy="-70" r="7" fill="#f5c5a3"/>
+                <circle cx="54" cy="-70" r="7" fill="#f5c5a3"/>
+                {/* Barbell overhead */}
+                <g transform="translate(0,-73)">
+                  <path d="M-95,0 Q-48,3 0,4 Q48,3 95,0" stroke="#b0bec5" strokeWidth="5" fill="none" strokeLinecap="round"/>
+                  <rect x="-108" y="-18" width="16" height="38" rx="5" fill="#ef5350" stroke="#c62828" strokeWidth="2"/>
+                  <rect x="92" y="-18" width="16" height="38" rx="5" fill="#ef5350" stroke="#c62828" strokeWidth="2"/>
+                  <rect x="-94" y="-13" width="10" height="28" rx="3" fill="#42a5f5" stroke="#1565c0" strokeWidth="1.5"/>
+                  <rect x="84" y="-13" width="10" height="28" rx="3" fill="#42a5f5" stroke="#1565c0" strokeWidth="1.5"/>
+                  <rect x="-81" y="-4" width="4" height="10" rx="1" fill="#78909c"/>
+                  <rect x="77" y="-4" width="4" height="10" rx="1" fill="#78909c"/>
+                </g>
+                {/* Head — no headband, different hair */}
+                <ellipse cx="0" cy="-14" rx="20" ry="18" fill="#f5c5a3"/>
+                <ellipse cx="0" cy="-27" rx="19" ry="10" fill="#5d4037"/>
+                <rect x="-19" y="-24" width="38" height="6" rx="3" fill="#5d4037"/>
+                <ellipse cx="-20" cy="-10" rx="4" ry="6" fill="#f5c5a3"/>
+                <ellipse cx="20" cy="-10" rx="4" ry="6" fill="#f5c5a3"/>
+                {/* Strained face */}
+                <line x1="-12" y1="-21" x2="-3" y2="-18" stroke="#5d4037" strokeWidth="2.5" strokeLinecap="round"/>
+                <line x1="3" y1="-18" x2="12" y2="-21" stroke="#5d4037" strokeWidth="2.5" strokeLinecap="round"/>
+                <ellipse cx="-7" cy="-12" rx="4" ry="4.5" fill="white"/>
+                <ellipse cx="-7" cy="-11" rx="2.5" ry="3" fill="#263238"/>
+                <ellipse cx="7" cy="-12" rx="4" ry="4.5" fill="white"/>
+                <ellipse cx="7" cy="-11" rx="2.5" ry="3" fill="#263238"/>
+                <ellipse cx="0" cy="-3" rx="5" ry="4" fill="#263238"/>
+                <ellipse cx="24" cy="-14" rx="3" ry="6" fill="#bbdefb" opacity=".7"/>
+              </>}
+
+              {oppPhase==='success'&&<>
+                {/* Legs wide */}
+                <rect x="-22" y="52" width="14" height="28" rx="4" fill="#263238" transform="rotate(-10,-15,66)"/>
+                <rect x="8" y="52" width="14" height="28" rx="4" fill="#263238" transform="rotate(10,15,66)"/>
+                <rect x="-30" y="76" width="18" height="10" rx="3" fill="#e53935"/>
+                <rect x="12" y="76" width="18" height="10" rx="3" fill="#e53935"/>
+                <rect x="-30" y="83" width="18" height="3" rx="1" fill="#b71c1c"/>
+                <rect x="12" y="83" width="18" height="3" rx="1" fill="#b71c1c"/>
+                {/* Body RED singlet */}
+                <rect x="-22" y="8" width="44" height="47" rx="8" fill="#c62828"/>
+                <line x1="-18" y1="40" x2="18" y2="13" stroke="#ffcdd2" strokeWidth="5" opacity=".5" strokeLinecap="round"/>
+                <rect x="-24" y="46" width="48" height="7" rx="3" fill="#5d4037"/>
+                <rect x="-3" y="47" width="6" height="5" rx="1" fill="#ffd740"/>
+                <rect x="-9" y="20" width="18" height="11" rx="2" fill="#b71c1c"/>
+                <text x="0" y="29" textAnchor="middle" fill="#fff" fontSize="6" fontWeight="bold" fontFamily="sans-serif">{(showingOpp.flag||'').slice(0,4)}</text>
+                <rect x="-6" y="-2" width="12" height="12" rx="3" fill="#f5c5a3"/>
+                {/* Arms UP success */}
+                <path d="M-22,12 Q-38,-25 -52,-68" stroke="#f5c5a3" strokeWidth="11" fill="none" strokeLinecap="round"/>
+                <path d="M22,12 Q38,-25 52,-68" stroke="#f5c5a3" strokeWidth="11" fill="none" strokeLinecap="round"/>
+                <circle cx="-54" cy="-70" r="7" fill="#f5c5a3"/>
+                <circle cx="54" cy="-70" r="7" fill="#f5c5a3"/>
+                {/* Barbell overhead */}
+                <g transform="translate(0,-73)">
+                  <path d="M-95,0 Q-48,3 0,4 Q48,3 95,0" stroke="#b0bec5" strokeWidth="5" fill="none" strokeLinecap="round"/>
+                  <rect x="-108" y="-18" width="16" height="38" rx="5" fill="#ef5350" stroke="#c62828" strokeWidth="2"/>
+                  <rect x="92" y="-18" width="16" height="38" rx="5" fill="#ef5350" stroke="#c62828" strokeWidth="2"/>
+                  <rect x="-94" y="-13" width="10" height="28" rx="3" fill="#42a5f5" stroke="#1565c0" strokeWidth="1.5"/>
+                  <rect x="84" y="-13" width="10" height="28" rx="3" fill="#42a5f5" stroke="#1565c0" strokeWidth="1.5"/>
+                  <rect x="-81" y="-4" width="4" height="10" rx="1" fill="#78909c"/>
+                  <rect x="77" y="-4" width="4" height="10" rx="1" fill="#78909c"/>
+                </g>
+                {/* Head happy */}
+                <ellipse cx="0" cy="-14" rx="20" ry="18" fill="#f5c5a3"/>
+                <ellipse cx="0" cy="-27" rx="19" ry="10" fill="#5d4037"/>
+                <rect x="-19" y="-24" width="38" height="6" rx="3" fill="#5d4037"/>
+                <ellipse cx="-20" cy="-10" rx="4" ry="6" fill="#f5c5a3"/>
+                <ellipse cx="20" cy="-10" rx="4" ry="6" fill="#f5c5a3"/>
+                <path d="M-12,-19 Q-7,-21 -3,-19" stroke="#5d4037" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                <path d="M3,-19 Q7,-21 12,-19" stroke="#5d4037" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                <path d="M-10,-13 Q-7,-10 -4,-13" stroke="#263238" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                <path d="M4,-13 Q7,-10 10,-13" stroke="#263238" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                <path d="M-8,-3 Q0,6 8,-3" stroke="#c62828" strokeWidth="2" fill="#ef5350"/>
+                <ellipse cx="-14" cy="-6" rx="5" ry="3" fill="#ef9a9a" opacity=".4"/>
+                <ellipse cx="14" cy="-6" rx="5" ry="3" fill="#ef9a9a" opacity=".4"/>
+                {/* Success sparkles */}
+                <polygon points="-45,-55 -42,-63 -39,-55 -42,-58" fill="#ffd740"/>
+                <polygon points="45,-60 48,-68 51,-60 48,-63" fill="#ffd740"/>
+                <circle cx="-70" cy="-20" r="3" fill="#ffd740" opacity=".6"/>
+                <circle cx="70" cy="-25" r="3" fill="#ffd740" opacity=".6"/>
+              </>}
+
+              {oppPhase==='fail'&&<>
+                {/* Legs standing */}
+                <rect x="-14" y="55" width="13" height="28" rx="4" fill="#263238"/>
+                <rect x="1" y="55" width="13" height="28" rx="4" fill="#263238"/>
+                <rect x="-17" y="80" width="17" height="9" rx="3" fill="#e53935"/>
+                <rect x="1" y="80" width="17" height="9" rx="3" fill="#e53935"/>
+                <rect x="-17" y="86" width="17" height="3" rx="1" fill="#b71c1c"/>
+                <rect x="1" y="86" width="17" height="3" rx="1" fill="#b71c1c"/>
+                {/* Body RED singlet hunched */}
+                <rect x="-20" y="12" width="40" height="45" rx="7" fill="#c62828"/>
+                <line x1="-16" y1="42" x2="16" y2="17" stroke="#ffcdd2" strokeWidth="4.5" opacity=".4" strokeLinecap="round"/>
+                <rect x="-22" y="48" width="44" height="7" rx="3" fill="#5d4037"/>
+                <rect x="-3" y="49" width="6" height="5" rx="1" fill="#ffd740"/>
+                <rect x="-8" y="24" width="16" height="10" rx="2" fill="#b71c1c"/>
+                <text x="0" y="33" textAnchor="middle" fill="#fff" fontSize="5" fontWeight="bold" fontFamily="sans-serif">{(showingOpp.flag||'').slice(0,4)}</text>
+                <rect x="-5" y="3" width="10" height="11" rx="3" fill="#f5c5a3"/>
+                {/* Arms drooping */}
+                <path d="M-20,18 Q-30,38 -24,52" stroke="#f5c5a3" strokeWidth="10" fill="none" strokeLinecap="round"/>
+                <path d="M20,18 Q30,38 24,52" stroke="#f5c5a3" strokeWidth="10" fill="none" strokeLinecap="round"/>
+                <circle cx="-24" cy="53" r="5.5" fill="#f5c5a3"/>
+                <circle cx="24" cy="53" r="5.5" fill="#f5c5a3"/>
+                {/* Head lowered sad */}
+                <ellipse cx="0" cy="-8" rx="19" ry="17" fill="#f5c5a3"/>
+                <ellipse cx="0" cy="-20" rx="18" ry="9" fill="#5d4037"/>
+                <rect x="-18" y="-18" width="36" height="5" rx="2" fill="#5d4037"/>
+                <ellipse cx="-19" cy="-4" rx="4" ry="5.5" fill="#f5c5a3"/>
+                <ellipse cx="19" cy="-4" rx="4" ry="5.5" fill="#f5c5a3"/>
+                <line x1="-12" y1="-14" x2="-4" y2="-11" stroke="#5d4037" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="4" y1="-11" x2="12" y2="-14" stroke="#5d4037" strokeWidth="2" strokeLinecap="round"/>
+                <ellipse cx="-7" cy="-6" rx="4" ry="3" fill="white"/>
+                <ellipse cx="-7" cy="-5.5" rx="2" ry="2" fill="#263238"/>
+                <ellipse cx="7" cy="-6" rx="4" ry="3" fill="white"/>
+                <ellipse cx="7" cy="-5.5" rx="2" ry="2" fill="#263238"/>
+                <path d="M-6,4 Q0,0 6,4" stroke="#795548" strokeWidth="2" fill="none"/>
+                <ellipse cx="22" cy="-10" rx="2.5" ry="4" fill="#bbdefb" opacity=".6"/>
+                {/* Dropped bar */}
+                <g transform="translate(0,82)">
+                  <rect x="-75" y="-2" width="150" height="5" rx="2" fill="#b0bec5" opacity=".7"/>
+                  <rect x="-85" y="-12" width="14" height="26" rx="4" fill="#ef5350" opacity=".6" stroke="#c62828" strokeWidth="1"/>
+                  <rect x="71" y="-12" width="14" height="26" rx="4" fill="#ef5350" opacity=".6" stroke="#c62828" strokeWidth="1"/>
+                </g>
+              </>}
+            </g>):(
+            /* ═══ PLAYER LIFTER CHARACTER — LARGE FRONT VIEW ═══ */
             <g transform="translate(200,155)" filter="url(#ds)">
               {liftPose==='ready'&&<>
                 {/* ── READY POSE: Standing upright, bar on ground ── */}
@@ -628,15 +809,15 @@ function CompScreen({c,setC,go}){
                   <rect x="65" y="-8" width="8" height="18" rx="3" fill="#42a5f5" opacity=".5"/>
                 </g>
               </>}
-            </g>
+            </g>)}
 
             {/* ═══ FOREGROUND DETAILS ═══ */}
             {/* Camera flash effects during lifting */}
-            {liftPose==='lifting'&&<>
+            {(liftPose==='lifting'||(showingOpp&&oppPhase==='lifting'))&&<>
               <circle cx="55" cy="65" r="4" fill="#fff" opacity=".6"><animate attributeName="opacity" values=".6;0;.6" dur="1.5s" repeatCount="indefinite"/></circle>
               <circle cx="340" cy="78" r="3" fill="#fff" opacity=".4"><animate attributeName="opacity" values=".4;0;.4" dur="2s" repeatCount="indefinite"/></circle>
             </>}
-            {liftPose==='success'&&<>
+            {(liftPose==='success'||(showingOpp&&oppPhase==='success'))&&<>
               <circle cx="50" cy="60" r="5" fill="#fff" opacity=".7"><animate attributeName="opacity" values=".7;0;.7" dur="0.8s" repeatCount="indefinite"/></circle>
               <circle cx="350" cy="70" r="4" fill="#fff" opacity=".6"><animate attributeName="opacity" values=".6;0;.6" dur="1s" repeatCount="indefinite"/></circle>
               <circle cx="80" cy="85" r="3" fill="#fff" opacity=".5"><animate attributeName="opacity" values=".5;0;.5" dur="1.2s" repeatCount="indefinite"/></circle>
@@ -677,9 +858,15 @@ function CompScreen({c,setC,go}){
 
           {/* Weight display overlay */}
           <div className="absolute top-2 left-1/2 -translate-x-1/2">
-            <div className="bg-pixel-dark bg-opacity-70 px-4 py-1 rounded border-2 border-pixel-gold">
-              <span className="font-pixel text-pixel-gold text-sm">{wt}kg</span>
-            </div>
+            {showingOpp?(
+              <div className="bg-pixel-dark bg-opacity-80 px-4 py-1 rounded border-2 border-red-500">
+                <span className="font-pixel text-red-400 text-sm">{showingOpp.flag} {showingOpp.weight}kg</span>
+              </div>
+            ):(
+              <div className="bg-pixel-dark bg-opacity-70 px-4 py-1 rounded border-2 border-pixel-gold">
+                <span className="font-pixel text-pixel-gold text-sm">{wt}kg</span>
+              </div>
+            )}
           </div>
 
           {/* Countdown overlay */}
@@ -704,6 +891,16 @@ function CompScreen({c,setC,go}){
           <div className="max-w-lg mx-auto">
             {showMeter?(
               <LiftControl liftType={lift==='snatch'?'snatch':'cleanJerk'} difficulty={ev.diff} stats={c.stats} onResult={handleLiftResult} weight={wt}/>
+            ):showingOpp?(
+              <div className="text-center py-2">
+                <div className="font-pixel text-red-400 text-[10px] mb-1">對手試舉中...</div>
+                <div className="font-vt text-white text-sm">{showingOpp.flag} {showingOpp.name} — {showingOpp.weight}kg</div>
+                {oppPhase!=='lifting'&&(
+                  <div className={`font-pixel text-sm mt-1 ${showingOpp.success?'text-pixel-green':'text-pixel-red'}`}>
+                    {showingOpp.success?'Good Lift!':'No Lift.'}
+                  </div>
+                )}
+              </div>
             ):(
               <>
                 {/* Opponent flash results */}

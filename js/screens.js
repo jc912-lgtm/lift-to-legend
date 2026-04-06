@@ -250,6 +250,7 @@ function CreateScreen({onConfirm}){
   const[gender,setGender]=useState('male');
   const[wc,setWc]=useState(WC.male[3]);
   const[avatar,setAvatar]=useState('cat');
+  const[selCoach,setSelCoach]=useState('titan');
   const cls=WC[gender];
   useEffect(()=>{setWc(cls[Math.floor(cls.length/2)])},[gender]);
   const[coach,setCoach]=useState(true);
@@ -279,6 +280,23 @@ function CreateScreen({onConfirm}){
           </div>
         </div>
         <div className="mb-4">
+          <label className="font-vt text-pixel-light text-lg block mb-2">選擇教練</label>
+          <div className="flex gap-2 justify-center">
+            {COACHES.map(co=>(
+              <button key={co.id} onClick={()=>{sfx('tap');setSelCoach(co.id)}}
+                className={`flex flex-col items-center p-2 rounded-lg border-2 w-24
+                  ${selCoach===co.id?'border-pixel-gold bg-pixel-darkblue':'border-pixel-gray bg-pixel-dark'}`}>
+                <div className="text-2xl mb-1">{co.id==='titan'?'🔥':co.id==='monk'?'🧘':'⚡'}</div>
+                <div className="font-vt text-xs text-pixel-gold">{co.name}</div>
+                <div className="font-vt text-[10px] text-pixel-light">{co.style==='power'?'爆發型':co.style==='technical'?'技術型':'力量型'}</div>
+              </button>
+            ))}
+          </div>
+          <div className="font-vt text-pixel-cyan text-sm text-center mt-1">
+            {COACHES.find(co=>co.id===selCoach)?.desc}
+          </div>
+        </div>
+        <div className="mb-4">
           <label className="font-vt text-pixel-light text-lg block mb-1">👤 選手姓名</label>
           <input type="text" value={name} onChange={e=>setName(e.target.value)} placeholder="輸入你的名字..."
             className="w-full bg-pixel-dark border-2 border-pixel-gray text-pixel-white font-vt text-xl px-3 py-2 focus:border-pixel-gold focus:outline-none"/>
@@ -301,7 +319,7 @@ function CreateScreen({onConfirm}){
             ))}
           </div>
         </div>
-        <button onClick={()=>{if(name.trim()){sfx('success');onConfirm(name.trim(),gender,wc,avatar)}}} disabled={!name.trim()}
+        <button onClick={()=>{if(name.trim()){sfx('success');onConfirm(name.trim(),gender,wc,avatar,selCoach)}}} disabled={!name.trim()}
           className={`w-full pixel-btn pixel-btn-gold py-3 text-[10px] font-pixel ${name.trim()?'bg-pixel-dark text-pixel-gold':'bg-pixel-charcoal text-pixel-gray cursor-not-allowed'}`}>
           💪 開始訓練之旅！
         </button>
@@ -719,19 +737,27 @@ function Hub({c,setC,go}){
             />
           ))}
 
-          {/* Character on map (centered, interactive) */}
-          <div className="absolute cursor-pointer" style={{left:'50%',top:'63%',transform:'translate(-50%,-50%)',zIndex:5}}
+          {/* Character on map — LARGE, interactive, with status */}
+          <div className="absolute cursor-pointer" style={{left:'50%',top:'55%',transform:'translate(-50%,-50%)',zIndex:8}}
             onClick={()=>{
               sfx('tap');
-              const reactions=['💪 今天也要加油！','😊 嗨！','🔥 練起來！','✨ 狀態很好！','😤 再來一組！','🎯 專注！','💭 想吃東西...','😴 有點累了','🏋️ 舉起來！'];
-              setToast({text:reactions[Math.floor(Math.random()*reactions.length)],type:'success'});
+              const mood=c.fatigue>60?['好累...😮‍💨','想回家睡覺💤','需要休息','肚子好餓🍜']:
+                c.streak>=5?['狀態超好🔥','要破紀錄！','停不下來💪','越練越強⚡']:
+                (c.injured)?['好痛🤕','要小心','先去治療']:
+                ['今天加油💪','嗨😊','練起來🔥','去哪好呢🤔','想吃東西🍜','天氣真好☀️','該訓練了🏋️','挑戰自我✨'];
+              setToast({text:mood[Math.floor(Math.random()*mood.length)],type:'success'});
             }}>
-            <div className="float">
-              <CharAvatar charId={c.avatar} size={70} lifting={c.streak>=3}/>
+            <div className="bounce" style={{animationDuration:'2s'}}>
+              <CharAvatar charId={c.avatar} size={110} lifting={c.streak>=3}/>
             </div>
-            {/* Speech bubble when tapped */}
-            {c.fatigue>50&&<div className="absolute -top-6 left-1/2 -translate-x-1/2 text-lg">💦</div>}
-            {c.streak>=5&&<div className="absolute -top-6 left-1/2 -translate-x-1/2 text-lg bounce">🔥</div>}
+            <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex gap-1 items-center">
+              {c.fatigue>50&&<span className="text-lg float">💦</span>}
+              {c.streak>=5&&<span className="text-lg bounce">🔥</span>}
+              {c.injured&&<span className="text-lg shake">🤕</span>}
+            </div>
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-pixel-dark bg-opacity-80 px-2 py-0.5 rounded whitespace-nowrap">
+              <span className="font-vt text-pixel-gold text-xs">{c.name}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -778,6 +804,18 @@ function TrainingScreen({c,setC,go}){
   const hasBoost=c.activeEffects.some(e=>e.type==='trainBoost');
   const mult=hasBoost?1.2:1;
   const streakB=Math.min(5,Math.floor(c.streak/5))*.05+1;
+  const myCoach=COACHES.find(co=>co.id===c.coach)||COACHES[0];
+  const injuryMult=c.injured?0.5:1;
+
+  // Auto-recover from injury after 3-5 days
+  useEffect(()=>{
+    if(c.injured&&c.day-c.injuryDay>=3+Math.floor(Math.random()*3)){
+      setC(x=>({...x,injured:false,injuryType:null,injuryDay:0}));
+      setCoach({text:'傷好了！可以正常訓練了！💪'});
+      sfx('success');
+      setTimeout(()=>setCoach(null),2500);
+    }
+  },[c.day]);
 
   function doTrain(t){
     if(exerciseAnim)return;
@@ -796,7 +834,7 @@ function TrainingScreen({c,setC,go}){
           activeEffects:x.activeEffects.map(e=>({...e,dur:e.dur-1})).filter(e=>e.dur>0),
         }));
         setFloats([{icon:'😴',text:`+${rec}❤️`,color:'#38b764'},{icon:'😌',text:`-${fatDrop}😤`,color:'#73eff7'}]);
-        if(c.fatigue>40){setCoach({text:'休息也是訓練👍'});setTimeout(()=>setCoach(null),2000);}
+        if(c.fatigue>40){const rl=myCoach.lines.rest;setCoach({text:rl[Math.floor(Math.random()*rl.length)]});setTimeout(()=>setCoach(null),2000);}
       },2000);
       return;
     }
@@ -806,18 +844,22 @@ function TrainingScreen({c,setC,go}){
     const injuryChance=c.fatigue>80?.15:c.fatigue>60?.05:0;
     if(injuryChance>0&&Math.random()<injuryChance){
       sfx('hurt');
-      setFloats([{icon:'🤕',text:'受傷！',color:'#b13e53'}]);
+      const injTypes=['肌肉拉傷','韌帶扭傷','腰部不適','膝蓋疼痛'];
+      const injType=injTypes[Math.floor(Math.random()*injTypes.length)];
+      setFloats([{icon:'🤕',text:'受傷！'+injType,color:'#b13e53'}]);
       setC(x=>({...x,stamina:Math.min(ms,x.stamina+10),day:x.day+1,fatigue:Math.max(0,x.fatigue-15),streak:0,
+        injured:true,injuryDay:x.day,injuryType:injType,
         activeEffects:x.activeEffects.map(e=>({...e,dur:e.dur-1})).filter(e=>e.dur>0)}));
-      setCoach({text:'受傷了！要好好休息💤'});setTimeout(()=>setCoach(null),2000);
+      const injLine=myCoach.lines.injury[Math.floor(Math.random()*myCoach.lines.injury.length)];
+      setCoach({text:injLine});setTimeout(()=>setCoach(null),2500);
       return;
     }
 
     sfx('train');
     setExerciseAnim(t.id);
     const floatItems=[];const ns={...c.stats};
-    for(const[s,v]of Object.entries(t.primary)){const g=Math.round(v*mult*streakB);ns[s]=Math.min(100,ns[s]+g);floatItems.push({icon:SI[s],text:`+${g}`,color:SC[s]});}
-    for(const[s,v]of Object.entries(t.secondary)){const g=Math.round(v*mult*streakB);ns[s]=Math.min(100,ns[s]+g);floatItems.push({icon:SI[s],text:`+${g}`,color:SC[s]});}
+    for(const[s,v]of Object.entries(t.primary)){const cm=s===myCoach.bonusStat?myCoach.bonusValue:1;const g=Math.round(v*mult*streakB*injuryMult*cm);ns[s]=Math.min(100,ns[s]+g);floatItems.push({icon:SI[s],text:`+${g}`,color:SC[s]});}
+    for(const[s,v]of Object.entries(t.secondary)){const cm=s===myCoach.bonusStat?myCoach.bonusValue:1;const g=Math.round(v*mult*streakB*injuryMult*cm);ns[s]=Math.min(100,ns[s]+g);floatItems.push({icon:SI[s],text:`+${g}`,color:SC[s]});}
 
     // Principle growth based on exercise category and type
     const np={...c.principles};
@@ -870,7 +912,7 @@ function TrainingScreen({c,setC,go}){
       setC(x=>{const _sh=[...(x.statHistory||[])];if(x.day%5===0&&(_sh.length===0||_sh[_sh.length-1].day!==x.day)){_sh.push({day:x.day,stats:{...ns}});if(_sh.length>50)_sh.shift()}return{...x,stamina:x.stamina-t.cost,stats:ns,totalTrainings:x.totalTrainings+1,fatigue:Math.min(100,x.fatigue+fatGain),streak:newStreak,restStreak:0,lastTrainDay:x.day,principles:np,tcjsCount:isTcjs?(x.tcjsCount||0)+1:x.tcjsCount||0,statHistory:_sh}});
       setFloats(floatItems);
       if(showCoach){setTimeout(()=>setCoach({text:t.tip}),500);setTimeout(()=>setCoach(null),2500);}
-      else{const reactions=['不錯！','很好！','繼續保持！','動作確實！','有進步！'];if(Math.random()<.4){setCoach({text:reactions[Math.floor(Math.random()*reactions.length)]});setTimeout(()=>setCoach(null),2000);}}
+      else{const cLines=c.injured?myCoach.lines.injury:myCoach.lines.train;if(Math.random()<.4){setCoach({text:cLines[Math.floor(Math.random()*cLines.length)]});setTimeout(()=>setCoach(null),2000);}}
     },2000);
   }
 
