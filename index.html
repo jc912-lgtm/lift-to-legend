@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>一舉成名</title>
+<meta name="theme-color" content="#FFD700">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="一舉成名">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@300;400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{pixel:{dark:'#1a1c2c',navy:'#5d275d',purple:'#b13e53',red:'#ef7d57',orange:'#ffcd75',gold:'#f4d03f',lime:'#a7f070',green:'#38b764',teal:'#257179',darkblue:'#29366f',blue:'#3b5dc9',sky:'#41a6f6',cyan:'#73eff7',white:'#f4f4f4',light:'#94b0c2',gray:'#566c86',charcoal:'#333c57'}},fontFamily:{pixel:['"Press Start 2P"','"LXGW WenKai TC"','sans-serif'],vt:['"LXGW WenKai TC"','"VT323"','sans-serif'],cute:['"LXGW WenKai TC"','sans-serif']}}}}
+</script>
+<link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+<div id="root"><div style="color:#f4d03f;font-family:monospace;padding:40px;text-align:center">載入中...</div></div>
+<script src="loader.js"></script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})</script>
+</body>
+</html>

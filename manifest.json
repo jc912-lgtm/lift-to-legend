@@ -1,0 +1,13 @@
+{
+  "name": "一舉成名",
+  "short_name": "一舉成名",
+  "description": "舉重冠軍養成遊戲",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#060612",
+  "theme_color": "#FFD700",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}

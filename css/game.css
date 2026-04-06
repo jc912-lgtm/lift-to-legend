@@ -1,0 +1,172 @@
+*{box-sizing:border-box;image-rendering:pixelated}
+body{background:#1a1c2c;margin:0;overflow-x:hidden;font-family:'LXGW WenKai TC',sans-serif;color:#f4f4f4}
+.pixel-border{border:4px solid #566c86;box-shadow:inset -4px -4px 0 0 #333c57,inset 4px 4px 0 0 #94b0c2}
+.pixel-border-gold{border:4px solid #f4d03f;box-shadow:inset -4px -4px 0 0 #c8a415,inset 4px 4px 0 0 #ffed8a}
+.pixel-btn{font-family:'Press Start 2P','LXGW WenKai TC',sans-serif;border:4px solid #566c86;box-shadow:inset -4px -4px 0 0 #333c57,inset 4px 4px 0 0 #94b0c2,0 4px 0 0 #333c57;transition:all .1s;cursor:pointer}
+.pixel-btn:hover{transform:translateY(-2px);box-shadow:inset -4px -4px 0 0 #333c57,inset 4px 4px 0 0 #94b0c2,0 6px 0 0 #333c57}
+.pixel-btn:active{transform:translateY(2px);box-shadow:inset -4px -4px 0 0 #333c57,inset 4px 4px 0 0 #94b0c2,0 1px 0 0 #333c57}
+.pixel-btn-gold{border-color:#f4d03f;box-shadow:inset -4px -4px 0 0 #c8a415,inset 4px 4px 0 0 #ffed8a,0 4px 0 0 #c8a415}
+.pixel-btn-gold:hover{box-shadow:inset -4px -4px 0 0 #c8a415,inset 4px 4px 0 0 #ffed8a,0 6px 0 0 #c8a415}
+.pixel-btn-gold:active{box-shadow:inset -4px -4px 0 0 #c8a415,inset 4px 4px 0 0 #ffed8a,0 1px 0 0 #c8a415}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}.blink{animation:blink 1s step-end infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}.bounce{animation:bounce .6s ease infinite}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}.shake{animation:shake .15s linear 3}
+@keyframes popIn{0%{transform:scale(0);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}.pop-in{animation:popIn .3s ease-out}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}.slide-up{animation:slideUp .4s ease-out}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}.float{animation:float 2s ease-in-out infinite}
+@keyframes glow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.4)}}.glow{animation:glow 1.5s ease-in-out infinite}
+@keyframes confetti-fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.confetti{position:fixed;width:8px;height:8px;top:-10px;animation:confetti-fall 2s linear forwards;z-index:9999;pointer-events:none}
+@keyframes muscle-flex{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.15)}}.flex-anim{animation:muscle-flex .4s ease}
+@keyframes medal-spin{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}.medal-spin{animation:medal-spin 1s ease-in-out}
+@keyframes liftAnim{0%{transform:translateY(0)}15%{transform:translateY(-4px)}30%{transform:translateY(-10px)}50%{transform:translateY(-30px) scaleY(0.95)}70%{transform:translateY(-45px) scaleY(1)}85%{transform:translateY(-48px)}100%{transform:translateY(-45px)}}.lift-up{animation:liftAnim 1.5s ease-out forwards}
+@keyframes liftFail{0%{transform:translateY(0)}20%{transform:translateY(-10px)}35%{transform:translateY(-18px) rotate(2deg)}50%{transform:translateY(-12px) rotate(-3deg)}70%{transform:translateY(-5px) rotate(2deg)}100%{transform:translateY(0) rotate(0)}}.lift-fail{animation:liftFail 1.2s ease-out forwards}
+@keyframes phaseGlow{0%{box-shadow:0 0 5px currentColor}50%{box-shadow:0 0 15px currentColor}100%{box-shadow:0 0 5px currentColor}}.phase-glow{animation:phaseGlow 1s ease-in-out infinite}
+.stamina-bar{height:18px;background:#333c57;border:2px solid #566c86}
+.stamina-fill{height:100%;background:linear-gradient(to right,#38b764,#a7f070);transition:width .3s}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#1a1c2c}::-webkit-scrollbar-thumb{background:#566c86;border:2px solid #333c57}
+@keyframes floatUp{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-80px);opacity:0}}
+@keyframes podiumRise{0%{transform:translateY(100px);opacity:0}100%{transform:translateY(0);opacity:1}}
+/* === Frame-by-frame exercise animations === */
+/* Snatch: 9 frames over 2.5s */
+@keyframes sn-f1{0%{opacity:1}11.99%{opacity:1}12%{opacity:0}100%{opacity:0}}
+@keyframes sn-f2{0%{opacity:0}12%{opacity:1}24.99%{opacity:1}25%{opacity:0}100%{opacity:0}}
+@keyframes sn-f3{0%{opacity:0}25%{opacity:1}36.99%{opacity:1}37%{opacity:0}100%{opacity:0}}
+@keyframes sn-f4{0%{opacity:0}37%{opacity:1}46.99%{opacity:1}47%{opacity:0}100%{opacity:0}}
+@keyframes sn-f5{0%{opacity:0}47%{opacity:1}54.99%{opacity:1}55%{opacity:0}100%{opacity:0}}
+@keyframes sn-f6{0%{opacity:0}55%{opacity:1}64.99%{opacity:1}65%{opacity:0}100%{opacity:0}}
+@keyframes sn-f7{0%{opacity:0}65%{opacity:1}79.99%{opacity:1}80%{opacity:0}100%{opacity:0}}
+@keyframes sn-f8{0%{opacity:0}80%{opacity:1}89.99%{opacity:1}90%{opacity:0}100%{opacity:0}}
+@keyframes sn-f9{0%{opacity:0}90%{opacity:1}100%{opacity:1}}
+.sn-f1{opacity:0;animation:sn-f1 2.5s steps(1) infinite}
+.sn-f2{opacity:0;animation:sn-f2 2.5s steps(1) infinite}
+.sn-f3{opacity:0;animation:sn-f3 2.5s steps(1) infinite}
+.sn-f4{opacity:0;animation:sn-f4 2.5s steps(1) infinite}
+.sn-f5{opacity:0;animation:sn-f5 2.5s steps(1) infinite}
+.sn-f6{opacity:0;animation:sn-f6 2.5s steps(1) infinite}
+.sn-f7{opacity:0;animation:sn-f7 2.5s steps(1) infinite}
+.sn-f8{opacity:0;animation:sn-f8 2.5s steps(1) infinite}
+.sn-f9{opacity:0;animation:sn-f9 2.5s steps(1) infinite}
+/* TCJS: 7 frames over 3s */
+@keyframes tc-f1{0%{opacity:1}14.99%{opacity:1}15%{opacity:0}100%{opacity:0}}
+@keyframes tc-f2{0%{opacity:0}15%{opacity:1}29.99%{opacity:1}30%{opacity:0}100%{opacity:0}}
+@keyframes tc-f3{0%{opacity:0}30%{opacity:1}44.99%{opacity:1}45%{opacity:0}100%{opacity:0}}
+@keyframes tc-f4{0%{opacity:0}45%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}
+@keyframes tc-f5{0%{opacity:0}60%{opacity:1}74.99%{opacity:1}75%{opacity:0}100%{opacity:0}}
+@keyframes tc-f6{0%{opacity:0}75%{opacity:1}89.99%{opacity:1}90%{opacity:0}100%{opacity:0}}
+@keyframes tc-f7{0%{opacity:0}90%{opacity:1}100%{opacity:1}}
+.tc-f1{opacity:0;animation:tc-f1 3s steps(1) infinite}
+.tc-f2{opacity:0;animation:tc-f2 3s steps(1) infinite}
+.tc-f3{opacity:0;animation:tc-f3 3s steps(1) infinite}
+.tc-f4{opacity:0;animation:tc-f4 3s steps(1) infinite}
+.tc-f5{opacity:0;animation:tc-f5 3s steps(1) infinite}
+.tc-f6{opacity:0;animation:tc-f6 3s steps(1) infinite}
+.tc-f7{opacity:0;animation:tc-f7 3s steps(1) infinite}
+/* Clean & Jerk: 10 frames over 2.5s */
+@keyframes cl-f1{0%{opacity:1}9.99%{opacity:1}10%{opacity:0}100%{opacity:0}}
+@keyframes cl-f2{0%{opacity:0}10%{opacity:1}19.99%{opacity:1}20%{opacity:0}100%{opacity:0}}
+@keyframes cl-f3{0%{opacity:0}20%{opacity:1}34.99%{opacity:1}35%{opacity:0}100%{opacity:0}}
+@keyframes cl-f4{0%{opacity:0}35%{opacity:1}49.99%{opacity:1}50%{opacity:0}100%{opacity:0}}
+@keyframes cl-f5{0%{opacity:0}50%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}
+@keyframes cl-f6{0%{opacity:0}60%{opacity:1}69.99%{opacity:1}70%{opacity:0}100%{opacity:0}}
+@keyframes cl-f7{0%{opacity:0}70%{opacity:1}79.99%{opacity:1}80%{opacity:0}100%{opacity:0}}
+@keyframes cl-f8{0%{opacity:0}80%{opacity:1}89.99%{opacity:1}90%{opacity:0}100%{opacity:0}}
+@keyframes cl-f9{0%{opacity:0}90%{opacity:1}94.99%{opacity:1}95%{opacity:0}100%{opacity:0}}
+@keyframes cl-f10{0%{opacity:0}95%{opacity:1}100%{opacity:1}}
+.cl-f1{opacity:0;animation:cl-f1 2.5s steps(1) infinite}
+.cl-f2{opacity:0;animation:cl-f2 2.5s steps(1) infinite}
+.cl-f3{opacity:0;animation:cl-f3 2.5s steps(1) infinite}
+.cl-f4{opacity:0;animation:cl-f4 2.5s steps(1) infinite}
+.cl-f5{opacity:0;animation:cl-f5 2.5s steps(1) infinite}
+.cl-f6{opacity:0;animation:cl-f6 2.5s steps(1) infinite}
+.cl-f7{opacity:0;animation:cl-f7 2.5s steps(1) infinite}
+.cl-f8{opacity:0;animation:cl-f8 2.5s steps(1) infinite}
+.cl-f9{opacity:0;animation:cl-f9 2.5s steps(1) infinite}
+.cl-f10{opacity:0;animation:cl-f10 2.5s steps(1) infinite}
+/* Squat: 5 frames over 1.5s */
+@keyframes sq-f1{0%{opacity:1}19.99%{opacity:1}20%{opacity:0}100%{opacity:0}}
+@keyframes sq-f2{0%{opacity:0}20%{opacity:1}39.99%{opacity:1}40%{opacity:0}100%{opacity:0}}
+@keyframes sq-f3{0%{opacity:0}40%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}
+@keyframes sq-f4{0%{opacity:0}60%{opacity:1}79.99%{opacity:1}80%{opacity:0}100%{opacity:0}}
+@keyframes sq-f5{0%{opacity:0}80%{opacity:1}100%{opacity:1}}
+.sq-f1{opacity:0;animation:sq-f1 1.5s steps(1) infinite}
+.sq-f2{opacity:0;animation:sq-f2 1.5s steps(1) infinite}
+.sq-f3{opacity:0;animation:sq-f3 1.5s steps(1) infinite}
+.sq-f4{opacity:0;animation:sq-f4 1.5s steps(1) infinite}
+.sq-f5{opacity:0;animation:sq-f5 1.5s steps(1) infinite}
+/* Pull/Deadlift: 5 frames over 1.5s */
+@keyframes pl-f1{0%{opacity:1}19.99%{opacity:1}20%{opacity:0}100%{opacity:0}}
+@keyframes pl-f2{0%{opacity:0}20%{opacity:1}39.99%{opacity:1}40%{opacity:0}100%{opacity:0}}
+@keyframes pl-f3{0%{opacity:0}40%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}
+@keyframes pl-f4{0%{opacity:0}60%{opacity:1}79.99%{opacity:1}80%{opacity:0}100%{opacity:0}}
+@keyframes pl-f5{0%{opacity:0}80%{opacity:1}100%{opacity:1}}
+.pl-f1{opacity:0;animation:pl-f1 1.5s steps(1) infinite}
+.pl-f2{opacity:0;animation:pl-f2 1.5s steps(1) infinite}
+.pl-f3{opacity:0;animation:pl-f3 1.5s steps(1) infinite}
+.pl-f4{opacity:0;animation:pl-f4 1.5s steps(1) infinite}
+.pl-f5{opacity:0;animation:pl-f5 1.5s steps(1) infinite}
+/* Press: 5 frames over 1.5s */
+@keyframes pr-f1{0%{opacity:1}19.99%{opacity:1}20%{opacity:0}100%{opacity:0}}
+@keyframes pr-f2{0%{opacity:0}20%{opacity:1}39.99%{opacity:1}40%{opacity:0}100%{opacity:0}}
+@keyframes pr-f3{0%{opacity:0}40%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}
+@keyframes pr-f4{0%{opacity:0}60%{opacity:1}79.99%{opacity:1}80%{opacity:0}100%{opacity:0}}
+@keyframes pr-f5{0%{opacity:0}80%{opacity:1}100%{opacity:1}}
+.pr-f1{opacity:0;animation:pr-f1 1.5s steps(1) infinite}
+.pr-f2{opacity:0;animation:pr-f2 1.5s steps(1) infinite}
+.pr-f3{opacity:0;animation:pr-f3 1.5s steps(1) infinite}
+.pr-f4{opacity:0;animation:pr-f4 1.5s steps(1) infinite}
+.pr-f5{opacity:0;animation:pr-f5 1.5s steps(1) infinite}
+/* Jump: 5 frames over 1.5s */
+@keyframes jp-f1{0%{opacity:1}19.99%{opacity:1}20%{opacity:0}100%{opacity:0}}
+@keyframes jp-f2{0%{opacity:0}20%{opacity:1}39.99%{opacity:1}40%{opacity:0}100%{opacity:0}}
+@keyframes jp-f3{0%{opacity:0}40%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}
+@keyframes jp-f4{0%{opacity:0}60%{opacity:1}79.99%{opacity:1}80%{opacity:0}100%{opacity:0}}
+@keyframes jp-f5{0%{opacity:0}80%{opacity:1}100%{opacity:1}}
+.jp-f1{opacity:0;animation:jp-f1 1.5s steps(1) infinite}
+.jp-f2{opacity:0;animation:jp-f2 1.5s steps(1) infinite}
+.jp-f3{opacity:0;animation:jp-f3 1.5s steps(1) infinite}
+.jp-f4{opacity:0;animation:jp-f4 1.5s steps(1) infinite}
+.jp-f5{opacity:0;animation:jp-f5 1.5s steps(1) infinite}
+/* Rest: ZZZ float */
+@keyframes rest-zzz{0%,100%{opacity:0;transform:translateY(0) scale(0.5)}50%{opacity:1;transform:translateY(-20px) scale(1)}}
+@keyframes rest-zzz2{0%,100%{opacity:0;transform:translateY(0) scale(0.6)}50%{opacity:1;transform:translateY(-30px) scale(1.2)}}
+@keyframes rest-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+/* Mental: sparkle + breathe */
+@keyframes mental-sparkle{0%,100%{opacity:0;transform:scale(0.3)}50%{opacity:1;transform:scale(1)}}
+@keyframes mental-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+/* Flexibility: stretch sway */
+@keyframes flex-sway{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+/* Jerk: 7 frames over 2s */
+@keyframes jk-f1{0%{opacity:1}14.99%{opacity:1}15%{opacity:0}100%{opacity:0}}
+@keyframes jk-f2{0%{opacity:0}15%{opacity:1}29.99%{opacity:1}30%{opacity:0}100%{opacity:0}}
+@keyframes jk-f3{0%{opacity:0}30%{opacity:1}44.99%{opacity:1}45%{opacity:0}100%{opacity:0}}
+@keyframes jk-f4{0%{opacity:0}45%{opacity:1}59.99%{opacity:1}60%{opacity:0}100%{opacity:0}}
+@keyframes jk-f5{0%{opacity:0}60%{opacity:1}74.99%{opacity:1}75%{opacity:0}100%{opacity:0}}
+@keyframes jk-f6{0%{opacity:0}75%{opacity:1}89.99%{opacity:1}90%{opacity:0}100%{opacity:0}}
+@keyframes jk-f7{0%{opacity:0}90%{opacity:1}100%{opacity:1}}
+.jk-f1{opacity:0;animation:jk-f1 2s steps(1) infinite}
+.jk-f2{opacity:0;animation:jk-f2 2s steps(1) infinite}
+.jk-f3{opacity:0;animation:jk-f3 2s steps(1) infinite}
+.jk-f4{opacity:0;animation:jk-f4 2s steps(1) infinite}
+.jk-f5{opacity:0;animation:jk-f5 2s steps(1) infinite}
+.jk-f6{opacity:0;animation:jk-f6 2s steps(1) infinite}
+.jk-f7{opacity:0;animation:jk-f7 2s steps(1) infinite}
+/* Accessory: 4 frames over 1.5s */
+@keyframes ac-f1{0%{opacity:1}24.99%{opacity:1}25%{opacity:0}100%{opacity:0}}
+@keyframes ac-f2{0%{opacity:0}25%{opacity:1}49.99%{opacity:1}50%{opacity:0}100%{opacity:0}}
+@keyframes ac-f3{0%{opacity:0}50%{opacity:1}74.99%{opacity:1}75%{opacity:0}100%{opacity:0}}
+@keyframes ac-f4{0%{opacity:0}75%{opacity:1}100%{opacity:1}}
+.ac-f1{opacity:0;animation:ac-f1 1.5s steps(1) infinite}
+.ac-f2{opacity:0;animation:ac-f2 1.5s steps(1) infinite}
+.ac-f3{opacity:0;animation:ac-f3 1.5s steps(1) infinite}
+.ac-f4{opacity:0;animation:ac-f4 1.5s steps(1) infinite}
+@keyframes cloud-drift{0%{transform:translateX(0)}100%{transform:translateX(30px)}}
+@keyframes cloud-drift2{0%{transform:translateX(0)}100%{transform:translateX(-20px)}}
+@keyframes water-shimmer{0%,100%{opacity:.6}50%{opacity:.9}}
+@keyframes flower-sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes chimney-smoke{0%{opacity:.4;transform:translateY(0)}100%{opacity:0;transform:translateY(-15px)}}
+@keyframes map-bounce{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.15)}}
+@keyframes map-glow{0%,100%{box-shadow:0 0 8px 2px rgba(244,208,63,.3)}50%{box-shadow:0 0 16px 6px rgba(244,208,63,.6)}}
+@keyframes flag-wave{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+.map-loc-hover:hover .map-icon{animation:map-bounce .4s ease}
+.map-loc-hover:hover .map-ring{animation:map-glow 1s ease-in-out infinite}

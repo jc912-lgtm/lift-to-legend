@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="64" fill="#060612"/>
+<rect x="20" y="20" width="472" height="472" rx="48" fill="none" stroke="#FFD700" stroke-width="4" opacity=".4"/>
+<text x="256" y="200" text-anchor="middle" font-family="serif" font-size="120" font-weight="900" fill="#FFD700">一舉</text>
+<text x="256" y="340" text-anchor="middle" font-family="serif" font-size="120" font-weight="900" fill="#FFD700">成名</text>
+<circle cx="256" cy="420" r="30" fill="none" stroke="#FFD700" stroke-width="4"/>
+<polygon points="256,388 262,408 284,408 266,420 272,440 256,428 240,440 246,420 228,408 250,408" fill="#FFD700"/>
+</svg>
