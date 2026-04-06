@@ -132,203 +132,15 @@ function commentary(text){
 
 // BGM uses mp3 file instead of synth
 
-// BGM uses mp3 file
 var bgmAudio=null;
-const _OLD_BGM_TRACKS={
 
-  // ── Title: Warm morning feel, "Welcome home, sit down, relax" ──
-  title:{
-    tempo:108,
-    melody:[
-      // Phrase 1: gentle opening on the 3rd (E), stepwise with rests
-      [N.E5,1.5],[N.R,.5],[N.G5,1],[N.A5,.5],[N.G5,.5],
-      [N.E5,2],[N.R,2],
-      // Phrase 2: meandering up, dotted rhythm
-      [N.G5,1.5],[N.A5,.5],[N.C6,1],[N.R,1],
-      [N.A5,.5],[N.G5,.5],[N.E5,2],[N.R,1],[N.D5,1],
-      // Phrase 3: gentle descent
-      [N.E5,1],[N.R,1],[N.G5,1.5],[N.E5,.5],
-      [N.D5,1],[N.C5,2],[N.R,1],
-      // Phrase 4: repeat motif with variation, ending on root
-      [N.E5,1.5],[N.R,.5],[N.G5,1],[N.A5,1],
-      [N.G5,.5],[N.E5,.5],[N.D5,1],[N.R,1],
-      [N.E5,1],[N.D5,.5],[N.C5,.5],[N.R,1],[N.C5,2],
-      [N.R,2],
-      // Phrase 5: higher register echo, dreamy
-      [N.C6,1.5],[N.R,.5],[N.A5,1],[N.G5,1],
-      [N.R,1],[N.E5,1.5],[N.D5,.5],[N.C5,2],
-      [N.R,2],
-      // Phrase 6: soft closing, settling on C
-      [N.G5,1],[N.E5,1],[N.R,1],[N.D5,1],
-      [N.C5,2],[N.R,2],
-    ],
-    bass:[
-      // C - F - G - Am pattern, soft root notes
-      [N.C3,4],[N.R,4],
-      [N.F3,4],[N.R,4],
-      [N.G3,4],[N.R,4],
-      [N.A3,4],[N.E3,4],
-      [N.C3,4],[N.R,4],
-      [N.F3,4],[N.R,4],
-      [N.G3,4],[N.R,4],
-      [N.C3,4],[N.R,4],
-    ],
-    drums:false,
-  },
-
-  // ── Training: Bouncy, playful, like AC shop music ──
-  training:{
-    tempo:116,
-    melody:[
-      // Phrase 1: playful bounce in G major
-      [N.B4,1],[N.D5,.5],[N.R,.5],[N.G5,1.5],[N.R,.5],
-      [N.E5,.5],[N.D5,.5],[N.B4,1],[N.R,1],
-      // Phrase 2: skip up, gentle
-      [N.D5,1],[N.R,.5],[N.G5,.5],[N.A5,1],[N.G5,.5],[N.R,.5],
-      [N.E5,1],[N.D5,1],[N.R,1],
-      // Phrase 3: bouncy repeat with variation
-      [N.B4,.5],[N.D5,.5],[N.G5,1.5],[N.R,.5],
-      [N.A5,.5],[N.G5,.5],[N.E5,1],[N.D5,1],[N.R,1],
-      // Phrase 4: higher playful bit
-      [N.G5,1],[N.R,.5],[N.A5,.5],[N.B5,1.5],[N.R,.5],
-      [N.A5,.5],[N.G5,.5],[N.E5,1],[N.R,1],
-      [N.D5,1],[N.B4,1],[N.R,1],[N.G4,1],
-      // Phrase 5: happy resolution
-      [N.B4,1.5],[N.R,.5],[N.D5,1],[N.G5,1],
-      [N.R,1],[N.E5,.5],[N.D5,.5],[N.B4,2],
-      [N.R,2],
-      // Phrase 6: gentle ending
-      [N.D5,1],[N.E5,.5],[N.D5,.5],[N.B4,1],[N.R,1],
-      [N.G4,2],[N.R,2],
-    ],
-    bass:[
-      // Walking bass feel, G-C-D-Em, soft
-      [N.G3,2],[N.R,1],[N.B3,1],
-      [N.C3,2],[N.R,1],[N.E3,1],
-      [N.D3,2],[N.R,1],[N.A3,1],
-      [N.E3,2],[N.R,1],[N.B3,1],
-      [N.G3,2],[N.R,1],[N.D3,1],
-      [N.C3,2],[N.R,1],[N.G3,1],
-      [N.D3,2],[N.R,1],[N.A3,1],
-      [N.G3,2],[N.R,2],
-    ],
-    drums:true,
-  },
-
-  // ── Competition: Exciting but pleasant, like AC event music ──
-  competition:{
-    tempo:126,
-    melody:[
-      // Phrase 1: ascending energy in D major
-      [N.A4,1],[N.R,.5],[N.D5,.5],[N.E5,1],[N.R,.5],[N.Gb5,.5],
-      [N.A5,1.5],[N.R,.5],[N.Gb5,1],
-      [N.E5,.5],[N.D5,.5],[N.R,1],
-      // Phrase 2: building excitement
-      [N.D5,.5],[N.E5,.5],[N.Gb5,1],[N.A5,1],[N.R,1],
-      [N.B5,1.5],[N.A5,.5],[N.Gb5,1],[N.E5,1],
-      [N.R,1],[N.D5,1],
-      // Phrase 3: peak phrase
-      [N.A5,1],[N.R,.5],[N.B5,.5],[N.D6,1.5],[N.R,.5],
-      [N.B5,.5],[N.A5,.5],[N.Gb5,1],[N.R,1],
-      [N.E5,1],[N.D5,1],
-      // Phrase 4: resolution with energy
-      [N.Gb5,1.5],[N.R,.5],[N.A5,1],[N.B5,.5],[N.A5,.5],
-      [N.Gb5,1],[N.E5,1],[N.R,1],
-      [N.D5,2],[N.R,1],
-      // Phrase 5: triumphant repeat
-      [N.A5,1],[N.B5,.5],[N.R,.5],[N.D6,1.5],[N.R,.5],
-      [N.B5,1],[N.A5,.5],[N.Gb5,.5],[N.E5,1],
-      [N.D5,2],[N.R,2],
-    ],
-    bass:[
-      // More active bass, D-G-A-Bm, gentle drive
-      [N.D3,2],[N.A3,2],
-      [N.G3,2],[N.D3,2],
-      [N.A3,2],[N.E3,2],
-      [N.B3,2],[N.Gb3,2],
-      [N.D3,2],[N.A3,2],
-      [N.G3,2],[N.D3,2],
-      [N.A3,2],[N.E3,2],
-      [N.D3,2],[N.R,2],
-    ],
-    drums:true,
-  },
-
-  // ── Shop: The coziest, like Nook's Cranny music ──
-  shop:{
-    tempo:96,
-    melody:[
-      // Phrase 1: very slow, dreamy in F major
-      [N.A5,2],[N.R,1],[N.G5,1],
-      [N.F5,2],[N.R,2],
-      // Phrase 2: gentle sustained notes
-      [N.C5,1.5],[N.R,.5],[N.D5,1],[N.F5,1],
-      [N.R,1],[N.E5,2],[N.R,1],
-      // Phrase 3: soft wandering
-      [N.F5,1.5],[N.R,.5],[N.A5,2],
-      [N.G5,1],[N.F5,1],[N.R,2],
-      // Phrase 4: dreamy descent
-      [N.A5,1.5],[N.R,.5],[N.G5,1.5],[N.R,.5],
-      [N.F5,1],[N.E5,1],[N.R,1],[N.D5,1],
-      [N.C5,2],[N.R,2],
-      // Phrase 5: gentle echo
-      [N.F5,2],[N.R,1],[N.E5,1],
-      [N.D5,1.5],[N.R,.5],[N.C5,2],
-      [N.R,2],
-      // Phrase 6: soft resolution
-      [N.D5,1],[N.R,1],[N.C5,1],[N.R,1],
-      [N.F4,2],[N.R,2],
-    ],
-    bass:[
-      // Minimal, just occasional root notes
-      [N.F3,4],[N.R,4],
-      [N.C3,4],[N.R,4],
-      [N.F3,4],[N.R,4],
-      [N.Bb3,4],[N.R,4],
-      [N.F3,4],[N.R,4],
-      [N.C3,4],[N.R,4],
-    ],
-    drums:false,
-  },
-
-  // ── Victory: Celebratory but warm, like AC achievement jingle ──
-  victory:{
-    tempo:120,
-    melody:[
-      // Phrase 1: ascending, sweet build
-      [N.E5,1],[N.R,.5],[N.G5,.5],[N.A5,1.5],[N.R,.5],
-      [N.C6,1],[N.R,1],
-      // Phrase 2: triumphant climb
-      [N.G5,.5],[N.A5,.5],[N.C6,1],[N.D6,1.5],[N.R,.5],
-      [N.E6,2],[N.R,1],
-      // Phrase 3: sweet echo down and up
-      [N.D6,1],[N.C6,.5],[N.R,.5],[N.A5,1],[N.G5,1],
-      [N.R,.5],[N.A5,.5],[N.C6,1.5],[N.R,.5],
-      // Phrase 4: proud resolution — ends on high sustained note
-      [N.D6,.5],[N.E6,.5],[N.G6,1],[N.R,1],
-      [N.E6,1],[N.D6,.5],[N.C6,.5],[N.R,1],
-      [N.C6,1],[N.E6,1],[N.G6,3],
-      [N.R,2],
-    ],
-    bass:[
-      // Strong supportive chords, C-F-G-C
-      [N.C3,2],[N.G3,2],
-      [N.F3,2],[N.C3,2],
-      [N.G3,2],[N.E3,2],
-      [N.F3,2],[N.G3,2],
-      [N.C3,2],[N.E3,1],[N.G3,1],
-      [N.C3,3],[N.R,2],
-    ],
-    drums:true,
-  },
-};
 
 var bgmGeneration=0;
 
 // Synth BGM patterns for different locations (simple looping melodies)
 var synthBGMInterval=null;
 var synthBGMType=null;
-const SYNTH_PATTERNS={
+var SYNTH_PATTERNS={
   training:{notes:[262,330,392,330,262,294,349,294],tempo:200,wave:'sine'},
   competition:{notes:[330,392,494,392,330,294,262,294,330,392,494,587],tempo:150,wave:'square'},
   shop:{notes:[349,440,349,330,294,262,294,330],tempo:280,wave:'sine'},
@@ -382,12 +194,12 @@ function stopBGM(){
 }
 
 // BGM track mapping
-const BGM_TRACK_TYPE={
+var BGM_TRACK_TYPE={
   title:'mp3',hub:'mp3',create:'mp3',
   training:'synth',competition:'synth',shop:'synth',
   friend:'synth',nature:'synth',work:'synth',relax:'synth',
 };
-const BGM_SYNTH_MAP={
+var BGM_SYNTH_MAP={
   training:'training',competition:'competition',shop:'shop',
   friend:'friend',nature:'nature',work:'work',relax:'relax',
 };
