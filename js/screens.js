@@ -328,6 +328,305 @@ function CreateScreen({onConfirm}){
   );
 }
 
+// ── Building SVG helper for Hub map ──
+function getBuildingSVG(id){
+  switch(id){
+    case 'home': return React.createElement('g',null,
+      React.createElement('rect',{x:25,y:50,width:70,height:45,rx:3,fill:'#e8d5b0',stroke:'#8d6e3f',strokeWidth:2}),
+      React.createElement('polygon',{points:'15,53 60,12 105,53',fill:'#c62828',stroke:'#8d2c2c',strokeWidth:2}),
+      React.createElement('rect',{x:47,y:62,width:22,height:33,rx:2,fill:'#5d4037'}),
+      React.createElement('circle',{cx:64,cy:80,r:2,fill:'#f4d03f'}),
+      React.createElement('rect',{x:28,y:58,width:14,height:14,fill:'#bbdefb',stroke:'#64b5f6',strokeWidth:1.5}),
+      React.createElement('rect',{x:78,y:58,width:14,height:14,fill:'#bbdefb',stroke:'#64b5f6',strokeWidth:1.5}),
+      React.createElement('line',{x1:35,y1:58,x2:35,y2:72,stroke:'#64b5f6',strokeWidth:0.8}),
+      React.createElement('line',{x1:28,y1:65,x2:42,y2:65,stroke:'#64b5f6',strokeWidth:0.8}),
+      React.createElement('line',{x1:85,y1:58,x2:85,y2:72,stroke:'#64b5f6',strokeWidth:0.8}),
+      React.createElement('line',{x1:78,y1:65,x2:92,y2:65,stroke:'#64b5f6',strokeWidth:0.8}),
+      React.createElement('rect',{x:78,y:18,width:12,height:30,fill:'#795548'}),
+      React.createElement('rect',{x:75,y:15,width:18,height:6,rx:1,fill:'#6d4c41'}),
+      React.createElement('circle',{cx:84,cy:10,r:4,fill:'white',opacity:0.5}),
+      React.createElement('circle',{cx:88,cy:4,r:3,fill:'white',opacity:0.35}),
+      React.createElement('rect',{x:20,y:93,width:80,height:7,rx:2,fill:'#66bb6a',opacity:0.5}),
+      React.createElement('circle',{cx:30,cy:92,r:4,fill:'#e91e63',opacity:0.7}),
+      React.createElement('circle',{cx:40,cy:93,r:3,fill:'#ffeb3b',opacity:0.7}),
+      React.createElement('circle',{cx:82,cy:92,r:4,fill:'#e91e63',opacity:0.7}),
+      React.createElement('circle',{cx:90,cy:93,r:3,fill:'#ff9800',opacity:0.7})
+    );
+    case 'gym': return React.createElement('g',null,
+      React.createElement('rect',{x:8,y:30,width:104,height:65,rx:3,fill:'#37474f',stroke:'#263238',strokeWidth:2}),
+      React.createElement('rect',{x:5,y:18,width:110,height:18,rx:3,fill:'#1565c0'}),
+      React.createElement('text',{x:60,y:33,textAnchor:'middle',fill:'white',fontSize:14,fontWeight:'bold',fontFamily:'monospace'},'GYM'),
+      React.createElement('rect',{x:40,y:60,width:38,height:35,rx:2,fill:'#263238'}),
+      React.createElement('rect',{x:40,y:60,width:18,height:35,fill:'#1a1a1a'}),
+      React.createElement('rect',{x:14,y:45,width:18,height:18,fill:'#263238',rx:1}),
+      React.createElement('rect',{x:86,y:45,width:18,height:18,fill:'#263238',rx:1}),
+      React.createElement('rect',{x:16,y:47,width:14,height:14,fill:'#546e7a',opacity:0.5}),
+      React.createElement('rect',{x:88,y:47,width:14,height:14,fill:'#546e7a',opacity:0.5}),
+      React.createElement('rect',{x:30,y:24,width:10,height:5,rx:2,fill:'#f4d03f'}),
+      React.createElement('rect',{x:78,y:24,width:10,height:5,rx:2,fill:'#f4d03f'}),
+      React.createElement('rect',{x:38,y:25,width:42,height:3,rx:1,fill:'#f4d03f'}),
+      React.createElement('circle',{cx:28,cy:26,r:6,fill:'#ef5350',stroke:'#c62828',strokeWidth:1}),
+      React.createElement('circle',{cx:90,cy:26,r:6,fill:'#ef5350',stroke:'#c62828',strokeWidth:1}),
+      React.createElement('rect',{x:35,y:92,width:48,height:5,rx:1,fill:'#455a64'})
+    );
+    case 'arena': return React.createElement('g',null,
+      React.createElement('rect',{x:5,y:55,width:130,height:40,rx:4,fill:'#bdbdbd',stroke:'#9e9e9e',strokeWidth:2}),
+      React.createElement('path',{d:'M5,55 Q70,5 135,55',fill:'#78909c',stroke:'#607d8b',strokeWidth:2}),
+      React.createElement('path',{d:'M15,55 Q70,15 125,55',fill:'#90a4ae',opacity:0.5}),
+      React.createElement('rect',{x:50,y:62,width:40,height:33,rx:3,fill:'#616161'}),
+      React.createElement('path',{d:'M50,62 Q70,50 90,62',fill:'#757575'}),
+      React.createElement('rect',{x:12,y:45,width:10,height:50,fill:'#9e9e9e'}),
+      React.createElement('rect',{x:118,y:45,width:10,height:50,fill:'#9e9e9e'}),
+      React.createElement('line',{x1:35,y1:20,x2:35,y2:40,stroke:'#5d4037',strokeWidth:2}),
+      React.createElement('polygon',{points:'36,20 50,25 36,30',fill:'#c62828'}),
+      React.createElement('line',{x1:105,y1:20,x2:105,y2:40,stroke:'#5d4037',strokeWidth:2}),
+      React.createElement('polygon',{points:'104,20 90,25 104,30',fill:'#1565c0'}),
+      React.createElement('rect',{x:20,y:65,width:10,height:8,rx:1,fill:'#e0e0e0'}),
+      React.createElement('rect',{x:110,y:65,width:10,height:8,rx:1,fill:'#e0e0e0'}),
+      React.createElement('rect',{x:45,y:92,width:50,height:5,rx:1,fill:'#9e9e9e'}),
+      React.createElement('rect',{x:40,y:95,width:60,height:5,rx:1,fill:'#bdbdbd'})
+    );
+    case 'restaurant': return React.createElement('g',null,
+      React.createElement('rect',{x:15,y:35,width:90,height:60,rx:3,fill:'#ffcc80',stroke:'#ff8a65',strokeWidth:2}),
+      React.createElement('path',{d:'M10,38 L60,18 L110,38',fill:'#ff8a65',stroke:'#e65100',strokeWidth:1.5}),
+      React.createElement('rect',{x:48,y:60,width:22,height:35,rx:2,fill:'#8d6e3f'}),
+      React.createElement('rect',{x:20,y:48,width:18,height:15,fill:'#fff9c4',stroke:'#ffb74d',strokeWidth:1}),
+      React.createElement('rect',{x:80,y:48,width:18,height:15,fill:'#fff9c4',stroke:'#ffb74d',strokeWidth:1}),
+      React.createElement('rect',{x:35,y:22,width:48,height:14,rx:2,fill:'#d84315'}),
+      React.createElement('text',{x:59,y:33,textAnchor:'middle',fill:'white',fontSize:9,fontWeight:'bold',fontFamily:'monospace'},'\u9910\u5EF3'),
+      React.createElement('path',{d:'M70,15 Q73,8 70,2',fill:'none',stroke:'white',strokeWidth:1.5,opacity:0.6}),
+      React.createElement('path',{d:'M78,18 Q81,10 78,4',fill:'none',stroke:'white',strokeWidth:1.5,opacity:0.5}),
+      React.createElement('path',{d:'M62,17 Q59,10 62,3',fill:'none',stroke:'white',strokeWidth:1.5,opacity:0.5}),
+      React.createElement('rect',{x:4,y:82,width:14,height:2,fill:'#8d6e3f'}),
+      React.createElement('rect',{x:10,y:84,width:2,height:10,fill:'#6d4c1f'}),
+      React.createElement('circle',{cx:11,cy:80,r:3,fill:'#ef5350',opacity:0.6})
+    );
+    case 'pool': return React.createElement('g',null,
+      React.createElement('rect',{x:15,y:30,width:90,height:65,rx:3,fill:'#1a1a2e',stroke:'#16213e',strokeWidth:2}),
+      React.createElement('rect',{x:12,y:25,width:96,height:10,rx:2,fill:'#0f3460'}),
+      React.createElement('rect',{x:25,y:38,width:70,height:16,rx:2,fill:'#0a0a15'}),
+      React.createElement('text',{x:60,y:51,textAnchor:'middle',fill:'#00e5ff',fontSize:12,fontWeight:'bold',fontFamily:'monospace'},'POOL'),
+      React.createElement('rect',{x:25,y:38,width:70,height:16,rx:2,fill:'none',stroke:'#00e5ff',strokeWidth:1,opacity:0.6}),
+      React.createElement('circle',{cx:88,cy:32,r:8,fill:'#111'}),
+      React.createElement('circle',{cx:88,cy:32,r:4,fill:'white'}),
+      React.createElement('text',{x:88,y:35,textAnchor:'middle',fill:'black',fontSize:6,fontWeight:'bold'},'8'),
+      React.createElement('rect',{x:44,y:62,width:26,height:33,rx:2,fill:'#16213e'}),
+      React.createElement('rect',{x:20,y:60,width:16,height:12,fill:'#1a1a2e',stroke:'#00e5ff',strokeWidth:0.8}),
+      React.createElement('rect',{x:82,y:60,width:16,height:12,fill:'#1a1a2e',stroke:'#00e5ff',strokeWidth:0.8}),
+      React.createElement('rect',{x:22,y:62,width:12,height:8,fill:'#0d47a1',opacity:0.4}),
+      React.createElement('rect',{x:84,y:62,width:12,height:8,fill:'#0d47a1',opacity:0.4})
+    );
+    case 'cafe': return React.createElement('g',null,
+      React.createElement('rect',{x:15,y:38,width:85,height:57,rx:3,fill:'#8d6e3f',stroke:'#6d4c41',strokeWidth:2}),
+      React.createElement('path',{d:'M10,40 Q55,28 105,40',fill:'#f4d03f',stroke:'#e6b800',strokeWidth:1.5}),
+      React.createElement('path',{d:'M10,40 L20,48 L35,40 L48,48 L60,40 L72,48 L85,40 L98,48 L105,40',fill:'none',stroke:'#e6b800',strokeWidth:1}),
+      React.createElement('rect',{x:44,y:60,width:24,height:35,rx:2,fill:'#5d4037'}),
+      React.createElement('circle',{cx:62,cy:78,r:2,fill:'#f4d03f'}),
+      React.createElement('rect',{x:20,y:52,width:18,height:16,fill:'#fff9c4',stroke:'#d4a24e',strokeWidth:1}),
+      React.createElement('rect',{x:76,y:52,width:18,height:16,fill:'#fff9c4',stroke:'#d4a24e',strokeWidth:1}),
+      React.createElement('rect',{x:48,y:30,width:16,height:12,rx:2,fill:'white'}),
+      React.createElement('path',{d:'M64,33 Q70,36 64,40',fill:'none',stroke:'white',strokeWidth:1.5}),
+      React.createElement('path',{d:'M52,28 Q54,22 52,17',fill:'none',stroke:'#999',strokeWidth:1.2,opacity:0.6}),
+      React.createElement('path',{d:'M58,27 Q60,20 58,14',fill:'none',stroke:'#999',strokeWidth:1.2,opacity:0.5}),
+      React.createElement('rect',{x:2,y:86,width:10,height:2,fill:'#8d6e3f'}),
+      React.createElement('rect',{x:6,y:88,width:2,height:8,fill:'#6d4c1f'}),
+      React.createElement('rect',{x:100,y:86,width:10,height:2,fill:'#8d6e3f'}),
+      React.createElement('rect',{x:104,y:88,width:2,height:8,fill:'#6d4c1f'})
+    );
+    case 'laundry': return React.createElement('g',null,
+      React.createElement('rect',{x:12,y:30,width:96,height:65,rx:3,fill:'#e0e0e0',stroke:'#bdbdbd',strokeWidth:2}),
+      React.createElement('rect',{x:8,y:22,width:104,height:14,rx:3,fill:'#90caf9',stroke:'#64b5f6',strokeWidth:1}),
+      React.createElement('text',{x:60,y:33,textAnchor:'middle',fill:'#1565c0',fontSize:9,fontWeight:'bold',fontFamily:'monospace'},'C&R WASH'),
+      React.createElement('rect',{x:18,y:44,width:84,height:25,fill:'#e3f2fd',stroke:'#90caf9',strokeWidth:1}),
+      React.createElement('circle',{cx:35,cy:56,r:9,fill:'white',stroke:'#bdbdbd',strokeWidth:1.5}),
+      React.createElement('circle',{cx:35,cy:56,r:5,fill:'#bbdefb'}),
+      React.createElement('circle',{cx:60,cy:56,r:9,fill:'white',stroke:'#bdbdbd',strokeWidth:1.5}),
+      React.createElement('circle',{cx:60,cy:56,r:5,fill:'#bbdefb'}),
+      React.createElement('circle',{cx:85,cy:56,r:9,fill:'white',stroke:'#bdbdbd',strokeWidth:1.5}),
+      React.createElement('circle',{cx:85,cy:56,r:5,fill:'#bbdefb'}),
+      React.createElement('rect',{x:45,y:72,width:26,height:23,rx:2,fill:'#b0bec5'}),
+      React.createElement('rect',{x:45,y:72,width:12,height:23,fill:'#90a4ae'}),
+      React.createElement('rect',{x:40,y:93,width:36,height:4,rx:1,fill:'#bdbdbd'})
+    );
+    case 'river': return React.createElement('g',null,
+      React.createElement('ellipse',{cx:60,cy:85,rx:55,ry:18,fill:'#4fc3f7',opacity:0.7}),
+      React.createElement('ellipse',{cx:60,cy:85,rx:45,ry:12,fill:'#81d4fa',opacity:0.4}),
+      React.createElement('path',{d:'M25,82 Q40,78 55,82 Q70,86 85,82',fill:'none',stroke:'white',strokeWidth:1.2,opacity:0.4}),
+      React.createElement('path',{d:'M30,90 Q45,86 60,90 Q75,94 90,90',fill:'none',stroke:'white',strokeWidth:1,opacity:0.3}),
+      React.createElement('rect',{x:40,y:55,width:40,height:28,rx:2,fill:'#8d6e3f',stroke:'#6d4c1f',strokeWidth:1.5}),
+      React.createElement('line',{x1:40,y1:62,x2:80,y2:62,stroke:'#6d4c1f',strokeWidth:1}),
+      React.createElement('line',{x1:40,y1:69,x2:80,y2:69,stroke:'#6d4c1f',strokeWidth:1}),
+      React.createElement('line',{x1:40,y1:76,x2:80,y2:76,stroke:'#6d4c1f',strokeWidth:1}),
+      React.createElement('rect',{x:42,y:80,width:5,height:12,fill:'#5d3c0f'}),
+      React.createElement('rect',{x:73,y:80,width:5,height:12,fill:'#5d3c0f'}),
+      React.createElement('line',{x1:70,y1:55,x2:70,y2:25,stroke:'#795548',strokeWidth:2.5}),
+      React.createElement('line',{x1:70,y1:25,x2:95,y2:45,stroke:'#795548',strokeWidth:1.5}),
+      React.createElement('path',{d:'M95,45 L95,75',fill:'none',stroke:'#bdbdbd',strokeWidth:0.8,strokeDasharray:'2,2'}),
+      React.createElement('circle',{cx:95,cy:76,r:3,fill:'#ef5350'})
+    );
+    case 'friend': return React.createElement('g',null,
+      React.createElement('rect',{x:20,y:45,width:75,height:50,rx:3,fill:'#ce93d8',stroke:'#9c27b0',strokeWidth:2}),
+      React.createElement('polygon',{points:'12,48 58,10 103,48',fill:'#7b1fa2',stroke:'#6a1b9a',strokeWidth:2}),
+      React.createElement('rect',{x:44,y:62,width:22,height:33,rx:2,fill:'#4a148c'}),
+      React.createElement('circle',{cx:60,cy:80,r:2,fill:'#f4d03f'}),
+      React.createElement('rect',{x:25,y:55,width:14,height:14,fill:'#ffeb3b',stroke:'#fbc02d',strokeWidth:1}),
+      React.createElement('rect',{x:75,y:55,width:14,height:14,fill:'#81d4fa',stroke:'#4fc3f7',strokeWidth:1}),
+      React.createElement('text',{x:58,y:20,textAnchor:'middle',fill:'#f48fb1',fontSize:10},'\u2665'),
+      React.createElement('rect',{x:44,y:93,width:22,height:4,rx:1,fill:'#ffab91'})
+    );
+    case 'shop': return React.createElement('g',null,
+      React.createElement('rect',{x:15,y:35,width:88,height:60,rx:3,fill:'#fff8e1',stroke:'#ffb74d',strokeWidth:2}),
+      React.createElement('rect',{x:10,y:25,width:98,height:14,rx:3,fill:'#ff7043'}),
+      React.createElement('rect',{x:10,y:25,width:14,height:14,fill:'#ef5350',opacity:0.7}),
+      React.createElement('rect',{x:38,y:25,width:14,height:14,fill:'#ef5350',opacity:0.7}),
+      React.createElement('rect',{x:66,y:25,width:14,height:14,fill:'#ef5350',opacity:0.7}),
+      React.createElement('rect',{x:94,y:25,width:14,height:14,fill:'#ef5350',opacity:0.7}),
+      React.createElement('rect',{x:20,y:45,width:35,height:25,fill:'#e3f2fd',stroke:'#90caf9',strokeWidth:1}),
+      React.createElement('rect',{x:24,y:55,width:8,height:12,rx:1,fill:'#ef5350'}),
+      React.createElement('rect',{x:35,y:58,width:8,height:9,rx:1,fill:'#42a5f5'}),
+      React.createElement('rect',{x:44,y:52,width:6,height:15,rx:1,fill:'#66bb6a'}),
+      React.createElement('rect',{x:64,y:52,width:24,height:43,rx:2,fill:'#8d6e3f'}),
+      React.createElement('rect',{x:64,y:52,width:11,height:43,fill:'#7c5e35'}),
+      React.createElement('circle',{cx:83,cy:74,r:2,fill:'#f4d03f'}),
+      React.createElement('text',{x:59,y:22,textAnchor:'middle',fill:'white',fontSize:10,fontWeight:'bold',fontFamily:'monospace'},'SHOP')
+    );
+    case 'jobs': return React.createElement('g',null,
+      React.createElement('rect',{x:15,y:25,width:88,height:70,rx:3,fill:'#78909c',stroke:'#546e7a',strokeWidth:2}),
+      React.createElement('rect',{x:12,y:18,width:94,height:12,rx:2,fill:'#546e7a'}),
+      React.createElement('rect',{x:22,y:35,width:12,height:10,fill:'#e3f2fd',stroke:'#90caf9',strokeWidth:0.8}),
+      React.createElement('rect',{x:42,y:35,width:12,height:10,fill:'#e3f2fd',stroke:'#90caf9',strokeWidth:0.8}),
+      React.createElement('rect',{x:62,y:35,width:12,height:10,fill:'#fff9c4',stroke:'#90caf9',strokeWidth:0.8}),
+      React.createElement('rect',{x:82,y:35,width:12,height:10,fill:'#e3f2fd',stroke:'#90caf9',strokeWidth:0.8}),
+      React.createElement('rect',{x:22,y:52,width:12,height:10,fill:'#fff9c4',stroke:'#90caf9',strokeWidth:0.8}),
+      React.createElement('rect',{x:42,y:52,width:12,height:10,fill:'#e3f2fd',stroke:'#90caf9',strokeWidth:0.8}),
+      React.createElement('rect',{x:62,y:52,width:12,height:10,fill:'#e3f2fd',stroke:'#90caf9',strokeWidth:0.8}),
+      React.createElement('rect',{x:82,y:52,width:12,height:10,fill:'#fff9c4',stroke:'#90caf9',strokeWidth:0.8}),
+      React.createElement('rect',{x:44,y:72,width:26,height:23,rx:2,fill:'#455a64'}),
+      React.createElement('rect',{x:44,y:72,width:12,height:23,fill:'#37474f'}),
+      React.createElement('rect',{x:48,y:20,width:18,height:10,rx:2,fill:'#f4d03f',stroke:'#e6b800',strokeWidth:1}),
+      React.createElement('rect',{x:54,y:17,width:6,height:5,rx:1,fill:'none',stroke:'#e6b800',strokeWidth:1})
+    );
+    case 'status': return React.createElement('g',null,
+      React.createElement('rect',{x:30,y:25,width:60,height:70,rx:3,fill:'#8d6e3f',stroke:'#6d4c1f',strokeWidth:2}),
+      React.createElement('rect',{x:35,y:30,width:50,height:45,rx:2,fill:'#d7ccc8'}),
+      React.createElement('rect',{x:38,y:34,width:20,height:14,fill:'#fff9c4',stroke:'#fbc02d',strokeWidth:0.5}),
+      React.createElement('circle',{cx:48,cy:34,r:2,fill:'#f44336'}),
+      React.createElement('rect',{x:62,y:34,width:18,height:12,fill:'#c8e6c9',stroke:'#66bb6a',strokeWidth:0.5}),
+      React.createElement('circle',{cx:71,cy:34,r:2,fill:'#2196f3'}),
+      React.createElement('rect',{x:40,y:52,width:16,height:10,fill:'#bbdefb',stroke:'#42a5f5',strokeWidth:0.5}),
+      React.createElement('circle',{cx:48,cy:52,r:2,fill:'#4caf50'}),
+      React.createElement('rect',{x:60,y:50,width:22,height:14,fill:'#ffccbc',stroke:'#ff8a65',strokeWidth:0.5}),
+      React.createElement('circle',{cx:71,cy:50,r:2,fill:'#f44336'}),
+      React.createElement('line',{x1:42,y1:66,x2:42,y2:72,stroke:'#42a5f5',strokeWidth:3}),
+      React.createElement('line',{x1:48,y1:63,x2:48,y2:72,stroke:'#66bb6a',strokeWidth:3}),
+      React.createElement('line',{x1:54,y1:60,x2:54,y2:72,stroke:'#f44336',strokeWidth:3}),
+      React.createElement('line',{x1:60,y1:58,x2:60,y2:72,stroke:'#f4d03f',strokeWidth:3}),
+      React.createElement('rect',{x:45,y:92,width:6,height:8,fill:'#6d4c1f'}),
+      React.createElement('rect',{x:69,y:92,width:6,height:8,fill:'#6d4c1f'}),
+      React.createElement('polygon',{points:'25,27 60,12 95,27',fill:'#5d4037'})
+    );
+    case 'nstc': return React.createElement('g',null,
+      React.createElement('rect',{x:8,y:40,width:114,height:55,rx:2,fill:'#eceff1',stroke:'#90a4ae',strokeWidth:2}),
+      React.createElement('polygon',{points:'5,42 65,8 125,42',fill:'#cfd8dc',stroke:'#90a4ae',strokeWidth:1.5}),
+      React.createElement('rect',{x:18,y:42,width:8,height:53,fill:'#e0e0e0',stroke:'#bdbdbd',strokeWidth:0.8}),
+      React.createElement('rect',{x:34,y:42,width:8,height:53,fill:'#e0e0e0',stroke:'#bdbdbd',strokeWidth:0.8}),
+      React.createElement('rect',{x:50,y:42,width:8,height:53,fill:'#e0e0e0',stroke:'#bdbdbd',strokeWidth:0.8}),
+      React.createElement('rect',{x:68,y:42,width:8,height:53,fill:'#e0e0e0',stroke:'#bdbdbd',strokeWidth:0.8}),
+      React.createElement('rect',{x:84,y:42,width:8,height:53,fill:'#e0e0e0',stroke:'#bdbdbd',strokeWidth:0.8}),
+      React.createElement('rect',{x:100,y:42,width:8,height:53,fill:'#e0e0e0',stroke:'#bdbdbd',strokeWidth:0.8}),
+      React.createElement('rect',{x:5,y:38,width:120,height:6,rx:1,fill:'#b0bec5'}),
+      React.createElement('rect',{x:48,y:65,width:30,height:30,rx:2,fill:'#78909c'}),
+      React.createElement('path',{d:'M48,65 Q63,55 78,65',fill:'#90a4ae'}),
+      React.createElement('line',{x1:65,y1:8,x2:65,y2:-5,stroke:'#795548',strokeWidth:2}),
+      React.createElement('polygon',{points:'66,-5 82,0 66,5',fill:'#c62828'}),
+      React.createElement('circle',{cx:65,cy:25,r:7,fill:'#f4d03f',stroke:'#e6b800',strokeWidth:1}),
+      React.createElement('text',{x:65,y:28,textAnchor:'middle',fill:'#c62828',fontSize:8,fontWeight:'bold'},'\u570B'),
+      React.createElement('rect',{x:30,y:93,width:66,height:4,rx:1,fill:'#b0bec5'}),
+      React.createElement('rect',{x:25,y:96,width:76,height:4,rx:1,fill:'#cfd8dc'})
+    );
+    case 'tianliao': return React.createElement('g',null,
+      React.createElement('polygon',{points:'10,95 60,15 110,95',fill:'#607d8b'}),
+      React.createElement('polygon',{points:'25,95 60,30 95,95',fill:'#78909c',opacity:0.6}),
+      React.createElement('polygon',{points:'45,35 60,15 75,35',fill:'white',opacity:0.7}),
+      React.createElement('rect',{x:40,y:72,width:30,height:22,rx:2,fill:'#a1887f'}),
+      React.createElement('polygon',{points:'35,74 55,58 75,74',fill:'#6d4c41'}),
+      React.createElement('rect',{x:50,y:78,width:10,height:16,rx:1,fill:'#5d4037'}),
+      React.createElement('rect',{x:43,y:77,width:6,height:6,fill:'#fff9c4'}),
+      React.createElement('polygon',{points:'28,78 32,65 36,78',fill:'#388e3c',opacity:0.7}),
+      React.createElement('polygon',{points:'78,72 82,60 86,72',fill:'#2e7d32',opacity:0.7}),
+      React.createElement('polygon',{points:'22,88 26,76 30,88',fill:'#43a047',opacity:0.6}),
+      React.createElement('path',{d:'M55,94 Q50,98 55,100',fill:'none',stroke:'#d4b880',strokeWidth:3,opacity:0.6})
+    );
+    case 'mituo': return React.createElement('g',null,
+      React.createElement('ellipse',{cx:60,cy:90,rx:55,ry:12,fill:'#f5deb3',opacity:0.8}),
+      React.createElement('path',{d:'M0,95 Q30,88 60,95 Q90,102 120,95',fill:'#4fc3f7',opacity:0.4}),
+      React.createElement('path',{d:'M5,100 Q35,93 65,100 Q95,107 120,100',fill:'#81d4fa',opacity:0.3}),
+      React.createElement('rect',{x:35,y:52,width:40,height:38,rx:2,fill:'#d7ccc8',stroke:'#a1887f',strokeWidth:1.5}),
+      React.createElement('polygon',{points:'28,55 55,32 82,55',fill:'#8d6e3f',stroke:'#6d4c1f',strokeWidth:1}),
+      React.createElement('rect',{x:48,y:65,width:14,height:25,rx:1,fill:'#6d4c41'}),
+      React.createElement('rect',{x:38,y:60,width:10,height:10,fill:'#81d4fa'}),
+      React.createElement('path',{d:'M100,90 Q98,60 102,35',fill:'none',stroke:'#795548',strokeWidth:5}),
+      React.createElement('path',{d:'M102,35 Q85,30 75,38',fill:'none',stroke:'#388e3c',strokeWidth:3}),
+      React.createElement('path',{d:'M102,35 Q115,28 120,38',fill:'none',stroke:'#388e3c',strokeWidth:3}),
+      React.createElement('path',{d:'M102,35 Q95,22 88,28',fill:'none',stroke:'#2e7d32',strokeWidth:2.5}),
+      React.createElement('path',{d:'M102,35 Q112,22 118,28',fill:'none',stroke:'#2e7d32',strokeWidth:2.5}),
+      React.createElement('path',{d:'M102,35 Q100,20 105,18',fill:'none',stroke:'#43a047',strokeWidth:2}),
+      React.createElement('circle',{cx:100,cy:37,r:3,fill:'#795548'}),
+      React.createElement('circle',{cx:105,cy:36,r:3,fill:'#6d4c41'})
+    );
+    case 'hengzhai': return React.createElement('g',null,
+      React.createElement('rect',{x:20,y:40,width:80,height:55,rx:2,fill:'#b0bec5',stroke:'#78909c',strokeWidth:2}),
+      React.createElement('line',{x1:15,y1:40,x2:15,y2:95,stroke:'#ff8f00',strokeWidth:2}),
+      React.createElement('line',{x1:105,y1:40,x2:105,y2:95,stroke:'#ff8f00',strokeWidth:2}),
+      React.createElement('line',{x1:15,y1:55,x2:105,y2:55,stroke:'#ff8f00',strokeWidth:1.5}),
+      React.createElement('line',{x1:15,y1:70,x2:105,y2:70,stroke:'#ff8f00',strokeWidth:1.5}),
+      React.createElement('line',{x1:15,y1:85,x2:105,y2:85,stroke:'#ff8f00',strokeWidth:1.5}),
+      React.createElement('rect',{x:85,y:5,width:6,height:90,fill:'#ffb300'}),
+      React.createElement('rect',{x:55,y:5,width:40,height:5,fill:'#ffb300'}),
+      React.createElement('line',{x1:55,y1:10,x2:55,y2:30,stroke:'#9e9e9e',strokeWidth:1,strokeDasharray:'3,2'}),
+      React.createElement('rect',{x:50,y:28,width:10,height:8,fill:'#ef5350'}),
+      React.createElement('line',{x1:85,y1:5,x2:91,y2:35,stroke:'#ff8f00',strokeWidth:1}),
+      React.createElement('line',{x1:91,y1:5,x2:85,y2:35,stroke:'#ff8f00',strokeWidth:1}),
+      React.createElement('rect',{x:28,y:48,width:12,height:10,fill:'#cfd8dc',stroke:'#90a4ae',strokeWidth:0.8}),
+      React.createElement('rect',{x:48,y:48,width:12,height:10,fill:'#cfd8dc',stroke:'#90a4ae',strokeWidth:0.8}),
+      React.createElement('rect',{x:68,y:48,width:12,height:10,fill:'#90a4ae',opacity:0.3}),
+      React.createElement('rect',{x:28,y:65,width:12,height:10,fill:'#90a4ae',opacity:0.3}),
+      React.createElement('rect',{x:48,y:65,width:12,height:10,fill:'#cfd8dc',stroke:'#90a4ae',strokeWidth:0.8}),
+      React.createElement('rect',{x:68,y:65,width:12,height:10,fill:'#cfd8dc',stroke:'#90a4ae',strokeWidth:0.8}),
+      React.createElement('rect',{x:20,y:88,width:80,height:7,fill:'#ffb300',opacity:0.6}),
+      React.createElement('line',{x1:25,y1:88,x2:32,y2:95,stroke:'#111',strokeWidth:1.5,opacity:0.4}),
+      React.createElement('line',{x1:40,y1:88,x2:47,y2:95,stroke:'#111',strokeWidth:1.5,opacity:0.4}),
+      React.createElement('line',{x1:55,y1:88,x2:62,y2:95,stroke:'#111',strokeWidth:1.5,opacity:0.4}),
+      React.createElement('line',{x1:70,y1:88,x2:77,y2:95,stroke:'#111',strokeWidth:1.5,opacity:0.4}),
+      React.createElement('line',{x1:85,y1:88,x2:92,y2:95,stroke:'#111',strokeWidth:1.5,opacity:0.4})
+    );
+    case 'wangfund': return React.createElement('g',null,
+      React.createElement('rect',{x:10,y:35,width:100,height:60,rx:3,fill:'#fff8e1',stroke:'#ffd54f',strokeWidth:2}),
+      React.createElement('polygon',{points:'5,38 60,8 115,38',fill:'#f4d03f',stroke:'#e6b800',strokeWidth:1.5}),
+      React.createElement('rect',{x:8,y:32,width:104,height:6,rx:1,fill:'#ffd54f'}),
+      React.createElement('rect',{x:18,y:38,width:7,height:57,fill:'#fff8e1',stroke:'#ffd54f',strokeWidth:0.8}),
+      React.createElement('rect',{x:38,y:38,width:7,height:57,fill:'#fff8e1',stroke:'#ffd54f',strokeWidth:0.8}),
+      React.createElement('rect',{x:75,y:38,width:7,height:57,fill:'#fff8e1',stroke:'#ffd54f',strokeWidth:0.8}),
+      React.createElement('rect',{x:95,y:38,width:7,height:57,fill:'#fff8e1',stroke:'#ffd54f',strokeWidth:0.8}),
+      React.createElement('rect',{x:48,y:55,width:24,height:40,rx:3,fill:'#8d6e3f'}),
+      React.createElement('rect',{x:48,y:55,width:11,height:40,fill:'#7c5e35'}),
+      React.createElement('path',{d:'M48,55 Q60,45 72,55',fill:'#a1887f'}),
+      React.createElement('circle',{cx:67,cy:76,r:2.5,fill:'#f4d03f'}),
+      React.createElement('circle',{cx:53,cy:76,r:2.5,fill:'#f4d03f'}),
+      React.createElement('circle',{cx:60,cy:22,r:8,fill:'#f4d03f',stroke:'#e6b800',strokeWidth:1.5}),
+      React.createElement('text',{x:60,y:26,textAnchor:'middle',fill:'#8d6e3f',fontSize:10,fontWeight:'bold'},'\u738B'),
+      React.createElement('rect',{x:35,y:93,width:50,height:4,rx:1,fill:'#ffd54f'}),
+      React.createElement('rect',{x:30,y:96,width:60,height:4,rx:1,fill:'#ffe082'})
+    );
+    default: return React.createElement('g',null,
+      React.createElement('rect',{x:25,y:45,width:70,height:50,rx:3,fill:'#e0e0e0',stroke:'#bdbdbd',strokeWidth:2}),
+      React.createElement('polygon',{points:'15,48 60,15 105,48',fill:'#78909c'}),
+      React.createElement('rect',{x:45,y:60,width:25,height:35,rx:2,fill:'#9e9e9e'}),
+      React.createElement('rect',{x:30,y:55,width:12,height:12,fill:'#bbdefb'})
+    );
+  }
+}
+
 // ── HUB ──
 function Hub({c,setC,go}){
   const ms=maxSta(c.stats.sta);
@@ -698,66 +997,33 @@ function Hub({c,setC,go}){
               </g>
             )}
 
-            {/* Small buildings at world coords */}
-            {/* Home */}
-            <g transform="translate(1188,1580)" opacity=".35">
-              <rect x="0" y="8" width="28" height="22" rx="2" fill="#e57373"/>
-              <polygon points="0,10 14,-5 28,10" fill="#c62828"/>
-              <rect x="10" y="20" width="8" height="10" fill="#8d6e3f"/>
-              <rect x="3" y="14" width="6" height="6" fill="#bbdefb"/>
-            </g>
-            {/* Gym */}
-            <g transform="translate(1784,1080)" opacity=".35">
-              <rect x="0" y="6" width="36" height="26" rx="2" fill="#78909c"/>
-              <rect x="0" y="0" width="36" height="9" rx="2" fill="#546e7a"/>
-              <rect x="13" y="20" width="10" height="12" fill="#455a64"/>
-            </g>
-            {/* Arena */}
-            <g transform="translate(1484,480)" opacity=".35">
-              <ellipse cx="18" cy="24" rx="24" ry="12" fill="#e0e0e0"/>
-              <rect x="0" y="8" width="36" height="18" rx="5" fill="#bdbdbd"/>
-              <path d="M2,8 Q18,0 34,8" fill="#9e9e9e"/>
-            </g>
-            {/* Restaurant */}
-            <g transform="translate(1986,1280)" opacity=".35">
-              <rect x="0" y="8" width="32" height="22" rx="2" fill="#ffcc80"/>
-              <rect x="0" y="2" width="32" height="9" rx="1" fill="#ff8a65"/>
-              <rect x="12" y="20" width="8" height="10" fill="#8d6e3f"/>
-            </g>
-            {/* Cafe */}
-            <g transform="translate(1036,1534)" opacity=".35">
-              <rect x="0" y="6" width="28" height="20" rx="2" fill="#8d6e3f"/>
-              <rect x="0" y="0" width="28" height="8" rx="2" fill="#6d4c41"/>
-              <rect x="9" y="18" width="10" height="8" fill="#5d4037"/>
-              <circle cx="20" cy="4" r="4" fill="#fff9c4" opacity=".7"/>
-            </g>
-            {/* Laundry */}
-            <g transform="translate(1336,1434)" opacity=".35">
-              <rect x="0" y="4" width="28" height="20" rx="2" fill="#e0e0e0"/>
-              <rect x="0" y="0" width="28" height="6" rx="2" fill="#90caf9"/>
-              <circle cx="14" cy="16" r="6" fill="#bbdefb" stroke="#90caf9" strokeWidth="1"/>
-              <rect x="10" y="20" width="8" height="6" fill="#bdbdbd"/>
-            </g>
+            {/* Building silhouettes removed - now rendered as large SVGs at location markers */}
 
           </svg>
 
-          {/* Locations with proximity detection */}
+          {/* Locations with proximity detection -- large SVG buildings */}
           {locations.map(loc=>{
             const dist=Math.sqrt((loc.x-playerPos.x)**2+(loc.y-playerPos.y)**2);
             const nearby=dist<200;
+            const bw=loc.id==='arena'?140:loc.id==='nstc'||loc.id==='wangfund'?130:120;
+            const bh=100;
             return(
-              <button key={loc.id} onClick={()=>{if(nearby&&!loc.locked){loc.action();setHovered(null)}else if(loc.locked){loc.action()}}}
-                className={`absolute flex flex-col items-center transition-all ${nearby?'scale-110':'scale-100'} ${loc.locked?'opacity-50':''}`}
-                style={{left:loc.x,top:loc.y,transform:'translate(-50%,-50%)',zIndex:6}}>
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${nearby&&!loc.locked?'bg-white bg-opacity-40 ring-2 ring-pixel-gold':'bg-white bg-opacity-20'}`}
-                  style={{boxShadow:nearby?'0 0 12px rgba(244,208,63,.5)':'0 2px 6px rgba(0,0,0,.2)',border:loc.locked?'2px solid #555':nearby?'2px solid #f4d03f':'2px solid rgba(255,255,255,.4)'}}>
-                  <span className={`text-2xl ${nearby?'bounce':''}`}>{loc.icon}</span>
-                  {loc.locked&&<span className="absolute text-xs">🔒</span>}
+              <div key={loc.id} className="absolute" style={{left:loc.x,top:loc.y,transform:'translate(-50%,-100%)',zIndex:nearby?7:5}}>
+                <div className={`cursor-pointer transition-all ${nearby?'scale-110':''} ${loc.locked?'opacity-40 grayscale':''}`}
+                  onClick={()=>{if(nearby&&!loc.locked){loc.action();setHovered(null)}else if(loc.locked){loc.action()}}}>
+                  <svg viewBox={`0 0 ${bw} ${bh}`} width={bw} height={bh} xmlns="http://www.w3.org/2000/svg"
+                    style={{filter:nearby?'drop-shadow(0 0 8px rgba(244,208,63,.6))':'drop-shadow(0 2px 4px rgba(0,0,0,.25))'}}>
+                    {getBuildingSVG(loc.id)}
+                    {loc.locked&&<React.Fragment>
+                      <rect x="0" y="0" width={bw} height={bh} fill="black" opacity="0.3" rx="4"/>
+                      <text x={bw/2} y={bh/2} textAnchor="middle" fontSize="24" dominantBaseline="central">🔒</text>
+                    </React.Fragment>}
+                  </svg>
+                  <div className={`text-center font-vt text-xs mt-0 px-1.5 rounded whitespace-nowrap ${nearby&&!loc.locked?'bg-pixel-gold text-pixel-dark':'bg-pixel-dark bg-opacity-75 text-white'}`}
+                    style={{boxShadow:'0 1px 3px rgba(0,0,0,.3)'}}>{loc.label}</div>
+                  {nearby&&!loc.locked&&<div className="text-center font-vt text-[10px] text-pixel-gold blink">▶ 進入</div>}
                 </div>
-                <span className={`font-vt text-xs mt-0.5 px-1.5 rounded whitespace-nowrap ${nearby&&!loc.locked?'bg-pixel-gold text-pixel-dark':'bg-pixel-dark bg-opacity-75 text-white'}`}
-                  style={{boxShadow:'0 1px 3px rgba(0,0,0,.3)'}}>{loc.label}</span>
-                {nearby&&!loc.locked&&<span className="font-vt text-[10px] text-pixel-gold mt-0.5 blink">▶ 進入</span>}
-              </button>
+              </div>
             );
           })}
 
