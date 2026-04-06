@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><body>
+<h3>Right-click each image → Save as...</h3>
+<p>Save as <b>icon-192.png</b>:</p>
+<canvas id="c1" width="192" height="192"></canvas>
+<p>Save as <b>icon-512.png</b>:</p>
+<canvas id="c2" width="512" height="512"></canvas>
+<script>
+function draw(canvas){
+  var s=canvas.width, ctx=canvas.getContext('2d');
+  ctx.fillStyle='#060612';
+  ctx.beginPath();ctx.roundRect(0,0,s,s,s*0.12);ctx.fill();
+  ctx.strokeStyle='#FFD700';ctx.lineWidth=s*0.008;
+  ctx.beginPath();ctx.roundRect(s*.04,s*.04,s*.92,s*.92,s*.09);ctx.stroke();
+  ctx.fillStyle='#FFD700';
+  ctx.font='bold '+Math.floor(s*0.28)+'px serif';
+  ctx.textAlign='center';
+  ctx.fillText('一舉',s/2,s*0.42);
+  ctx.fillText('成名',s/2,s*0.72);
+  // Star
+  var cx=s/2,cy=s*0.85,r=s*0.05;
+  ctx.beginPath();
+  for(var i=0;i<5;i++){
+    var a=Math.PI/2+i*Math.PI*2/5, b=Math.PI/2+(i+0.5)*Math.PI*2/5;
+    ctx.lineTo(cx+Math.cos(-a)*r,cy+Math.sin(-a)*r);
+    ctx.lineTo(cx+Math.cos(-b)*r*0.4,cy+Math.sin(-b)*r*0.4);
+  }
+  ctx.closePath();ctx.fill();
+}
+draw(document.getElementById('c1'));
+draw(document.getElementById('c2'));
+// Auto-convert to downloadable images
+['c1','c2'].forEach(function(id){
+  var c=document.getElementById(id);
+  var img=new Image();img.src=c.toDataURL('image/png');
+  img.style.display='block';img.style.margin='10px 0';
+  c.parentNode.insertBefore(img,c.nextSibling);
+});
+</script>
+</body></html>
