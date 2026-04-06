@@ -409,8 +409,10 @@ function Hub({c,setC,go}){
   // Coach tip
   useEffect(()=>{
     if(c.day%3===0&&!coachTip){
-      const tip=COACH_TIPS[c.coachIdx%COACH_TIPS.length];
-      setCoachTip(tip);
+      const mc=COACHES.find(co=>co.id===c.coach)||COACHES[0];
+      const cLines=c.injured?mc.lines.injury:mc.lines.train;
+      const tipText=cLines[Math.floor(Math.random()*cLines.length)];
+      setCoachTip({text:mc.name+'：'+tipText});
     }
   },[]);
 
@@ -748,7 +750,7 @@ function Hub({c,setC,go}){
               setToast({text:mood[Math.floor(Math.random()*mood.length)],type:'success'});
             }}>
             <div className="bounce" style={{animationDuration:'2s'}}>
-              <CharAvatar charId={c.avatar} size={110} lifting={c.streak>=3}/>
+              <CharAvatar charId={c.avatar} size={160} lifting={c.streak>=3}/>
             </div>
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex gap-1 items-center">
               {c.fatigue>50&&<span className="text-lg float">💦</span>}
@@ -759,6 +761,67 @@ function Hub({c,setC,go}){
               <span className="font-vt text-pixel-gold text-xs">{c.name}</span>
             </div>
           </div>
+
+          {/* Coach chibi on map */}
+          {(()=>{const mc=COACHES.find(co=>co.id===c.coach)||COACHES[0];return(
+            <div className="absolute" style={{left:'58%',top:'57%',transform:'translate(-50%,-50%)',zIndex:7,pointerEvents:'none'}}>
+              <div className="float" style={{animationDelay:'0.5s'}}>
+                <svg viewBox="0 0 40 50" width="45" height="56" xmlns="http://www.w3.org/2000/svg">
+                  {mc.id==='titan'&&<g>
+                    <ellipse cx="20" cy="48" rx="10" ry="2" fill="#000" opacity=".15"/>
+                    <rect x="14" y="35" width="5" height="10" rx="1" fill="#1a237e"/>
+                    <rect x="21" y="35" width="5" height="10" rx="1" fill="#1a237e"/>
+                    <rect x="12" y="44" width="6" height="3" rx="1" fill="#ef5350"/>
+                    <rect x="22" y="44" width="6" height="3" rx="1" fill="#ef5350"/>
+                    <rect x="10" y="18" width="20" height="18" rx="4" fill="#ef5350"/>
+                    <path d="M10,24 Q4,22 5,30" stroke={mc.appearance.skin} strokeWidth="4" fill="none" strokeLinecap="round"/>
+                    <path d="M30,24 Q36,20 35,14" stroke={mc.appearance.skin} strokeWidth="4" fill="none" strokeLinecap="round"/>
+                    <circle cx="20" cy="10" r="9" fill={mc.appearance.skin}/>
+                    <path d="M11,7 Q11,1 20,0 Q29,1 29,7" fill={mc.appearance.hair}/>
+                    <rect x="12" y="4" width="16" height="3" rx="1" fill="#ef5350"/>
+                    <circle cx="17" cy="10" r="1.5" fill="#263238"/>
+                    <circle cx="23" cy="10" r="1.5" fill="#263238"/>
+                    <path d="M17,14 Q20,17 23,14" stroke="#c62828" strokeWidth="1.2" fill="#ef5350"/>
+                  </g>}
+                  {mc.id==='monk'&&<g>
+                    <ellipse cx="20" cy="48" rx="10" ry="2" fill="#000" opacity=".15"/>
+                    <rect x="14" y="36" width="5" height="10" rx="1" fill="#ff8f00"/>
+                    <rect x="21" y="36" width="5" height="10" rx="1" fill="#ff8f00"/>
+                    <rect x="13" y="44" width="6" height="3" rx="1" fill="#5d4037"/>
+                    <rect x="21" y="44" width="6" height="3" rx="1" fill="#5d4037"/>
+                    <rect x="10" y="18" width="20" height="20" rx="4" fill="#ff8f00"/>
+                    <path d="M10,26 Q4,30 5,36" stroke={mc.appearance.skin} strokeWidth="4" fill="none" strokeLinecap="round"/>
+                    <path d="M30,26 Q36,24 35,18" stroke={mc.appearance.skin} strokeWidth="4" fill="none" strokeLinecap="round"/>
+                    <circle cx="20" cy="10" r="9" fill={mc.appearance.skin}/>
+                    <ellipse cx="20" cy="4" rx="8" ry="4" fill={mc.appearance.hair} opacity=".2"/>
+                    <circle cx="17" cy="10" r="1.2" fill="#263238"/>
+                    <circle cx="23" cy="10" r="1.2" fill="#263238"/>
+                    <path d="M18,14 Q20,16 22,14" stroke="#5d4037" strokeWidth="0.8" fill="none"/>
+                    <ellipse cx="20" cy="22" rx="3" ry="1" fill="#8d6e63" opacity=".4"/>
+                  </g>}
+                  {mc.id==='thor'&&<g>
+                    <ellipse cx="20" cy="48" rx="12" ry="2" fill="#000" opacity=".15"/>
+                    <rect x="13" y="35" width="6" height="12" rx="2" fill="#1a237e"/>
+                    <rect x="21" y="35" width="6" height="12" rx="2" fill="#1a237e"/>
+                    <rect x="12" y="45" width="7" height="3" rx="1" fill="#5d4037"/>
+                    <rect x="21" y="45" width="7" height="3" rx="1" fill="#5d4037"/>
+                    <rect x="9" y="16" width="22" height="22" rx="4" fill="#546e7a"/>
+                    <rect x="10" y="16" width="20" height="4" rx="1" fill="#78909c"/>
+                    <path d="M9,24 Q2,20 3,30" stroke={mc.appearance.skin} strokeWidth="5" fill="none" strokeLinecap="round"/>
+                    <path d="M31,24 Q38,18 37,12" stroke={mc.appearance.skin} strokeWidth="5" fill="none" strokeLinecap="round"/>
+                    <circle cx="20" cy="8" r="10" fill={mc.appearance.skin}/>
+                    <path d="M10,4 Q10,-2 15,-4 Q18,-5 20,-4 Q22,-5 25,-4 Q30,-2 30,4" fill={mc.appearance.hair}/>
+                    <path d="M12,8 Q10,14 13,16" stroke={mc.appearance.hair} strokeWidth="2" fill="none"/>
+                    <path d="M28,8 Q30,14 27,16" stroke={mc.appearance.hair} strokeWidth="2" fill="none"/>
+                    <path d="M16,12 Q18,16 20,16 Q22,16 24,12" stroke={mc.appearance.hair} strokeWidth="1.5" fill={mc.appearance.hair}/>
+                    <circle cx="17" cy="6" r="2" fill="#fff"/><circle cx="17" cy="6.5" r="1.2" fill="#2196f3"/>
+                    <circle cx="23" cy="6" r="2" fill="#fff"/><circle cx="23" cy="6.5" r="1.2" fill="#2196f3"/>
+                  </g>}
+                </svg>
+              </div>
+            </div>
+          );})()}
+
         </div>
       </div>
 
@@ -807,13 +870,16 @@ function TrainingScreen({c,setC,go}){
   const myCoach=COACHES.find(co=>co.id===c.coach)||COACHES[0];
   const injuryMult=c.injured?0.5:1;
 
-  // Auto-recover from injury after 3-5 days
+  // Auto-recover from injury after 3-5 days (use day parity for pseudo-random threshold)
   useEffect(()=>{
-    if(c.injured&&c.day-c.injuryDay>=3+Math.floor(Math.random()*3)){
-      setC(x=>({...x,injured:false,injuryType:null,injuryDay:0}));
-      setCoach({text:'傷好了！可以正常訓練了！💪'});
-      sfx('success');
-      setTimeout(()=>setCoach(null),2500);
+    if(c.injured){
+      const threshold=3+(c.injuryDay%3); // 3,4,5 based on injury start day
+      if(c.day-c.injuryDay>=threshold){
+        setC(x=>({...x,injured:false,injuryType:null,injuryDay:0}));
+        setCoach({text:'傷好了！可以正常訓練了！'});
+        sfx('success');
+        setTimeout(()=>setCoach(null),2500);
+      }
     }
   },[c.day]);
 

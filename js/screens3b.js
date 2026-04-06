@@ -30,13 +30,14 @@ function MituoScreen({c,setC,go}){
 
   const ACTIVITIES=[
     {id:'cook',icon:'🍲',name:'阿嬤煮好料',cost:0,
-      desc:'體力+35 疲勞-15 恢復+1',
+      desc:c.injured?'體力+35 疲勞-15 恢復+1 加速傷癒':'體力+35 疲勞-15 恢復+1',
       check:()=>!visited.cook,
       apply:(nc,fi)=>{
         nc.stamina=Math.min(ms,nc.stamina+35);nc.fatigue=Math.max(0,(nc.fatigue||0)-15);nc.stats.rec=Math.min(100,nc.stats.rec+1);
         fi.push({icon:'⚡',text:'+35體力',color:'#38b764'},{icon:'😌',text:'-15😤',color:'#73eff7'},{icon:'💚',text:'恢復+1',color:'#26c6da'});
+        if(nc.injured){nc.injuryDay=Math.max(0,nc.injuryDay-2);fi.push({icon:'🩹',text:'阿嬤的愛治癒',color:'#38b764'});}
         setReactAnim('cook');
-        return '阿嬤：多吃一點！太瘦了啦';
+        return nc.injured?'阿嬤：受傷了喔？來，阿嬤煮補的給你':'阿嬤：多吃一點！太瘦了啦';
       }},
     {id:'soup',icon:'🍗',name:'燉雞湯',cost:0,
       desc:'體力+40 疲勞-20 力量+1',

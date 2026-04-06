@@ -17,11 +17,16 @@ function HomeScreen({c,setC,go}){
     setTimeout(()=>{
       const rec=20+Math.floor(c.stats.rec/3);
       const fatDrop=Math.min(c.fatigue,25+Math.floor(c.stats.rec/5));
-      setC(x=>({...x,stamina:Math.min(ms,x.stamina+rec),day:x.day+1,
-        fatigue:Math.max(0,x.fatigue-fatDrop),streak:0,restStreak:(x.restStreak||0)+1,
-        stats:{...x.stats,rec:Math.min(100,x.stats.rec+1)},totalTrainings:x.totalTrainings+1,
-        activeEffects:x.activeEffects.map(e=>({...e,dur:e.dur-1})).filter(e=>e.dur>0)}));
-      setFloats([{icon:'😴',text:`+${rec}❤️`,color:'#38b764'},{icon:'😌',text:`-${fatDrop}😤`,color:'#73eff7'},{icon:'📅',text:'新的一天',color:'#f4d03f'}]);
+      const fItems=[{icon:'😴',text:`+${rec}❤️`,color:'#38b764'},{icon:'😌',text:`-${fatDrop}😤`,color:'#73eff7'},{icon:'📅',text:'新的一天',color:'#f4d03f'}];
+      setC(x=>{
+        const nx={...x,stamina:Math.min(ms,x.stamina+rec),day:x.day+1,
+          fatigue:Math.max(0,x.fatigue-fatDrop),streak:0,restStreak:(x.restStreak||0)+1,
+          stats:{...x.stats,rec:Math.min(100,x.stats.rec+1)},totalTrainings:x.totalTrainings+1,
+          activeEffects:x.activeEffects.map(e=>({...e,dur:e.dur-1})).filter(e=>e.dur>0)};
+        if(nx.injured){nx.injuryDay=Math.max(0,nx.injuryDay-1);fItems.push({icon:'🩹',text:'傷慢慢好了',color:'#38b764'});}
+        return nx;
+      });
+      setFloats(fItems);
       setSleeping(false);
     },2000);
   }

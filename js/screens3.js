@@ -24,11 +24,12 @@ function NstcScreen({c,setC,go}){
         return '老母：'+lines[Math.floor(Math.random()*lines.length)];
       }},
     {id:'physio',icon:'💆',name:'物理治療',cost:50,costType:'money',
-      desc:'疲勞-30，恢復+2',
+      desc:c.injured?'疲勞-30，恢復+2，加速傷癒':'疲勞-30，恢復+2',
       check:()=>c.money>=50,
       apply:(nc,fi)=>{
         nc.money-=50;nc.fatigue=Math.max(0,(nc.fatigue||0)-30);nc.stats.rec=Math.min(100,nc.stats.rec+2);
         fi.push({icon:'💰',text:'-50',color:'#ef5350'},{icon:'😌',text:'-30😤',color:'#73eff7'},{icon:'💚',text:'恢復+2',color:'#26c6da'});
+        if(nc.injured){nc.injuryDay=Math.max(0,nc.injuryDay-2);fi.push({icon:'🩹',text:'傷癒加速',color:'#38b764'});return '專業治療幫你加速恢復！傷快好了';}
         return '專業治療師幫你放鬆肌肉';
       }},
     {id:'sauna',icon:'🧖',name:'烤箱放鬆',cost:30,costType:'money',
