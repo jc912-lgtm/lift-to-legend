@@ -1,4 +1,4 @@
-const CACHE='yiju-v3';
+const CACHE='yiju-v5';
 const ASSETS=[
   '.','index.html','manifest.json','loader.js',
   'css/game.css',
