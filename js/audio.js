@@ -352,15 +352,24 @@ function playSynthBGM(type){
   let idx=0;
   ea();
   synthBGMInterval=setInterval(()=>{
-    if(audioMuted||!bgmPlaying){return}
+    if(audioMuted||!bgmPlaying||!ctx)return;
+    if(ctx.state==='suspended')ctx.resume();
     const freq=pat.notes[idx%pat.notes.length];
     if(freq>0){
+      // Main note
       const o=ctx.createOscillator(),g=ctx.createGain();
       o.type=pat.wave;o.frequency.value=freq;
-      g.gain.value=bgmVol*0.15;
-      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+pat.tempo/1000*0.9);
+      g.gain.value=bgmVol*0.5;
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+pat.tempo/1000*0.85);
       o.connect(g);g.connect(masterGain);
       o.start();o.stop(ctx.currentTime+pat.tempo/1000);
+      // Harmony (octave below, softer)
+      const o2=ctx.createOscillator(),g2=ctx.createGain();
+      o2.type='sine';o2.frequency.value=freq/2;
+      g2.gain.value=bgmVol*0.2;
+      g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+pat.tempo/1000*0.8);
+      o2.connect(g2);g2.connect(masterGain);
+      o2.start();o2.stop(ctx.currentTime+pat.tempo/1000);
     }
     idx++;
   },pat.tempo);
