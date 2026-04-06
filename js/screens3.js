@@ -195,6 +195,8 @@ function NstcScreen({c,setC,go}){
               {/* Blush */}
               <ellipse cx="-14" cy="5" rx="5" ry="3" fill="#ef9a9a" opacity=".4"/>
               <ellipse cx="14" cy="5" rx="5" ry="3" fill="#ef9a9a" opacity=".4"/>
+              {/* Name label */}
+              <text x="0" y="118" textAnchor="middle" fill="#f4d03f" fontSize="10" fontWeight="bold" fontFamily="LXGW WenKai TC,sans-serif">老母教練</text>
             </g>
 
             {/* Speech bubble when msg */}
