@@ -207,69 +207,82 @@ function RingGame({onResult,difficulty,successRate}){
   );
 }
 
-// ── Mini-Game: HoldGame (連擊站起來！) ──
-// Rapid tap to fill a "stand up" gauge — represents recovery/lockout
+// ── Mini-Game: HoldGame (左右平衡) ──
+// A ball drifts left/right, tap left/right to keep centered for 2 seconds
 function HoldGame({onResult,difficulty,successRate}){
-  const[power,setPower]=useState(0);
+  const[pos,setPos]=useState(50); // 0-100, 50=center
   const[done,setDone]=useState(false);
   const[result,setResult]=useState(null);
-  const[timeLeft,setTimeLeft]=useState(100);
-  const threshold=35+difficulty*8;
-  const decay=0.12+difficulty*0.08;
-  const powerRef=useRef(0);
+  const[timer,setTimer]=useState(0); // how long stayed in center zone
+  const posRef=useRef(50);
+  const timerRef=useRef(0);
   const doneRef=useRef(false);
+  const driftSpeed=0.8+difficulty*0.6;
 
   useEffect(()=>{
     if(done)return;
+    let drift=driftSpeed*(Math.random()>0.5?1:-1);
     const id=setInterval(()=>{
       if(doneRef.current)return;
-      powerRef.current=Math.max(0,powerRef.current-decay);
-      setPower(powerRef.current);
-      setTimeLeft(t=>{
-        const next=t-1.2;
-        if(next<=0){
+      // Random drift direction changes
+      if(Math.random()<0.05)drift=-drift;
+      if(Math.random()<0.03)drift=driftSpeed*(Math.random()>0.5?1:-1)*1.5;
+      posRef.current=Math.max(0,Math.min(100,posRef.current+drift));
+      setPos(posRef.current);
+      // Check if in center zone (35-65)
+      if(posRef.current>=35&&posRef.current<=65){
+        timerRef.current+=30;
+        setTimer(timerRef.current);
+        if(timerRef.current>=2000){
           doneRef.current=true;setDone(true);
-          const p=powerRef.current;
-          const res=p>=threshold?'perfect':p>=threshold*0.6?'good':'fail';
-          setResult(res);sfx(res==='fail'?'fail':res==='perfect'?'perfect':'success');
+          const res=posRef.current>=45&&posRef.current<=55?'perfect':'good';
+          setResult(res);sfx(res==='perfect'?'perfect':'success');
           setTimeout(()=>onResult(res),600);
-          return 0;
         }
-        return next;
-      });
+      }
+      // Fail if too far off
+      if(posRef.current<=5||posRef.current>=95){
+        doneRef.current=true;setDone(true);
+        setResult('fail');sfx('fail');
+        setTimeout(()=>onResult('fail'),600);
+      }
     },30);
     return()=>clearInterval(id);
   },[done]);
 
-  function handleTap(){
+  function nudge(dir){
     if(done||doneRef.current)return;
-    powerRef.current=Math.min(100,powerRef.current+6);
-    setPower(powerRef.current);
+    posRef.current=Math.max(0,Math.min(100,posRef.current+dir*5));
+    setPos(posRef.current);
     sfx('tap');
   }
 
-  const barColor=power>=threshold?'#f4d03f':power>=threshold*0.6?'#38b764':'#3b5dc9';
+  const inZone=pos>=35&&pos<=65;
 
   return(
     <div className="flex flex-col items-center gap-2">
-      <div className="font-vt text-pixel-lime text-sm">🦵 連打站起來！</div>
+      <div className="font-vt text-pixel-lime text-sm">⚖️ 保持平衡！左右調整！</div>
+      {/* Timer progress */}
       <div className="w-48 h-2 bg-pixel-dark border border-pixel-gray overflow-hidden rounded">
-        <div className="h-full bg-pixel-red transition-none" style={{width:`${timeLeft}%`}}/>
+        <div className="h-full bg-pixel-green transition-none" style={{width:`${Math.min(100,timer/2000*100)}%`}}/>
       </div>
-      <div className="w-48 h-10 bg-pixel-dark border-2 border-pixel-gray relative overflow-hidden cursor-pointer rounded"
-        onClick={handleTap} onTouchStart={e=>{e.preventDefault();handleTap()}}>
-        <div className="h-full transition-none" style={{width:`${power}%`,background:barColor}}/>
-        <div className="absolute top-0 bottom-0 w-0.5 bg-pixel-gold" style={{left:`${threshold}%`}}/>
-        <div className="absolute inset-0 flex items-center justify-center font-pixel text-white text-[8px]" style={{textShadow:'1px 1px 0 #000'}}>
-          {done?(result==='perfect'?'🌟完美站起！':result==='good'?'✅站穩了！':'❌腿軟了...'):'站起來！TAP!'}
-        </div>
+      {/* Balance bar */}
+      <div className="w-56 h-8 bg-pixel-dark border-2 border-pixel-gray relative overflow-hidden rounded">
+        {/* Center zone highlight */}
+        <div className="absolute top-0 bottom-0 bg-pixel-green opacity-20" style={{left:'35%',width:'30%'}}/>
+        {/* Ball */}
+        <div className="absolute top-1 w-6 h-6 rounded-full transition-none"
+          style={{left:`calc(${pos}% - 12px)`,background:inZone?'#f4d03f':'#ef5350',boxShadow:inZone?'0 0 8px #f4d03f':'0 0 8px #ef5350'}}/>
       </div>
-      {!done&&<button onClick={handleTap} onTouchStart={e=>{e.preventDefault();handleTap()}}
-        className="pixel-btn pixel-btn-gold bg-pixel-dark text-pixel-gold px-8 py-3 text-xs font-pixel active:scale-95 select-none">
-        🦵 站起來！
-      </button>}
+      {/* Left/Right buttons */}
+      {!done&&<div className="flex gap-4">
+        <button onClick={()=>nudge(-1)} onTouchStart={e=>{e.preventDefault();nudge(-1)}}
+          className="pixel-btn bg-pixel-dark text-pixel-light px-6 py-3 text-lg font-pixel active:scale-95 select-none">◀</button>
+        <button onClick={()=>nudge(1)} onTouchStart={e=>{e.preventDefault();nudge(1)}}
+          className="pixel-btn bg-pixel-dark text-pixel-light px-6 py-3 text-lg font-pixel active:scale-95 select-none">▶</button>
+      </div>}
       {result&&<div className={`font-vt text-lg ${result==='perfect'?'text-pixel-gold':result==='good'?'text-pixel-green':'text-pixel-red'}`}>
-        {result==='perfect'?'🌟完美恢復！':result==='good'?'✅站穩了！':'❌腿軟...'}
+        {result==='perfect'?'🌟穩如泰山！':result==='good'?'✅站穩了！':'❌失去平衡！'}
       </div>}
     </div>
   );
