@@ -84,19 +84,29 @@ function getExerciseSVG(eid,skin,shirt){
     return E('text',{key:'lbl',x:100,y:floorY+15,textAnchor:'middle',fill:color||'#f4d03f',fontSize:12,fontFamily:'VT323'},txt);
   }
 
-  /* ── Determine animation type ── */
-  let at='rest';
-  if(['snatchDrill','hangSnatch','powerSnatch','muscleSnatch','snatchBalance'].includes(eid))at='snatch';
+  /* ── Determine animation type from exercise ID ── */
+  let at='squat'; // default to squat (not rest!)
+  // Snatch family
+  if(eid.includes('snatch')||eid.includes('Snatch')||['snatchDrill','tcjs','snatchBalance','muscleSnatch','snatchWide','snatchCombo','snatchDeadliftCombo','deficitSnatchDLCombo','noFeetSnatch','hangSnatchAbove','hangSnatchBelow','deficitSnatch','blockSnatch','lowBlockSnatch','muscleSnatchPressOHS','muscleSnatchBalance','contactSnatchBalance','hipSnatchBalance','continuousSnatchWide','muscleSnatchOHS','narrowMuscleSnatch'].includes(eid))at='snatch';
   else if(eid==='tcjs')at='tcjs';
-  else if(['cleanJerkDrill','hangClean','powerClean'].includes(eid))at='clean';
-  else if(eid==='jerkDrill')at='jerk';
-  else if(['squat','frontSquat','overheadSquat'].includes(eid))at='squat';
-  else if(['deadlift','snatchPull','cleanPull','slowPull','deficitPull'].includes(eid))at='pull';
-  else if(['press','benchPress'].includes(eid))at='press';
-  else if(['plyometric','boxJump','sqJump'].includes(eid))at='jump';
-  else if(['pullUp','hyperext','grip'].includes(eid))at='accessory';
+  // Clean & Jerk family
+  else if(eid.includes('clean')||eid.includes('Clean')||['cleanJerkDrill','hangClean','powerClean','hangCleanBelow','hangCleanAbove','deficitClean','blockClean','lowBlockClean','cleanWide','cleanFSJerk','cleanPushPress','cleanPushJerk','deficitCleanDL','cleanCombo','noFeetClean','hangMuscleCleanWide','continuousHangClean','muscleClean','powerCleanFS','powerCleanFSJerk','hangPowerClean','belowKneePowerClean','cleanDLPowerClean','deficitPowerClean','blockPowerClean','noFeetPowerClean'].includes(eid))at='clean';
+  // Jerk family
+  else if(eid.includes('jerk')||eid.includes('Jerk')||['jerkDrill','rackJerk','rackPushJerk','backRackJerk','backRackPushJerk','jerkDrive'].includes(eid))at='jerk';
+  // Squat family
+  else if(eid.includes('squat')||eid.includes('Squat')||['squat','frontSquat','overheadSquat','halfSquat','boxSquat','frontHalfSquat','frontBoxSquat','squatPause','frontSquatPause','squatJerk','frontSquatJerk','squatPushPress','frontSquatPushPress','squatPushJerk','frontSquatPushJerk','backSquatJump'].includes(eid))at='squat';
+  // Pull/Deadlift family
+  else if(eid.includes('pull')||eid.includes('Pull')||eid.includes('deadlift')||eid.includes('Deadlift')||['deadlift','snatchPull','cleanPull','slowPull','deficitPull','stiffSnatchPull','stiffCleanPull','snatchPullPause','cleanPullPause','blockSnatchPull','blockCleanPull','deficitStiffPull','mediumGripPull','mediumGripDL','hangSnatchPullCont'].includes(eid))at='pull';
+  // Press family
+  else if(eid.includes('press')||eid.includes('Press')||['press','benchPress','shoulderPress','rackPushPress','snatchGripPress','snatchGripPressOHS','overheadPress2','snatchPress','backRackDrive'].includes(eid))at='press';
+  // Jump family
+  else if(eid.includes('jump')||eid.includes('Jump')||['plyometric','boxJump','sqJump','backSquatJump','jumps'].includes(eid))at='jump';
+  // Accessory
+  else if(['pullUp','hyperext','grip','gripTraining2','sitUp','platetwist','dips','frenchPress','staticHold','stepTraining','goodMorning','benchPress'].includes(eid))at='accessory';
+  // Recovery
   else if(eid==='flexibility')at='flexibility';
   else if(eid==='mental')at='mental';
+  else if(eid==='rest')at='rest';
 
   /* =========================================================
      ANIMATION 1: SNATCH — 9 frames
