@@ -872,32 +872,59 @@ function FriendScreen({c,setC,go}){
     setTimeout(()=>setFriendMsg(null),2500);
   }
 
+  // ── Mahjong matching mini-game ──
+  const[mjMode,setMjMode]=useState(false);
+  const[mjTiles,setMjTiles]=useState(null);
+  const[mjFlipped,setMjFlipped]=useState([]);
+  const[mjMatched,setMjMatched]=useState([]);
+  const[mjTurns,setMjTurns]=useState(0);
+  const[mjTime,setMjTime]=useState(30);
+  const[mjDone,setMjDone]=useState(false);
+  const[mjBusy,setMjBusy]=useState(false);
+
+  function startMahjong(){
+    const symbols=['一萬','二萬','三筒','四筒'];
+    const t=[...symbols,...symbols].sort(()=>Math.random()-0.5);
+    setMjTiles(t);setMjFlipped([]);setMjMatched([]);setMjTurns(0);setMjTime(30);setMjDone(false);setMjBusy(false);setMjMode(true);
+  }
+
+  function flipTile(idx){
+    if(mjDone||mjBusy||mjFlipped.includes(idx)||mjMatched.includes(idx))return;
+    sfx('tap');
+    const nf=[...mjFlipped,idx];
+    setMjFlipped(nf);
+    if(nf.length===2){
+      setMjTurns(t=>t+1);setMjBusy(true);
+      if(mjTiles[nf[0]]===mjTiles[nf[1]]){
+        sfx('coin');
+        setTimeout(()=>{
+          const nm=[...mjMatched,nf[0],nf[1]];
+          setMjMatched(nm);setMjFlipped([]);setMjBusy(false);
+          if(nm.length===8){setMjDone(true);sfx('success')}
+        },400);
+      }else{
+        setTimeout(()=>{setMjFlipped([]);setMjBusy(false)},800);
+      }
+    }
+  }
+
+  useEffect(()=>{
+    if(!mjMode||mjDone)return;
+    const t=setInterval(()=>setMjTime(v=>{if(v<=1){setMjDone(true);return 0}return v-1}),1000);
+    return()=>clearInterval(t);
+  },[mjMode,mjDone]);
+
+  function claimMjReward(){
+    const pairs=mjMatched.length/2;
+    const reward=pairs===4?100:pairs===3?60:0;
+    setC(x=>({...x,money:x.money+reward,stats:{...x.stats,stb:Math.min(100,x.stats.stb+(pairs>=3?2:1))}}));
+    setFloats([{icon:'🀄',text:pairs===4?'自摸！+100💰':pairs===3?'+60💰':'穩定+1',color:'#f4d03f'}]);
+    setMjMode(false);setDone(d=>({...d,mahjong:true}));
+  }
+
   const doMahjong=()=>{
     if(done.mahjong)return;
-    sfx('tap');
-    setActivity('mahjong');
-    const tileSet=['🀄','🀇','🀈','🀉','🀊','🀋','🀌','🀍','🀎','🀏','🀙','🀚','🀛','🀜','🀝','🀞','🀟','🀠','🀡'];
-    const picked=[...Array(4)].map(()=>tileSet[Math.floor(Math.random()*tileSet.length)]);
-    setTiles(picked);
-    setTimeout(()=>{
-      const winChance=0.5+c.stats.stb*0.003;
-      const win=Math.random()<winChance;
-      const reward=win?Math.floor(50+Math.random()*100):0;
-      const msgs=win?['自摸！贏錢了！','碰！好牌！大贏！','胡了！今天手氣真好！']:['放槍了...','沒胡，下次再來！','差一張就胡了...'];
-      const msg=msgs[Math.floor(Math.random()*msgs.length)];
-      setAnimResult({type:'mahjong',win,msg,reward});
-      if(win){
-        sfx('coin');
-        setC(x=>({...x,money:x.money+reward,stats:{...x.stats,stb:Math.min(100,x.stats.stb+1)}}));
-        setFloats([{icon:'🀄',text:msg,color:'#f4d03f'},{icon:'💰',text:`+${reward}`,color:'#f4d03f'},{icon:'🧠',text:'穩定+1',color:'#81c784'}]);
-      }else{
-        sfx('fail');
-        setC(x=>({...x,stats:{...x.stats,stb:Math.min(100,x.stats.stb+1)}}));
-        setFloats([{icon:'🀄',text:msg,color:'#e57373'},{icon:'🧠',text:'穩定+1',color:'#81c784'}]);
-      }
-      setDone(d=>({...d,mahjong:true}));
-      setTimeout(()=>{setActivity(null);setAnimResult(null)},2000);
-    },1500);
+    startMahjong();
   };
 
   const doGaming=()=>{
@@ -939,6 +966,51 @@ function FriendScreen({c,setC,go}){
 
   const breathY=Math.sin(frame*0.1)*2;
   const tvFlicker=frame%10<5;
+
+  // Mahjong mini-game takes over the screen
+  if(mjMode){
+    return(
+      <div className="h-screen bg-pixel-dark flex flex-col items-center justify-center p-4">
+        {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
+        <div className="font-pixel text-pixel-gold text-sm mb-3">🀄 快速麻將 — 翻牌配對</div>
+        <div className="flex gap-4 mb-4">
+          <span className="font-vt text-pixel-red text-lg">⏱️ {mjTime}s</span>
+          <span className="font-vt text-pixel-light text-lg">翻牌 {mjTurns}次</span>
+          <span className="font-vt text-pixel-green text-lg">✓ {mjMatched.length/2}/4</span>
+        </div>
+        {mjTiles&&<div className="grid grid-cols-4 gap-2 mb-4">
+          {mjTiles.map((tile,idx)=>{
+            const show=mjFlipped.includes(idx)||mjMatched.includes(idx);
+            const matched=mjMatched.includes(idx);
+            return(
+              <button key={idx} onClick={()=>flipTile(idx)}
+                className={`w-16 h-22 rounded-lg border-2 flex items-center justify-center transition-all
+                  ${matched?'border-pixel-gold bg-yellow-900 bg-opacity-30 scale-95':show?'border-pixel-green bg-white':'border-pixel-gray bg-green-900 hover:bg-green-800'}`}
+                style={{minHeight:80}}>
+                {show?(
+                  <span className="font-vt text-xl text-pixel-dark font-bold">{tile}</span>
+                ):(
+                  <span className="text-3xl">🀄</span>
+                )}
+              </button>
+            );
+          })}
+        </div>}
+        {mjDone&&<div className="text-center mb-3">
+          <div className="font-pixel text-pixel-gold text-lg mb-2">
+            {mjMatched.length===8?'🎉 自摸！全對！':mjMatched.length>=6?'👍 不錯嘛！':'😅 再練練！'}
+          </div>
+          <div className="font-vt text-pixel-light text-sm mb-2">
+            {mjTurns}次翻牌，配對 {mjMatched.length/2}/4
+          </div>
+          <button onClick={claimMjReward} className="pixel-btn pixel-btn-gold bg-pixel-dark text-pixel-gold px-6 py-2 text-xs font-pixel">
+            {mjMatched.length===8?'💰 +100 收下！':mjMatched.length>=6?'💰 +60 收下！':'🧠 穩定+1'}
+          </button>
+        </div>}
+        {!mjDone&&<button onClick={()=>setMjMode(false)} className="font-vt text-pixel-gray text-sm mt-2">← 不玩了</button>}
+      </div>
+    );
+  }
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-hidden">
