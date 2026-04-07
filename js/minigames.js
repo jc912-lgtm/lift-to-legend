@@ -207,68 +207,69 @@ function RingGame({onResult,difficulty,successRate}){
   );
 }
 
-// ── Mini-Game: HoldGame (穩住不動) ──
-// Hold button to fill progress, needle shakes
+// ── Mini-Game: HoldGame (連擊站起來！) ──
+// Rapid tap to fill a "stand up" gauge — represents recovery/lockout
 function HoldGame({onResult,difficulty,successRate}){
-  const[holding,setHolding]=useState(false);
-  const[progress,setProgress]=useState(0);
-  const[offset,setOffset]=useState(0);
+  const[power,setPower]=useState(0);
   const[done,setDone]=useState(false);
   const[result,setResult]=useState(null);
-  const shakeAmount=2+difficulty*2;
-  const holdDuration=50;
+  const[timeLeft,setTimeLeft]=useState(100);
+  const threshold=35+difficulty*8;
+  const decay=0.12+difficulty*0.08;
+  const powerRef=useRef(0);
   const doneRef=useRef(false);
 
   useEffect(()=>{
     if(done)return;
     const id=setInterval(()=>{
       if(doneRef.current)return;
-      if(holding){
-        setProgress(p=>{
-          const next=p+1.5;
-          if(next>=holdDuration){
-            doneRef.current=true;
-            setDone(true);
-            const res=Math.abs(offset)<shakeAmount*0.5?'perfect':'good';
-            setResult(res);sfx(res==='perfect'?'perfect':'success');
-            setTimeout(()=>onResult(res),600);
-            return holdDuration;
-          }
-          return next;
-        });
-        setOffset(shakeAmount*(Math.random()-0.5)*2);
-      }else{
-        setProgress(p=>Math.max(0,p-0.5));
-        setOffset(0);
-      }
+      powerRef.current=Math.max(0,powerRef.current-decay);
+      setPower(powerRef.current);
+      setTimeLeft(t=>{
+        const next=t-1.2;
+        if(next<=0){
+          doneRef.current=true;setDone(true);
+          const p=powerRef.current;
+          const res=p>=threshold?'perfect':p>=threshold*0.6?'good':'fail';
+          setResult(res);sfx(res==='fail'?'fail':res==='perfect'?'perfect':'success');
+          setTimeout(()=>onResult(res),600);
+          return 0;
+        }
+        return next;
+      });
     },30);
     return()=>clearInterval(id);
-  },[done,holding]);
+  },[done]);
 
-  function startHold(){if(!done&&!doneRef.current)setHolding(true)}
-  function stopHold(){setHolding(false)}
+  function handleTap(){
+    if(done||doneRef.current)return;
+    powerRef.current=Math.min(100,powerRef.current+6);
+    setPower(powerRef.current);
+    sfx('tap');
+  }
+
+  const barColor=power>=threshold?'#f4d03f':power>=threshold*0.6?'#38b764':'#3b5dc9';
 
   return(
     <div className="flex flex-col items-center gap-2">
-      <div className="font-vt text-pixel-lime text-sm">🤚 按住不放！穩住！</div>
-      {/* Progress bar */}
-      <div className="relative w-40 h-8 bg-pixel-dark border-2 border-pixel-gray overflow-hidden rounded">
-        <div className="h-full bg-pixel-green transition-none" style={{width:`${progress/holdDuration*100}%`}}/>
-        <div className="absolute top-0 bottom-0 w-1 bg-pixel-gold"
-          style={{left:`calc(50% + ${offset}px)`,transition:'left 0.05s'}}/>
+      <div className="font-vt text-pixel-lime text-sm">🦵 連打站起來！</div>
+      <div className="w-48 h-2 bg-pixel-dark border border-pixel-gray overflow-hidden rounded">
+        <div className="h-full bg-pixel-red transition-none" style={{width:`${timeLeft}%`}}/>
       </div>
-      {/* Hold button */}
-      {!done&&(
-        <button
-          onMouseDown={startHold} onMouseUp={stopHold} onMouseLeave={stopHold}
-          onTouchStart={e=>{e.preventDefault();startHold()}} onTouchEnd={stopHold}
-          className={`pixel-btn ${holding?'pixel-btn-gold':'pixel-btn'} bg-pixel-dark text-pixel-light px-8 py-3 text-xs font-pixel select-none`}
-          style={{transform:holding?'translateY(2px)':'none'}}>
-          {holding?'穩住...🔥':'按住我！'}
-        </button>
-      )}
-      {result&&<div className={`font-vt text-lg ${result==='perfect'?'text-pixel-gold':'text-pixel-green'}`}>
-        {result==='perfect'?'🌟穩如泰山！':'✅穩住了！'}
+      <div className="w-48 h-10 bg-pixel-dark border-2 border-pixel-gray relative overflow-hidden cursor-pointer rounded"
+        onClick={handleTap} onTouchStart={e=>{e.preventDefault();handleTap()}}>
+        <div className="h-full transition-none" style={{width:`${power}%`,background:barColor}}/>
+        <div className="absolute top-0 bottom-0 w-0.5 bg-pixel-gold" style={{left:`${threshold}%`}}/>
+        <div className="absolute inset-0 flex items-center justify-center font-pixel text-white text-[8px]" style={{textShadow:'1px 1px 0 #000'}}>
+          {done?(result==='perfect'?'🌟完美站起！':result==='good'?'✅站穩了！':'❌腿軟了...'):'站起來！TAP!'}
+        </div>
+      </div>
+      {!done&&<button onClick={handleTap} onTouchStart={e=>{e.preventDefault();handleTap()}}
+        className="pixel-btn pixel-btn-gold bg-pixel-dark text-pixel-gold px-8 py-3 text-xs font-pixel active:scale-95 select-none">
+        🦵 站起來！
+      </button>}
+      {result&&<div className={`font-vt text-lg ${result==='perfect'?'text-pixel-gold':result==='good'?'text-pixel-green':'text-pixel-red'}`}>
+        {result==='perfect'?'🌟完美恢復！':result==='good'?'✅站穩了！':'❌腿軟...'}
       </div>}
     </div>
   );
