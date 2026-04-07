@@ -123,6 +123,8 @@ function StatusScreen({c,go}){
 function ShopScreen({c,setC,go}){
   const[floats,setFloats]=useState(null);
   const[coach,setCoach]=useState(null);
+  const[viewItem,setViewItem]=useState(null); // item detail popup
+  const[viewSinglet,setViewSinglet]=useState(null); // singlet detail popup
   const shopDialogs=(()=>{
     const normal=['歡迎光臨！','看看有什麼需要的？','今天有特價喔！','好東西不怕貴！','買了就變強！','這個很多選手都在用喔','老闆推薦！絕對值得','品質保證，不滿意包退','每樣都是精挑細選的好貨'];
     const tired=['你看起來很累耶...休息一下再買？','要不要先吃個飯？','運動員要注意身體喔','別太勉強自己啊'];
@@ -259,15 +261,39 @@ function ShopScreen({c,setC,go}){
         </div>
 
         <div className="grid grid-cols-3 gap-1.5 mb-2">
-          {SHOP.filter(i=>i.id!=='singlet').map(item=>{const can=c.money>=item.price;return(
-            <button key={item.id} onClick={()=>buy(item)} disabled={!can}
-              className={`pixel-border p-2 flex flex-col items-center gap-0.5 ${can?'bg-pixel-charcoal hover:bg-pixel-darkblue cursor-pointer':'bg-pixel-dark opacity-40 cursor-not-allowed'}`}>
+          {SHOP.filter(i=>i.id!=='singlet').map(item=>(
+            <button key={item.id} onClick={()=>{sfx('tap');setViewItem(item)}}
+              className="pixel-border p-2 flex flex-col items-center gap-0.5 bg-pixel-charcoal hover:bg-pixel-darkblue cursor-pointer">
               <span className="text-2xl">{item.icon}</span>
               <span className="font-vt text-pixel-white text-xs text-center">{item.name}</span>
-              <span className={`font-pixel text-[8px] ${can?'text-pixel-orange':'text-pixel-red'}`}>💰{item.price}</span>
+              <span className="font-pixel text-[8px] text-pixel-orange">💰{item.price}</span>
             </button>
-          )})}
+          ))}
         </div>
+
+        {/* Item detail popup */}
+        {viewItem&&(
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center p-4" onClick={()=>setViewItem(null)}>
+            <div className="pixel-border-gold bg-pixel-charcoal p-5 rounded-lg max-w-sm w-full pop-in" onClick={e=>e.stopPropagation()}>
+              <div className="text-center mb-3">
+                <span className="text-5xl">{viewItem.icon}</span>
+              </div>
+              <div className="font-pixel text-pixel-gold text-sm text-center mb-1">{viewItem.name}</div>
+              <div className="font-vt text-pixel-light text-base text-center mb-2">{viewItem.desc}</div>
+              {viewItem.tip&&<div className="font-vt text-pixel-cyan text-sm text-center mb-3 bg-pixel-dark p-2 rounded">💡 {viewItem.tip}</div>}
+              <div className="font-pixel text-pixel-orange text-center text-lg mb-3">💰 {viewItem.price}</div>
+              <div className="flex gap-2">
+                <button onClick={()=>setViewItem(null)}
+                  className="flex-1 pixel-btn bg-pixel-dark text-pixel-light py-2 text-xs font-pixel">返回</button>
+                <button onClick={()=>{buy(viewItem);setViewItem(null)}}
+                  disabled={c.money<viewItem.price}
+                  className={`flex-1 pixel-btn pixel-btn-gold py-2 text-xs font-pixel ${c.money>=viewItem.price?'bg-pixel-dark text-pixel-gold':'bg-pixel-charcoal text-pixel-gray cursor-not-allowed'}`}>
+                  {c.money>=viewItem.price?'購買！':'金幣不足'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Singlet Shop */}
         <div className="pixel-border bg-pixel-charcoal p-2 mb-2">
@@ -278,20 +304,7 @@ function ShopScreen({c,setC,go}){
               const equipped=c.singlet===s.id;
               const canBuy=c.money>=s.price;
               return(
-                <button key={s.id} onClick={()=>{
-                  if(equipped)return;
-                  if(owned){
-                    sfx('tap');setC(x=>({...x,singlet:s.id}));
-                    setShopMsg('換上了'+s.name+'！帥！');setShopWave(true);setTimeout(()=>setShopWave(false),1200);
-                  }else if(canBuy){
-                    sfx('buy');sfx('coin');
-                    setC(x=>({...x,money:x.money-s.price,singlet:s.id,ownedSinglets:[...(x.ownedSinglets||[]),s.id]}));
-                    setShopMsg('買了'+s.name+'！穿起來很帥！');setShopWave(true);setTimeout(()=>setShopWave(false),1200);
-                    setFloats([{icon:'👔',text:s.name,color:s.body},{icon:'💰',text:'-'+s.price,color:'#ef5350'}]);
-                  }else{
-                    sfx('fail');setShopMsg('不夠錢喔！');
-                  }
-                }}
+                <button key={s.id} onClick={()=>{sfx('tap');setViewSinglet(s)}}
                 className={`pixel-border p-1.5 flex items-center gap-2 ${equipped?'border-pixel-gold bg-pixel-darkblue':owned?'bg-pixel-charcoal hover:bg-pixel-darkblue':'bg-pixel-dark'} ${!owned&&!canBuy?'opacity-40':''}`}>
                   {/* Singlet preview SVG */}
                   <svg viewBox="0 0 40 55" width="36" height="50">
@@ -318,6 +331,62 @@ function ShopScreen({c,setC,go}){
             })}
           </div>
         </div>
+
+        {/* Singlet detail popup */}
+        {viewSinglet&&(()=>{
+          const s=viewSinglet;
+          const owned=(c.ownedSinglets||['basic_blue']).includes(s.id);
+          const equipped=c.singlet===s.id;
+          const canBuy=c.money>=s.price;
+          const numChar='一二三四五六七八九';
+          return(
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center p-4" onClick={()=>setViewSinglet(null)}>
+              <div className="pixel-border-gold bg-pixel-charcoal p-5 rounded-lg max-w-sm w-full pop-in" onClick={e=>e.stopPropagation()}>
+                {/* Large singlet preview */}
+                <div className="flex justify-center mb-3">
+                  <svg viewBox="0 0 80 110" width="120" height="165">
+                    <rect x="16" y="0" width="12" height="32" rx="4" fill={s.body}/>
+                    <rect x="52" y="0" width="12" height="32" rx="4" fill={s.body}/>
+                    <rect x="8" y="24" width="64" height="76" rx="8" fill={s.body} stroke={s.stripe} strokeWidth="1.5"/>
+                    {s.stripeType==='diagonal'&&<line x1="16" y1="90" x2="64" y2="32" stroke={s.stripe} strokeWidth="10" opacity=".6" strokeLinecap="round"/>}
+                    {s.stripeType==='horizontal'&&<rect x="12" y="52" width="56" height="10" fill={s.stripe} opacity=".6" rx="2"/>}
+                    {s.stripeType==='vstripe'&&<rect x="34" y="28" width="12" height="68" fill={s.stripe} opacity=".6" rx="2"/>}
+                    <rect x="16" y="94" width="20" height="10" rx="4" fill={s.body}/>
+                    <rect x="44" y="94" width="20" height="10" rx="4" fill={s.body}/>
+                  </svg>
+                </div>
+                <div className="font-pixel text-pixel-gold text-sm text-center mb-1">{s.name}</div>
+                <div className="font-vt text-pixel-light text-base text-center mb-3">{s.desc}</div>
+                {!owned&&<div className="font-pixel text-pixel-orange text-center text-lg mb-3">💰 {s.price}</div>}
+                <div className="flex gap-2">
+                  <button onClick={()=>setViewSinglet(null)}
+                    className="flex-1 pixel-btn bg-pixel-dark text-pixel-light py-2 text-xs font-pixel">返回</button>
+                  {equipped?(
+                    <div className="flex-1 pixel-btn bg-pixel-darkblue text-pixel-gold py-2 text-xs font-pixel text-center">✓ 已裝備</div>
+                  ):owned?(
+                    <button onClick={()=>{
+                      sfx('tap');setC(x=>({...x,singlet:s.id}));
+                      setShopMsg('換上了'+s.name+'！');setShopWave(true);setTimeout(()=>setShopWave(false),1200);
+                      setViewSinglet(null);
+                    }} className="flex-1 pixel-btn pixel-btn-gold bg-pixel-dark text-pixel-gold py-2 text-xs font-pixel">裝備</button>
+                  ):(
+                    <button onClick={()=>{
+                      if(!canBuy){sfx('fail');setShopMsg('不夠錢喔！');return}
+                      sfx('buy');sfx('coin');
+                      setC(x=>({...x,money:x.money-s.price,singlet:s.id,ownedSinglets:[...(x.ownedSinglets||[]),s.id]}));
+                      setShopMsg('買了'+s.name+'！');setShopWave(true);setTimeout(()=>setShopWave(false),1200);
+                      setFloats([{icon:'👔',text:s.name,color:s.body},{icon:'💰',text:'-'+s.price,color:'#ef5350'}]);
+                      setViewSinglet(null);
+                    }} disabled={!canBuy}
+                    className={`flex-1 pixel-btn pixel-btn-gold py-2 text-xs font-pixel ${canBuy?'bg-pixel-dark text-pixel-gold':'bg-pixel-charcoal text-pixel-gray cursor-not-allowed'}`}>
+                      {canBuy?'購買！':'金幣不足'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
