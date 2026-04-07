@@ -1166,12 +1166,12 @@ function Hub({c,setC,go}){
           <span className="font-vt text-pixel-gold text-sm">💰{c.money}</span>
           <span className="font-vt text-pixel-light text-xs">📅{c.day}天</span>
         </div>
-        {/* Row 2: Buttons + weight + PB */}
+        {/* Row 2: Buttons with labels + weight + PB */}
         <div className="flex items-center gap-1">
-          <button onClick={save} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[7px] font-pixel">💾</button>
-          <button onClick={()=>goSave('status')} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[7px] font-pixel">📊</button>
-          <button onClick={()=>go('achievements')} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[7px] font-pixel">🏆{c.achievements.length}</button>
-          <button onClick={()=>go('title')} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[7px] font-pixel">🏠</button>
+          <button onClick={save} className="pixel-btn bg-pixel-dark text-pixel-gold py-0.5 px-2 text-[9px] font-vt flex items-center gap-0.5">💾存檔</button>
+          <button onClick={()=>goSave('status')} className="pixel-btn bg-pixel-dark text-pixel-sky py-0.5 px-2 text-[9px] font-vt flex items-center gap-0.5">📊狀態</button>
+          <button onClick={()=>go('achievements')} className="pixel-btn bg-pixel-dark text-pixel-orange py-0.5 px-2 text-[9px] font-vt flex items-center gap-0.5">🏆成就</button>
+          <button onClick={()=>go('title')} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[9px] font-vt">🏠</button>
           <span className={`font-vt text-xs ${(c.bodyWeight||0)>(parseInt(c.weightClass)||80)?'text-pixel-red':'text-pixel-light'}`}>⚖️{(c.bodyWeight||0).toFixed(1)}kg</span>
           <div className="flex-1"/>
           <span className="font-vt text-pixel-gold text-xs">抓{c.pb.snatch||'--'} 挺{c.pb.cleanJerk||'--'} 總{c.pb.total||'--'}kg</span>
