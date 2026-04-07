@@ -756,7 +756,6 @@ function Hub({c,setC,go}){
 
   const locations=[
     // North area (y: 200-800) -- urban/arena zone
-    {id:'status',icon:'📊',label:'狀態',x:1200,y:200,action:()=>{sfx('click');goSave('status')},tip:'查看能力值和成長紀錄'},
     {id:'wangfund',icon:'🏦',label:'老王基金會',x:1200,y:400,locked:c.eventLevel<4,
       action:()=>{if(c.eventLevel<4){sfx('fail');setToast({text:'🔒 世界賽等級！',type:'fail'});return}sfx('click');goSave('wangfund')},tip:'🔒 世界賽解鎖'},
     {id:'nstc',icon:'🏛️',label:'國訓中心',x:900,y:600,action:()=>{sfx('click');goSave('nstc')},tip:'國訓中心！可參觀'},
@@ -1167,13 +1166,15 @@ function Hub({c,setC,go}){
           <span className="font-vt text-pixel-gold text-sm">💰{c.money}</span>
           <span className="font-vt text-pixel-light text-xs">📅{c.day}天</span>
         </div>
-        {/* Row 2: Buttons + PB */}
+        {/* Row 2: Buttons + weight + PB */}
         <div className="flex items-center gap-1">
           <button onClick={save} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[7px] font-pixel">💾</button>
+          <button onClick={()=>goSave('status')} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[7px] font-pixel">📊</button>
           <button onClick={()=>go('achievements')} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[7px] font-pixel">🏆{c.achievements.length}</button>
           <button onClick={()=>go('title')} className="pixel-btn bg-pixel-dark text-pixel-light py-0.5 px-2 text-[7px] font-pixel">🏠</button>
+          <span className={`font-vt text-xs ${(c.bodyWeight||0)>(parseInt(c.weightClass)||80)?'text-pixel-red':'text-pixel-light'}`}>⚖️{(c.bodyWeight||0).toFixed(1)}kg</span>
           <div className="flex-1"/>
-          <span className="font-vt text-pixel-gold text-xs">🏋️ 抓{c.pb.snatch||'--'} 挺{c.pb.cleanJerk||'--'} 總{c.pb.total||'--'}kg</span>
+          <span className="font-vt text-pixel-gold text-xs">抓{c.pb.snatch||'--'} 挺{c.pb.cleanJerk||'--'} 總{c.pb.total||'--'}kg</span>
           {c.streak>=3&&<span className="font-vt text-pixel-orange text-xs">🔥{c.streak}</span>}
         </div>
       </div>
