@@ -74,6 +74,8 @@ function App(){
       s.bodyWeight=s.bodyWeight||(parseInt(s.weightClass)||80);
       s.targetWeight=s.targetWeight||s.bodyWeight;
       s.mapPos=s.mapPos||null;
+      s.singlet=s.singlet||'basic_blue';
+      s.ownedSinglets=s.ownedSinglets||['basic_blue'];
       setC(s);setScreen('hub');
     }}catch(e){console.error(e)}
   }

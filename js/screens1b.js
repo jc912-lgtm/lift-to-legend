@@ -218,6 +218,10 @@ function CompScreen({c,setC,go}){
 
     // Lifter pose
     const liftPose=showMeter?'lifting':lastAtt?(lastAtt.success?'success':'fail'):'ready';
+    const mySinglet=SINGLETS.find(s=>s.id===c.singlet)||SINGLETS[0];
+    const singletColor=mySinglet.body;
+    const singletStripe=mySinglet.stripe;
+    const singletType=mySinglet.stripeType;
 
     return(
       <div className="h-screen bg-pixel-dark flex flex-col overflow-hidden">
@@ -532,9 +536,11 @@ function CompScreen({c,setC,go}){
                 <rect x="-19" y="86" width="18" height="3" rx="1" fill="#0d47a1"/>
                 <rect x="1" y="86" width="18" height="3" rx="1" fill="#0d47a1"/>
                 {/* Body / Singlet */}
-                <rect x="-22" y="10" width="44" height="45" rx="8" fill="#1565c0"/>
-                {/* White diagonal stripe on singlet */}
-                <line x1="-18" y1="40" x2="18" y2="15" stroke="white" strokeWidth="5" opacity=".7" strokeLinecap="round"/>
+                <rect x="-22" y="10" width="44" height="45" rx="8" fill={singletColor}/>
+                {/* Singlet stripe */}
+                {singletType==='diagonal'&&<line x1="-18" y1="40" x2="18" y2="15" stroke={singletStripe} strokeWidth="5" opacity=".7" strokeLinecap="round"/>}
+                {singletType==='horizontal'&&<rect x="-20" y="28" width="40" height="6" fill={singletStripe} opacity=".7" rx="1"/>}
+                {singletType==='vstripe'&&<rect x="-3" y="12" width="6" height="40" fill={singletStripe} opacity=".7" rx="1"/>}
                 {/* Belt */}
                 <rect x="-24" y="46" width="48" height="7" rx="3" fill="#5d4037"/>
                 <rect x="-3" y="47" width="6" height="5" rx="1" fill="#ffd740"/>
@@ -598,8 +604,10 @@ function CompScreen({c,setC,go}){
                 <rect x="-22" y="83" width="18" height="3" rx="1" fill="#0d47a1"/>
                 <rect x="4" y="83" width="18" height="3" rx="1" fill="#0d47a1"/>
                 {/* Body */}
-                <rect x="-22" y="10" width="44" height="45" rx="8" fill="#1565c0"/>
-                <line x1="-18" y1="40" x2="18" y2="15" stroke="white" strokeWidth="5" opacity=".7" strokeLinecap="round"/>
+                <rect x="-22" y="10" width="44" height="45" rx="8" fill={singletColor}/>
+                {singletType==='diagonal'&&<line x1="-18" y1="40" x2="18" y2="15" stroke={singletStripe} strokeWidth="5" opacity=".7" strokeLinecap="round"/>}
+                {singletType==='horizontal'&&<rect x="-20" y="28" width="40" height="6" fill={singletStripe} opacity=".7" rx="1"/>}
+                {singletType==='vstripe'&&<rect x="-3" y="12" width="6" height="40" fill={singletStripe} opacity=".7" rx="1"/>}
                 <rect x="-24" y="46" width="48" height="7" rx="3" fill="#5d4037"/>
                 <rect x="-3" y="47" width="6" height="5" rx="1" fill="#ffd740"/>
                 <rect x="-9" y="22" width="18" height="11" rx="2" fill="#0d47a1"/>
@@ -653,9 +661,11 @@ function CompScreen({c,setC,go}){
                 <rect x="-30" y="83" width="18" height="3" rx="1" fill="#0d47a1"/>
                 <rect x="12" y="83" width="18" height="3" rx="1" fill="#0d47a1"/>
                 {/* Body / Singlet */}
-                <rect x="-22" y="8" width="44" height="47" rx="8" fill="#1565c0"/>
-                {/* White diagonal stripe */}
-                <line x1="-18" y1="40" x2="18" y2="13" stroke="white" strokeWidth="5" opacity=".7" strokeLinecap="round"/>
+                <rect x="-22" y="8" width="44" height="47" rx="8" fill={singletColor}/>
+                {/* Singlet stripe */}
+                {singletType==='diagonal'&&<line x1="-18" y1="40" x2="18" y2="13" stroke={singletStripe} strokeWidth="5" opacity=".7" strokeLinecap="round"/>}
+                {singletType==='horizontal'&&<rect x="-20" y="26" width="40" height="6" fill={singletStripe} opacity=".7" rx="1"/>}
+                {singletType==='vstripe'&&<rect x="-3" y="10" width="6" height="42" fill={singletStripe} opacity=".7" rx="1"/>}
                 {/* Belt */}
                 <rect x="-24" y="46" width="48" height="7" rx="3" fill="#5d4037"/>
                 <rect x="-3" y="47" width="6" height="5" rx="1" fill="#ffd740"/>
@@ -768,7 +778,7 @@ function CompScreen({c,setC,go}){
                 <rect x="-17" y="86" width="17" height="3" rx="1" fill="#0d47a1"/>
                 <rect x="1" y="86" width="17" height="3" rx="1" fill="#0d47a1"/>
                 {/* Body — slightly hunched */}
-                <rect x="-20" y="12" width="40" height="45" rx="7" fill="#1565c0"/>
+                <rect x="-20" y="12" width="40" height="45" rx="7" fill={singletColor}/>
                 <line x1="-16" y1="42" x2="16" y2="17" stroke="white" strokeWidth="4.5" opacity=".5" strokeLinecap="round"/>
                 <rect x="-22" y="48" width="44" height="7" rx="3" fill="#5d4037"/>
                 <rect x="-3" y="49" width="6" height="5" rx="1" fill="#ffd740"/>

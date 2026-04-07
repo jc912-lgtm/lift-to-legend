@@ -390,9 +390,20 @@ const SHOP=[
   {id:'charm',name:'幸運護符',desc:'比賽運氣+3%',price:1200,effect:{type:'luck',value:3},icon:'🍀',tip:'運氣是留給準備好的人！'},
   {id:'book',name:'教練秘笈',desc:'所有屬性+1',price:800,effect:{type:'allBoost',value:1},icon:'📖',tip:'學無止境！書中有前輩們累積的智慧。'},
   {id:'video',name:'國際賽影片分析',desc:'技術+2、穩定+1',price:400,effect:{type:'multi',stats:{tec:2,stb:1}},icon:'📹',tip:'觀看國際選手的比賽影片，分析他們的技術是進步的捷徑！注意他們的槓鈴軌跡和節奏。'},
-  {id:'singlet',name:'比賽連身衣',desc:'正式比賽必備！技術+2、穩定+1',price:400,effect:{type:'multi',stats:{tec:2,stb:1}},icon:'👔',tip:'國際比賽規定必須穿連身衣上場！'},
+  {id:'singlet',name:'比賽連身衣(基本)',desc:'開啟連身衣商店',price:0,effect:{type:'none'},icon:'👔',tip:'去商店選購更多款式！'},
   {id:'kneeSleeves',name:'護膝套',desc:'保護膝蓋，深蹲更穩',price:300,effect:{type:'perm',stat:'stb',value:2},icon:'🦵',tip:'護膝能保護膝關節，讓你更安心地蹲'},
   {id:'chalk',name:'止滑粉',desc:'握力提升！不怕手滑',price:100,effect:{type:'perm',stat:'str',value:1},icon:'🤍',tip:'止滑粉（碳酸鎂）能增加摩擦力，是舉重必備品'},
+];
+
+const SINGLETS=[
+  {id:'basic_blue',name:'基本藍',desc:'基礎訓練用',price:0,body:'#1565c0',stripe:'#ffffff',stripeType:'diagonal'},
+  {id:'taiwan_red',name:'台灣紅',desc:'代表台灣出賽！',price:300,body:'#c62828',stripe:'#ffffff',stripeType:'horizontal'},
+  {id:'gold_champion',name:'冠軍金',desc:'王者的象徵',price:800,body:'#1a237e',stripe:'#f4d03f',stripeType:'diagonal'},
+  {id:'tiger_orange',name:'猛虎橘',desc:'像老虎一樣兇猛',price:500,body:'#e65100',stripe:'#000000',stripeType:'vstripe'},
+  {id:'dragon_black',name:'黑龍',desc:'低調霸氣',price:600,body:'#212121',stripe:'#c62828',stripeType:'diagonal'},
+  {id:'sakura_pink',name:'櫻花粉',desc:'可愛又有力',price:400,body:'#e91e63',stripe:'#ffffff',stripeType:'horizontal'},
+  {id:'forest_green',name:'森林綠',desc:'自然的力量',price:350,body:'#2e7d32',stripe:'#f4d03f',stripeType:'vstripe'},
+  {id:'thunder_purple',name:'雷電紫',desc:'電光石火',price:700,body:'#6a1b9a',stripe:'#ffeb3b',stripeType:'diagonal'},
 ];
 
 const COACH_TIPS=[

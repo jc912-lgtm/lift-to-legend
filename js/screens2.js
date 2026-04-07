@@ -259,7 +259,7 @@ function ShopScreen({c,setC,go}){
         </div>
 
         <div className="grid grid-cols-3 gap-1.5 mb-2">
-          {SHOP.map(item=>{const can=c.money>=item.price;return(
+          {SHOP.filter(i=>i.id!=='singlet').map(item=>{const can=c.money>=item.price;return(
             <button key={item.id} onClick={()=>buy(item)} disabled={!can}
               className={`pixel-border p-2 flex flex-col items-center gap-0.5 ${can?'bg-pixel-charcoal hover:bg-pixel-darkblue cursor-pointer':'bg-pixel-dark opacity-40 cursor-not-allowed'}`}>
               <span className="text-2xl">{item.icon}</span>
@@ -267,6 +267,56 @@ function ShopScreen({c,setC,go}){
               <span className={`font-pixel text-[8px] ${can?'text-pixel-orange':'text-pixel-red'}`}>💰{item.price}</span>
             </button>
           )})}
+        </div>
+
+        {/* Singlet Shop */}
+        <div className="pixel-border bg-pixel-charcoal p-2 mb-2">
+          <div className="font-pixel text-pixel-gold text-[9px] mb-1">👔 連身衣專區</div>
+          <div className="grid grid-cols-2 gap-1.5">
+            {SINGLETS.map(s=>{
+              const owned=(c.ownedSinglets||['basic_blue']).includes(s.id);
+              const equipped=c.singlet===s.id;
+              const canBuy=c.money>=s.price;
+              return(
+                <button key={s.id} onClick={()=>{
+                  if(equipped)return;
+                  if(owned){
+                    sfx('tap');setC(x=>({...x,singlet:s.id}));
+                    setShopMsg('換上了'+s.name+'！帥！');setShopWave(true);setTimeout(()=>setShopWave(false),1200);
+                  }else if(canBuy){
+                    sfx('buy');sfx('coin');
+                    setC(x=>({...x,money:x.money-s.price,singlet:s.id,ownedSinglets:[...(x.ownedSinglets||[]),s.id]}));
+                    setShopMsg('買了'+s.name+'！穿起來很帥！');setShopWave(true);setTimeout(()=>setShopWave(false),1200);
+                    setFloats([{icon:'👔',text:s.name,color:s.body},{icon:'💰',text:'-'+s.price,color:'#ef5350'}]);
+                  }else{
+                    sfx('fail');setShopMsg('不夠錢喔！');
+                  }
+                }}
+                className={`pixel-border p-1.5 flex items-center gap-2 ${equipped?'border-pixel-gold bg-pixel-darkblue':owned?'bg-pixel-charcoal hover:bg-pixel-darkblue':'bg-pixel-dark'} ${!owned&&!canBuy?'opacity-40':''}`}>
+                  {/* Singlet preview SVG */}
+                  <svg viewBox="0 0 40 55" width="36" height="50">
+                    <rect x="8" y="0" width="6" height="16" rx="2" fill={s.body}/>
+                    <rect x="26" y="0" width="6" height="16" rx="2" fill={s.body}/>
+                    <rect x="4" y="12" width="32" height="38" rx="4" fill={s.body}/>
+                    {s.stripeType==='diagonal'&&<line x1="8" y1="45" x2="32" y2="16" stroke={s.stripe} strokeWidth="5" opacity=".6" strokeLinecap="round"/>}
+                    {s.stripeType==='horizontal'&&<rect x="6" y="26" width="28" height="5" fill={s.stripe} opacity=".6" rx="1"/>}
+                    {s.stripeType==='vstripe'&&<rect x="17" y="14" width="6" height="34" fill={s.stripe} opacity=".6" rx="1"/>}
+                    <rect x="8" y="46" width="10" height="5" rx="2" fill={s.body}/>
+                    <rect x="22" y="46" width="10" height="5" rx="2" fill={s.body}/>
+                  </svg>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-vt text-pixel-white text-xs">{s.name}</div>
+                    <div className="font-vt text-pixel-gray text-[10px]">{s.desc}</div>
+                    <div className="font-vt text-xs">
+                      {equipped?<span className="text-pixel-gold">✓ 已裝備</span>:
+                       owned?<span className="text-pixel-green">裝備</span>:
+                       <span className={canBuy?'text-pixel-orange':'text-pixel-red'}>💰{s.price}</span>}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
