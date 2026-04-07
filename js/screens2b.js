@@ -872,60 +872,133 @@ function FriendScreen({c,setC,go}){
     setTimeout(()=>setFriendMsg(null),2500);
   }
 
-  // ── Mahjong matching mini-game ──
+  // ── Real Mahjong (simplified Taiwanese style) ──
   const[mjMode,setMjMode]=useState(false);
-  const[mjTiles,setMjTiles]=useState(null);
-  const[mjFlipped,setMjFlipped]=useState([]);
-  const[mjMatched,setMjMatched]=useState([]);
-  const[mjTurns,setMjTurns]=useState(0);
-  const[mjTime,setMjTime]=useState(30);
-  const[mjDone,setMjDone]=useState(false);
-  const[mjBusy,setMjBusy]=useState(false);
+  const[mjHand,setMjHand]=useState([]);
+  const[mjAI,setMjAI]=useState([[],[],[]]);
+  const[mjPile,setMjPile]=useState([]);
+  const[mjDiscard,setMjDiscard]=useState([]);
+  const[mjSets,setMjSets]=useState([]);
+  const[mjTurn,setMjTurn]=useState(0);
+  const[mjSel,setMjSel]=useState(null);
+  const[mjCanPong,setMjCanPong]=useState(false);
+  const[mjCanWin,setMjCanWin]=useState(false);
+  const[mjResult,setMjResult]=useState(null);
+  const[mjLast,setMjLast]=useState(null);
+  const[mjMsg,setMjMsg]=useState('');
 
-  function startMahjong(){
-    const symbols=['一萬','二萬','三筒','四筒'];
-    const t=[...symbols,...symbols].sort(()=>Math.random()-0.5);
-    setMjTiles(t);setMjFlipped([]);setMjMatched([]);setMjTurns(0);setMjTime(30);setMjDone(false);setMjBusy(false);setMjMode(true);
+  const MJ_NAMES=['','一萬','二萬','三萬','四萬','五萬','六萬','七萬','八萬','九萬','一筒','二筒','三筒','四筒','五筒','六筒','七筒','八筒','九筒'];
+  const mjName=v=>MJ_NAMES[v]||'?';
+  const mjSuit=v=>v<=9?'萬':'筒';
+  const mjNum=v=>v<=9?v:v-9;
+  const mjColor=v=>v<=9?'#c62828':'#1565c0';
+
+  function canFormSets(t){
+    if(t.length===0)return true;
+    const s=[...t].sort((a,b)=>a-b);
+    if(s.length>=3&&s[0]===s[1]&&s[1]===s[2]){const r=[...s];r.splice(0,3);if(canFormSets(r))return true}
+    const f=s[0];const su=f<=9?9:18;
+    const i2=s.indexOf(f+1);const i3=s.indexOf(f+2);
+    if(i2>=0&&i3>=0&&f+2<=su){const r=[...s];r.splice(r.indexOf(f+2),1);r.splice(r.indexOf(f+1),1);r.splice(0,1);if(canFormSets(r))return true}
+    return false;
+  }
+  function canWin(hand){
+    const s=[...hand].sort((a,b)=>a-b);
+    for(let i=0;i<s.length-1;i++){
+      if(s[i]===s[i+1]){const r=[...s];r.splice(i,2);if(canFormSets(r))return true}
+    }
+    return false;
+  }
+  function aiDiscard(hand){
+    let worst=0,ws=99;
+    hand.forEach((t,i)=>{let sc=0;hand.forEach(t2=>{if(t2!==t&&Math.abs(t2-t)<=2&&Math.floor((t-1)/9)===Math.floor((t2-1)/9))sc++});if(sc<ws){ws=sc;worst=i}});
+    return worst;
   }
 
-  function flipTile(idx){
-    if(mjDone||mjBusy||mjFlipped.includes(idx)||mjMatched.includes(idx))return;
+  function startMj(){
+    const all=[];for(let v=1;v<=18;v++)for(let i=0;i<4;i++)all.push(v);
+    for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
+    const h=all.splice(0,13).sort((a,b)=>a-b);
+    const a1=all.splice(0,13),a2=all.splice(0,13),a3=all.splice(0,13);
+    setMjHand(h);setMjAI([a1,a2,a3]);setMjPile(all);setMjDiscard([]);setMjSets([]);
+    setMjTurn(0);setMjSel(null);setMjCanPong(false);setMjCanWin(false);setMjResult(null);setMjLast(null);
+    setMjMsg('你的回合！摸牌中...');setMjMode(true);
+    // Player draws
+    setTimeout(()=>{
+      const drawn=all.shift();
+      const nh=[...h,drawn].sort((a,b)=>a-b);
+      setMjHand(nh);setMjPile([...all]);
+      setMjMsg('選一張牌打出！');
+      if(canWin(nh))setMjCanWin(true);
+    },500);
+  }
+
+  function playerDiscard(idx){
+    if(mjTurn!==0||mjResult)return;
     sfx('tap');
-    const nf=[...mjFlipped,idx];
-    setMjFlipped(nf);
-    if(nf.length===2){
-      setMjTurns(t=>t+1);setMjBusy(true);
-      if(mjTiles[nf[0]]===mjTiles[nf[1]]){
-        sfx('coin');
-        setTimeout(()=>{
-          const nm=[...mjMatched,nf[0],nf[1]];
-          setMjMatched(nm);setMjFlipped([]);setMjBusy(false);
-          if(nm.length===8){setMjDone(true);sfx('success')}
-        },400);
-      }else{
-        setTimeout(()=>{setMjFlipped([]);setMjBusy(false)},800);
-      }
+    const tile=mjHand[idx];
+    const nh=[...mjHand];nh.splice(idx,1);
+    setMjHand(nh);setMjSel(null);setMjCanWin(false);
+    setMjDiscard(d=>[...d,tile]);setMjLast(tile);
+    setMjMsg('對手回合...');
+    setMjTurn(1);
+    setTimeout(()=>aiTurn(1,nh,[...mjAI],[...mjPile],[...mjDiscard,tile]),600);
+  }
+
+  function aiTurn(turn,ph,ais,pile,disc){
+    if(mjResult||pile.length===0){setMjResult({winner:-1,msg:'流局！沒人胡'});return}
+    const ai=[...ais];const hand=[...ai[turn-1]];
+    const drawn=pile.shift();hand.push(drawn);
+    if(canWin(hand)){
+      ai[turn-1]=hand;setMjAI(ai);setMjPile(pile);
+      setMjResult({winner:turn,msg:'AI'+turn+' 胡了！😱'});sfx('fail');return;
+    }
+    const di=aiDiscard(hand);const discTile=hand.splice(di,1)[0];
+    ai[turn-1]=hand;disc.push(discTile);
+    setMjAI(ai);setMjPile(pile);setMjDiscard(disc);setMjLast(discTile);
+    // Check player pong
+    const pongCount=ph.filter(t=>t===discTile).length;
+    if(pongCount>=2){
+      setMjCanPong(true);setMjMsg('可以碰！要碰嗎？');
+      setMjTurn(0);return;
+    }
+    const nextTurn=turn>=3?0:turn+1;
+    if(nextTurn===0){
+      // Player's turn — draw
+      if(pile.length===0){setMjResult({winner:-1,msg:'流局！'});return}
+      const pd=pile.shift();const nph=[...ph,pd].sort((a,b)=>a-b);
+      setMjHand(nph);setMjPile(pile);setMjTurn(0);setMjMsg('你的回合！選牌打出');
+      if(canWin(nph))setMjCanWin(true);
+    }else{
+      setMjTurn(nextTurn);
+      setTimeout(()=>aiTurn(nextTurn,ph,ai,pile,disc),400);
     }
   }
 
-  useEffect(()=>{
-    if(!mjMode||mjDone)return;
-    const t=setInterval(()=>setMjTime(v=>{if(v<=1){setMjDone(true);return 0}return v-1}),1000);
-    return()=>clearInterval(t);
-  },[mjMode,mjDone]);
+  function doPong(){
+    const tile=mjLast;const nh=[...mjHand];
+    let removed=0;const kept=[];
+    nh.forEach(t=>{if(t===tile&&removed<2)removed++;else kept.push(t)});
+    setMjSets(s=>[...s,{tiles:[tile,tile,tile]}]);
+    setMjHand(kept.sort((a,b)=>a-b));setMjCanPong(false);setMjTurn(0);setMjMsg('碰！選牌打出');sfx('coin');
+    // Remove last discard
+    setMjDiscard(d=>{const nd=[...d];nd.pop();return nd});
+    if(canWin(kept))setMjCanWin(true);
+  }
+
+  function doWin(){
+    sfx('success');sfx('cheer');
+    setMjResult({winner:0,msg:'胡了！🀄🎉'});
+  }
 
   function claimMjReward(){
-    const pairs=mjMatched.length/2;
-    const reward=pairs===4?100:pairs===3?60:0;
-    setC(x=>({...x,money:x.money+reward,stats:{...x.stats,stb:Math.min(100,x.stats.stb+(pairs>=3?2:1))}}));
-    setFloats([{icon:'🀄',text:pairs===4?'自摸！+100💰':pairs===3?'+60💰':'穩定+1',color:'#f4d03f'}]);
+    const won=mjResult&&mjResult.winner===0;
+    setC(x=>({...x,money:x.money+(won?150:0),stats:{...x.stats,stb:Math.min(100,x.stats.stb+(won?2:1))}}));
+    setFloats([{icon:'🀄',text:won?'胡了！+150💰':'穩定+1',color:won?'#f4d03f':'#81c784'}]);
     setMjMode(false);setDone(d=>({...d,mahjong:true}));
   }
 
-  const doMahjong=()=>{
-    if(done.mahjong)return;
-    startMahjong();
-  };
+  const doMahjong=()=>{if(done.mahjong)return;startMj()};
 
   const doGaming=()=>{
     if(done.gaming)return;
@@ -967,47 +1040,99 @@ function FriendScreen({c,setC,go}){
   const breathY=Math.sin(frame*0.1)*2;
   const tvFlicker=frame%10<5;
 
-  // Mahjong mini-game takes over the screen
+  // Real Mahjong game takes over the screen
   if(mjMode){
+    const numChar='一二三四五六七八九';
     return(
-      <div className="h-screen bg-pixel-dark flex flex-col items-center justify-center p-4">
+      <div className="h-screen bg-green-900 flex flex-col overflow-hidden">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
-        <div className="font-pixel text-pixel-gold text-sm mb-3">🀄 快速麻將 — 翻牌配對</div>
-        <div className="flex gap-4 mb-4">
-          <span className="font-vt text-pixel-red text-lg">⏱️ {mjTime}s</span>
-          <span className="font-vt text-pixel-light text-lg">翻牌 {mjTurns}次</span>
-          <span className="font-vt text-pixel-green text-lg">✓ {mjMatched.length/2}/4</span>
+        {/* Top bar: AI info */}
+        <div className="bg-green-800 p-2 flex justify-between items-center">
+          <button onClick={()=>{setMjMode(false);setDone(d=>({...d}))}} className="font-vt text-white text-sm">← 退出</button>
+          <span className="font-pixel text-pixel-gold text-[10px]">🀄 台灣麻將</span>
+          <span className="font-vt text-white text-sm">剩{mjPile.length}張</span>
         </div>
-        {mjTiles&&<div className="grid grid-cols-4 gap-2 mb-4">
-          {mjTiles.map((tile,idx)=>{
-            const show=mjFlipped.includes(idx)||mjMatched.includes(idx);
-            const matched=mjMatched.includes(idx);
-            return(
-              <button key={idx} onClick={()=>flipTile(idx)}
-                className={`w-16 h-22 rounded-lg border-2 flex items-center justify-center transition-all
-                  ${matched?'border-pixel-gold bg-yellow-900 bg-opacity-30 scale-95':show?'border-pixel-green bg-white':'border-pixel-gray bg-green-900 hover:bg-green-800'}`}
-                style={{minHeight:80}}>
-                {show?(
-                  <span className="font-vt text-xl text-pixel-dark font-bold">{tile}</span>
-                ):(
-                  <span className="text-3xl">🀄</span>
-                )}
-              </button>
-            );
-          })}
-        </div>}
-        {mjDone&&<div className="text-center mb-3">
-          <div className="font-pixel text-pixel-gold text-lg mb-2">
-            {mjMatched.length===8?'🎉 自摸！全對！':mjMatched.length>=6?'👍 不錯嘛！':'😅 再練練！'}
+        {/* AI hands (face down) */}
+        <div className="flex justify-center gap-6 p-2">
+          {mjAI.map((ai,i)=>(
+            <div key={i} className="text-center">
+              <div className="font-vt text-white text-xs mb-1">{['朋友A','朋友B','朋友C'][i]}</div>
+              <div className="flex gap-0.5 justify-center">
+                {Array.from({length:Math.min(ai.length,7)},(_,j)=>(
+                  <div key={j} className="w-4 h-6 bg-green-700 border border-green-600 rounded-sm"/>
+                ))}
+              </div>
+              <div className="font-vt text-green-400 text-[10px]">{ai.length}張</div>
+            </div>
+          ))}
+        </div>
+        {/* Message */}
+        <div className="text-center py-1">
+          <span className="font-vt text-pixel-gold text-sm">{mjMsg}</span>
+        </div>
+        {/* Discard pile */}
+        <div className="flex-1 overflow-auto p-2">
+          <div className="flex flex-wrap gap-1 justify-center">
+            {mjDiscard.map((t,i)=>(
+              <div key={i} className="w-8 h-11 bg-white border border-gray-300 rounded flex flex-col items-center justify-center">
+                <span className="text-[9px] font-bold" style={{color:t<=9?'#c62828':'#1565c0'}}>{numChar[mjNum(t)-1]}</span>
+                <span className="text-[7px]" style={{color:t<=9?'#c62828':'#1565c0'}}>{mjSuit(t)}</span>
+              </div>
+            ))}
           </div>
-          <div className="font-vt text-pixel-light text-sm mb-2">
-            {mjTurns}次翻牌，配對 {mjMatched.length/2}/4
+          {/* Pong sets */}
+          {mjSets.length>0&&<div className="flex gap-2 justify-center mt-2">
+            {mjSets.map((s,i)=>(
+              <div key={i} className="flex gap-0.5 border border-pixel-gold rounded p-0.5">
+                {s.tiles.map((t,j)=>(
+                  <div key={j} className="w-7 h-10 bg-yellow-100 border border-pixel-gold rounded flex flex-col items-center justify-center">
+                    <span className="text-[8px] font-bold" style={{color:t<=9?'#c62828':'#1565c0'}}>{numChar[mjNum(t)-1]}</span>
+                    <span className="text-[6px]" style={{color:t<=9?'#c62828':'#1565c0'}}>{mjSuit(t)}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>}
+        </div>
+        {/* Action buttons */}
+        {mjCanPong&&!mjResult&&(
+          <div className="flex justify-center gap-3 p-2">
+            <button onClick={doPong} className="pixel-btn pixel-btn-gold bg-pixel-dark text-pixel-gold px-6 py-2 text-sm font-pixel">碰！</button>
+            <button onClick={()=>{setMjCanPong(false);setMjTurn(0);setMjMsg('跳過碰，你的回合');
+              if(mjPile.length>0){const d=mjPile.shift();const nh=[...mjHand,d].sort((a,b)=>a-b);setMjHand(nh);setMjPile([...mjPile]);if(canWin(nh))setMjCanWin(true)}
+            }} className="pixel-btn bg-pixel-charcoal text-pixel-light px-6 py-2 text-sm font-vt">跳過</button>
           </div>
-          <button onClick={claimMjReward} className="pixel-btn pixel-btn-gold bg-pixel-dark text-pixel-gold px-6 py-2 text-xs font-pixel">
-            {mjMatched.length===8?'💰 +100 收下！':mjMatched.length>=6?'💰 +60 收下！':'🧠 穩定+1'}
-          </button>
-        </div>}
-        {!mjDone&&<button onClick={()=>setMjMode(false)} className="font-vt text-pixel-gray text-sm mt-2">← 不玩了</button>}
+        )}
+        {mjCanWin&&!mjResult&&mjTurn===0&&(
+          <div className="flex justify-center p-1">
+            <button onClick={doWin} className="pixel-btn pixel-btn-gold bg-pixel-dark text-pixel-gold px-8 py-2 text-sm font-pixel blink">🀄 胡！</button>
+          </div>
+        )}
+        {/* Result */}
+        {mjResult&&(
+          <div className="text-center p-3 bg-green-800">
+            <div className="font-pixel text-pixel-gold text-lg mb-2">{mjResult.msg}</div>
+            <button onClick={claimMjReward} className="pixel-btn pixel-btn-gold bg-pixel-dark text-pixel-gold px-6 py-2 text-xs font-pixel">
+              {mjResult.winner===0?'💰 +150 收下！':'🧠 穩定+1'}
+            </button>
+          </div>
+        )}
+        {/* Player's hand */}
+        {!mjResult&&mjTurn===0&&!mjCanPong&&(
+          <div className="bg-green-800 p-2">
+            <div className="flex gap-1 justify-center flex-wrap">
+              {mjHand.map((t,i)=>(
+                <button key={i} onClick={()=>{if(mjHand.length>13)playerDiscard(i);else setMjSel(mjSel===i?null:i)}}
+                  className={`w-10 h-14 bg-white border-2 rounded flex flex-col items-center justify-center transition-all
+                    ${mjSel===i?'border-pixel-gold -translate-y-2 shadow-lg':'border-gray-400 hover:border-pixel-gold'}`}>
+                  <span className="text-sm font-bold" style={{color:t<=9?'#c62828':'#1565c0'}}>{numChar[mjNum(t)-1]}</span>
+                  <span className="text-[10px]" style={{color:t<=9?'#c62828':'#1565c0'}}>{mjSuit(t)}</span>
+                </button>
+              ))}
+            </div>
+            <div className="font-vt text-green-300 text-xs text-center mt-1">{mjHand.length}張 {mjHand.length>13?'← 點牌打出':''}</div>
+          </div>
+        )}
       </div>
     );
   }
