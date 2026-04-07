@@ -302,7 +302,7 @@ function PoolScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto p-2 select-none">
-      <div className="max-w-lg mx-auto w-full">
+      <div className="max-w-4xl mx-auto w-full px-3 w-full">
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
           <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-4 py-1.5 text-[10px] font-pixel">← 返回</button>
@@ -621,7 +621,7 @@ function RestaurantScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
 
         {/* Eat animation overlay */}
@@ -1194,7 +1194,7 @@ function FriendScreen({c,setC,go}){
 
       {/* Activity Buttons */}
       <div className="bg-pixel-charcoal border-t-4 border-pixel-gray p-3">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-4xl mx-auto w-full px-3">
           <div className="font-pixel text-pixel-gold text-[10px] mb-2 text-center">🏘️ 朋友家 — 來玩吧！</div>
           <div className="grid grid-cols-3 gap-2 mb-3">
             <button onClick={doMahjong} disabled={!!done.mahjong||!!activity}

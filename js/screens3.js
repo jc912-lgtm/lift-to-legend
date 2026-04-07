@@ -88,7 +88,7 @@ function NstcScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto w-full">
+      <div className="max-w-4xl mx-auto w-full px-3 w-full">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
 
         <div className="flex justify-between items-center mb-2">
@@ -373,7 +373,7 @@ function WangFundScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto w-full">
+      <div className="max-w-4xl mx-auto w-full px-3 w-full">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
 
         <div className="flex justify-between items-center mb-2">
@@ -746,7 +746,7 @@ function TianliaoScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-hidden">
-      <div className="max-w-lg mx-auto w-full flex flex-col h-full">
+      <div className="max-w-4xl mx-auto w-full px-3 w-full flex flex-col h-full">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
 
         <div className="flex justify-between items-center mb-1">

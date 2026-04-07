@@ -258,7 +258,7 @@ function CreateScreen({onConfirm}){
     <div className="h-screen flex flex-col items-center justify-center bg-pixel-dark p-4 overflow-auto">
       {coach&&<CoachDialog text="歡迎！我是教練，一起拿金牌吧！🏆"
         onClose={()=>setCoach(false)}/>}
-      <div className="pixel-border-gold bg-pixel-charcoal p-5 md:p-8 w-full max-w-md slide-up">
+      <div className="pixel-border-gold bg-pixel-charcoal p-5 md:p-8 w-full max-w-4xl slide-up">
         <h2 className="font-pixel text-pixel-gold text-center text-xs mb-4">✨ 創建你的選手 ✨</h2>
         <div className="flex justify-center mb-4">
           <CharAvatar charId={avatar} size={100} selected/>
@@ -1369,7 +1369,7 @@ function TrainingScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         {coach&&<CoachDialog text={coach.text} onClose={()=>setCoach(null)}/>}
         {showTip&&<CoachDialog text={showTip.tip} onClose={()=>setShowTip(null)}/>}
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}

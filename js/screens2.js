@@ -33,7 +33,7 @@ function StatusScreen({c,go}){
   const stageDescs=['動作還在學習中，多練習！','動作逐漸穩定，繼續加油！','技術成熟了，準備挑戰大賽！','大師級！動作已經是自然反應。'];
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-4 py-1.5 text-[10px] font-pixel mb-2">← 返回</button>
         <h2 className="font-pixel text-pixel-sky text-[10px] mb-2">📊 選手狀態</h2>
 
@@ -163,7 +163,7 @@ function ShopScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         {coach&&<CoachDialog text={coach.text} onClose={()=>setCoach(null)}/>}
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
         <div className="flex justify-between items-center mb-2">
@@ -520,7 +520,7 @@ function JobsScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         {coach&&<CoachDialog text={coach.text} onClose={()=>setCoach(null)}/>}
         <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-4 py-1.5 text-[10px] font-pixel mb-2">← 返回</button>
         <div className="flex justify-between items-center mb-2">

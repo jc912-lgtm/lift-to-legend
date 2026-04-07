@@ -166,7 +166,7 @@ function CompScreen({c,setC,go}){
   if(phase==='select'){
     return(
       <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-4xl mx-auto w-full px-3">
           <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-4 py-1.5 text-[10px] font-pixel mb-2">← 返回</button>
           <h2 className="font-pixel text-pixel-gold text-[10px] mb-2">🏆 選擇賽事</h2>
           {(c.bodyWeight||0)>(parseInt(c.weightClass)||80)&&(
@@ -906,7 +906,7 @@ function CompScreen({c,setC,go}){
 
         {/* ═══ BOTTOM CONTROLS ═══ */}
         <div className="bg-pixel-charcoal border-t-4 border-pixel-gray p-2">
-          <div className="max-w-lg mx-auto">
+          <div className="max-w-4xl mx-auto w-full px-3">
             {showMeter?(
               <LiftControl liftType={lift==='snatch'?'snatch':'cleanJerk'} difficulty={ev.diff} stats={c.stats} onResult={handleLiftResult} weight={wt}/>
             ):showingOpp?(
@@ -999,7 +999,7 @@ function CompScreen({c,setC,go}){
     }
     function PodiumSVG(){
       return(
-        <svg viewBox="0 0 320 230" className="w-full max-w-sm mx-auto" style={{overflow:'visible'}}>
+        <svg viewBox="0 0 320 230" className="w-full max-w-2xl mx-auto" style={{overflow:'visible'}}>
           {Array.from({length:18},(_,i)=><circle key={`cr${i}`} cx={16+i*17} cy={12+Math.sin(i*1.2)*6} r="4" fill="#333c57" opacity=".4"/>)}
           <g style={{animation:'podiumRise 0.6s ease-out 0.15s both'}}><rect x="216" y="160" width="85" height="40" fill="#ef7d57" stroke="#b13e53" strokeWidth="2" rx="2"/><text x="258" y="186" textAnchor="middle" fill="#1a1c2c" fontSize="18" fontWeight="bold" fontFamily="Press Start 2P,monospace">3</text></g>
           <g style={{animation:'podiumRise 0.6s ease-out 0.3s both'}}><rect x="20" y="145" width="85" height="55" fill="#94b0c2" stroke="#566c86" strokeWidth="2" rx="2"/><text x="62" y="180" textAnchor="middle" fill="#1a1c2c" fontSize="18" fontWeight="bold" fontFamily="Press Start 2P,monospace">2</text></g>
@@ -1017,7 +1017,7 @@ function CompScreen({c,setC,go}){
 
     return(
       <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-4xl mx-auto w-full px-3">
           <div className={`pixel-border-gold bg-pixel-charcoal p-5 mb-3 text-center ${isOG?'glow':''}`}>
             {isOG&&<div className="font-pixel text-pixel-gold text-sm mb-3 blink">🏆 恭喜！你是奧運金牌得主！！！🏆</div>}
             <h2 className="font-pixel text-pixel-gold text-[10px] mb-2">{ev.emoji} {ev.name}</h2>

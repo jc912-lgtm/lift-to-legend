@@ -93,7 +93,7 @@ function HomeScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
         <div className="flex justify-between items-center mb-2">
           <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-3 py-1 text-[10px] font-pixel">← 返回</button>
@@ -276,7 +276,7 @@ function CafeScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
         {buyAnim&&(
           <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
@@ -438,7 +438,7 @@ function LaundryScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
         <div className="flex justify-between items-center mb-2">
           <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-3 py-1 text-[10px] font-pixel">← 返回</button>
@@ -645,7 +645,7 @@ function RiverScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
         <div className="flex justify-between items-center mb-2">
           <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-3 py-1 text-[10px] font-pixel">← 返回</button>

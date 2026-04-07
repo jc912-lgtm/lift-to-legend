@@ -110,7 +110,7 @@ function MituoScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-hidden">
-      <div className="max-w-lg mx-auto w-full flex flex-col h-full">
+      <div className="max-w-4xl mx-auto w-full px-3 w-full flex flex-col h-full">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
 
         <div className="flex justify-between items-center mb-1">
@@ -597,7 +597,7 @@ function HengzhaiScreen({c,setC,go}){
 
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-hidden">
-      <div className="max-w-lg mx-auto w-full flex flex-col h-full">
+      <div className="max-w-4xl mx-auto w-full px-3 w-full flex flex-col h-full">
         {floats&&<FloatingNum items={floats} onDone={()=>setFloats(null)}/>}
 
         <div className="flex justify-between items-center mb-1">
@@ -850,7 +850,7 @@ function HengzhaiScreen({c,setC,go}){
 function AchScreen({c,go}){
   return(
     <div className="h-screen bg-pixel-dark flex flex-col overflow-auto">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-4xl mx-auto w-full px-3">
         <button onClick={()=>go('hub')} className="pixel-btn bg-pixel-charcoal text-pixel-light px-4 py-1.5 text-[10px] font-pixel mb-2">← 返回</button>
         <h2 className="font-pixel text-pixel-gold text-[10px] mb-2">🏆 成就 ({c.achievements.length}/{ACHIEVEMENTS.length})</h2>
         <div className="pixel-border bg-pixel-charcoal p-2 mb-2">
